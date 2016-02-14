@@ -20,7 +20,6 @@ class TweetProcessor:
 
     @staticmethod
     def standardize_tweet(tweet):
-        # Convert to lowercase
         """
         This method seeks to standardize tweets, currently it removes RT
         from the beginning of the tweet, it replaces #'s with those words,
@@ -31,8 +30,9 @@ class TweetProcessor:
         we could change this so it takes in a tweet object, with user id and
         other params that we wish to analyze
 
-        :return: returns a single standardized tweet
+        :return: returns a single standardized tweet object
         """
+        # Convert to lowercase
         tweet = tweet.lower()
 
         # remove RT if it's there
@@ -44,17 +44,13 @@ class TweetProcessor:
         tweet = re.sub(r'#([^\s]+)', r'\1', tweet)
 
         # Replace @{user} with USER
-        tweet = re.sub('@[^\s]+', 'USER', tweet)
+        tweet = re.sub(r'@[^\s]+', 'USER', tweet)
 
         # Remove extra whitespaces
         tweet = re.sub(r'[\s]+', ' ', tweet)
 
+        # Remove URL's
+        tweet = re.sub(r'((www\.[^\s]+)|(https?:\/\/[^\s]+))', 'URL', tweet)
+        # TODO: - Remove Emoticons, really anything that isn't word.
+
         return tweet
-
-
-# A tweet with RT @, #'s and extra blank spaces for testing purposes
-twit = u'RT @atirathaich:      #PeytonManning’s squeaky-clean' \
-       u'image was built on lies https://t.co/Dh23C5iSpj #DenverBroncos #CamNewton #NFL #SuperBowl …'
-
-t = TweetProcessor()
-print t.standardize_tweet(twit)
