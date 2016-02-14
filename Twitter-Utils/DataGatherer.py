@@ -4,7 +4,6 @@ from TweetProcessing import TweetProcessor
 
 class DataGatherer(TwythonStreamer):
     """Class to gather data from Twitter"""
-
     processor = TweetProcessor()
 
     def on_success(self, data):
