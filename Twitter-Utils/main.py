@@ -8,4 +8,4 @@ OAUTH_TOKEN_SECRET = os.environ['TWITTER_OAUTH_TOKEN_SECRET']
 
 if __name__ == "__main__":
     stream = DataGatherer(APP_KEY, APP_SECRET, OAUTH_TOKEN, OAUTH_TOKEN_SECRET)
-    stream.statuses.filter(track='NBA, west, east')
+    stream.statuses.filter(track='Superbowl, SB50')
