@@ -13,7 +13,7 @@ class DataGatherer(TwythonStreamer):
         :param data: data received from stream
         """
         if 'text' in data and 'user' in data:
-            processed_tweet = self.processor.standardize_tweet(data['text'].encode('utf-8'))
+            processed_tweet = self.processor.standardize_tweet(data['text'])
             print processed_tweet
             return processed_tweet
 

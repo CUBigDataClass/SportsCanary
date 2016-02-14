@@ -50,7 +50,18 @@ class TweetProcessor:
         tweet = re.sub(r'[\s]+', ' ', tweet)
 
         # Remove URL's
-        tweet = re.sub(r'((www\.[^\s]+)|(https?:\/\/[^\s]+))', 'URL', tweet)
-        # TODO: - Remove Emoticons, really anything that isn't word.
+        tweet = re.sub(r'((www\.[^\s]+)|(https?://[^\s]+))', 'URL', tweet)
 
+        # Remove Emoji's
+        try:
+        # UCS-4
+            emoji_pattern = re.compile(u'([\U00002600-\U000027BF])|([\U0001f300-\U0001f64F])|([\U0001f680-\U0001f6FF])')
+        except re.error:
+        # UCS-2
+            emoji_pattern = re.compile(u'([\u2600-\u27BF])|([\uD83C][\uDF00-\uDFFF])|([\uD83D][\uDC00-\uDE4F])|([\uD83D][\uDE80-\uDEFF])')
+        tweet = emoji_pattern.sub('', tweet)
+
+
+        # TODO: - Remove Emoticons, really anything that isn't word.
+        
         return tweet
