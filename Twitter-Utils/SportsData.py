@@ -73,10 +73,31 @@ class SportsData:
 
         return relevant_games_list
 
+    def get_upcoming_games_for_nba(self, time_range):
+        """
+        Returns a list of all upcoming games in the NBA within time range.
 
+        Currently highly inefficient due to it having to twice as many API
+        calls as it has too and thus every game is duplicated.  Optimization
+        would be to check the team id before making a call thus making half
+        the amount of calls.
 
+        :param time_range: time range in DAYS given as an INT
+        :return: return list of games object
+        """
+        upcoming_games = []
+        for team in self.nba_team_list:
+            upcoming_games_for_team = self.get_games_within_time_range_for_team(team, time_range)
+            for game in upcoming_games_for_team:
+                upcoming_games.append(game)
 
+        return upcoming_games
+
+    def pretty_print_schedule(self, time_range):
+        """Prints pretty version of schedule"""
+        for game in self.get_upcoming_games_for_nba(time_range):
+            print(game['title'] + " " + game['on'])
 
 
 t = SportsData()
-t.get_games_within_time_range_for_team('nba-mia', 7)
+t.pretty_print_schedule(7)
