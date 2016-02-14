@@ -61,7 +61,10 @@ class TweetProcessor:
             emoji_pattern = re.compile(u'([\u2600-\u27BF])|([\uD83C][\uDF00-\uDFFF])|([\uD83D][\uDC00-\uDE4F])|([\uD83D][\uDE80-\uDEFF])')
         tweet = emoji_pattern.sub('', tweet)
 
+        # Remove's everything that isn't a letter or space
+        tweet = re.sub(r'[^a-zA-Z ]','', tweet)
 
-        # TODO: - Remove Emoticons, really anything that isn't word.
-        
+        # Remove repeated char's, currently replaces it with two,
+        # could replace it with one and have it check a dictionary?
+        tweet = re.sub(r'(.)\1+', r'\1\1', tweet)
         return tweet
