@@ -29,6 +29,7 @@ class SportsData:
     def get_games_for_team(self, team_id):
 
         """
+
         Gets all basketball games
         :param team_id: team_id as defined by stattleship API
         :return: returns content of response
