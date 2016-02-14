@@ -21,3 +21,13 @@ Then, either load a new bash prompt or run
 ```
 source ~/.bashrc
 ```
+
+
+###NLTK Setup
+Make sure you've installed the requirements prior to this step.
+```
+$ python
+$ import nltk
+$ nltk.download()
+```
+Select the 'Corpora' tab and then download 'twitter_samples'

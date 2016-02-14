@@ -1,6 +1,4 @@
-from twython import Twython, TwythonStreamer
-import os
-import simplejson as json
+from twython import TwythonStreamer
 
 class DataGatherer(TwythonStreamer):
     """Class to gather data from Twitter"""

@@ -1,2 +1,4 @@
 twython
 simplejson
+nltk
+numpy
