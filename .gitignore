@@ -9,6 +9,7 @@ __pycache__/
 *.py[cod]
 *$py.class
 data/daily-logs/*
+data/tweets/*
 
 # C extensions
 *.so
