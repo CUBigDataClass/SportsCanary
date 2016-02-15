@@ -26,7 +26,7 @@ class SportsData:
                               'nba-okc', 'nba-orl', 'nba-phi', 'nba-pho', 'nba-por',
                               'nba-sa', 'nba-sac', 'nba-tor', 'nba-uta', 'nba-was']
 
-    def get_games_for_team(self, team_id):
+    def _get_games_for_team(self, team_id):
 
         """
 
@@ -47,7 +47,7 @@ class SportsData:
 
         return content['games']
 
-    def get_games_within_time_range_for_team(self, team_id, time_range):
+    def _get_games_within_time_range_for_team(self, team_id, time_range):
 
         """
         :param team_id: team_id as defined by stattleship API
@@ -59,7 +59,7 @@ class SportsData:
             current_date = datetime.datetime.now() + datetime.timedelta(days=x)
             list_next_seven_days.append(current_date.strftime("%B %d, %Y"))
 
-        games = self.get_games_for_team(team_id=team_id)
+        games = self._get_games_for_team(team_id=team_id)
 
         relevant_games_list = []
 
@@ -82,17 +82,30 @@ class SportsData:
         """
         upcoming_games = []
         for team in self.nba_team_list:
-            upcoming_games_for_team = self.get_games_within_time_range_for_team(team, time_range)
+            upcoming_games_for_team = self._get_games_within_time_range_for_team(team, time_range)
             for game in upcoming_games_for_team:
                 upcoming_games.append(game)
 
         return upcoming_games
 
-    def pretty_print_schedule(self, time_range):
+    def _pretty_print_schedule(self, time_range):
         """Prints pretty version of schedule"""
         for game in self.get_upcoming_games_for_nba(time_range):
             print(game['title'] + " " + game['on'])
 
+    def get_nba_games_for_today(self):
+        """Gets all games for today"""
+        url = self.base_url + '/nba/games?on=today'
+        headers = {
+            'Authorization': str(self.STAT_ACCESS_TOKEN),
+            'Accept': 'application/vnd.stattleship.com; version=1',
+            'Content-Type': 'application/json'
+        }
+
+        res = requests.get(url, headers=headers)
+        content = json.loads(res.content)
+
+        return content['games']
 
 t = SportsData()
-t.pretty_print_schedule(7)
+t.get_nba_games_for_today()
