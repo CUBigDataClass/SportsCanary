@@ -91,11 +91,13 @@ class SportsData:
     def _pretty_print_schedule(self, time_range):
         """Prints pretty version of schedule"""
         for game in self.get_upcoming_games_for_nba(time_range):
-            print(game['title'] + " " + game['on'])
+            # print(game['title'] + " " + game['on'])
+            print game
 
     def get_nba_games_for_today(self):
         """Gets all games for today"""
-        url = self.base_url + '/nba/games?on=today'
+        # TODO - Change back to today rather than date with games
+        url = self.base_url + '/nba/games?on=February-18'
         headers = {
             'Authorization': str(self.STAT_ACCESS_TOKEN),
             'Accept': 'application/vnd.stattleship.com; version=1',
@@ -104,8 +106,27 @@ class SportsData:
 
         res = requests.get(url, headers=headers)
         content = json.loads(res.content)
+        return self._create_game_log_object(content['games'])
 
-        return content['games']
+    @staticmethod
+    def _create_game_log_object(data):
+        """
+        Creates a json object from API call to Stattleship
 
-t = SportsData()
-t.get_nba_games_for_today()
+        :param data: input of data object from Stattleship
+        :return: returns JSON object with relevant information for each game
+        """
+        list_of_games = []
+        for game in data:
+            game_uuid = game['id']
+            game_start_time = game['started_at']
+            game_title = game['title']
+            game_home_team_id = game['home_team_id']
+            game_away_team_id = game['away_team_id']
+            game_slug = game['slug']
+            list_of_games.append(json.dumps({"uuid": game_uuid, "start_time": game_start_time,
+                                             "title": game_title, "home_team_id": game_home_team_id,
+                                             "away_team_id": game_away_team_id, "slug": game_slug}))
+
+        list_of_games = str(list_of_games).replace("'", "")
+        return list_of_games
