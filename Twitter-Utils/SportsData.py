@@ -7,10 +7,8 @@ import simplejson as json
 class SportsData:
     """
     Class to gather data from the Stattleship API
-
     Endpoints follow the pattern <sport>/<league>/<action>
     And the headers must look as follows:
-
     Content-Type: application/json"
     Accept: application/vnd.stattleship.com; version=1
     Authorization: Token token=ACCESS_TOKEN
@@ -52,7 +50,6 @@ class SportsData:
     def get_games_within_time_range_for_team(self, team_id, time_range):
 
         """
-
         :param team_id: team_id as defined by stattleship API
         :param time_range: time range in DAYS given as an INT
         :return: returns a list with all games within time range
@@ -76,12 +73,10 @@ class SportsData:
     def get_upcoming_games_for_nba(self, time_range):
         """
         Returns a list of all upcoming games in the NBA within time range.
-
         Currently highly inefficient due to it having to twice as many API
         calls as it has too and thus every game is duplicated.  Optimization
         would be to check the team id before making a call thus making half
         the amount of calls.
-
         :param time_range: time range in DAYS given as an INT
         :return: return list of games object
         """
