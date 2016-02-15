@@ -18,7 +18,6 @@ http://www.ranks.nl/stopwords for source
 """
 
 class TweetProcessor:
-
     def __init__(self):
         pass
 
@@ -71,11 +70,15 @@ class TweetProcessor:
 
         # Remove extra whitespaces
         tweet = re.sub(r'[\s]+', ' ', tweet)
-        stop = stopwords.words('english')
-        stop.append(u'USER')
-        stop.append(u'URL')
+        
+        english_stop_words = stopwords.words('english')
+        english_stop_words.extend(('USER','URL'))
         words = nltk.word_tokenize(tweet)
 
-        tweet = " ".join([x for x in words if x not in stop])
+        tweet = " ".join([x for x in words if x not in english_stop_words])
 
+        # Remove things like tooURL,
+        tweet = tweet.replace('URL','')
+        tweet = tweet.replace('USER','')
         return tweet
+

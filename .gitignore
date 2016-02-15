@@ -8,6 +8,7 @@
 __pycache__/
 *.py[cod]
 *$py.class
+data/daily-logs/*
 
 # C extensions
 *.so
