@@ -6,7 +6,7 @@ class KeywordGenerator:
     def __init__(self):
         self.team_data_path = os.getcwd() + '/Twitter-Utils/data/teams-data.json'
 
-    def given_team_id_generate_search_terms(self, team_id):
+    def generate_search_terms(self, team_id):
         """
         Creates list of key words to search for.
         :param team_id: id of team, given by Stattleship API
@@ -31,16 +31,10 @@ class KeywordGenerator:
                 if team['name']:
                     search_terms_list.append(team['name'])
 
-        # TODO - Do this in a cleaner way
+        # TODO - Refactor this
         search_terms_list_with_go = []
         for word in search_terms_list:
             search_terms_list_with_go.append('go' + word)
 
         search_terms_list += search_terms_list_with_go
-        print search_terms_list
         return search_terms_list
-
-
-
-k = KeywordGenerator()
-k.given_team_id_generate_search_terms('2a8639cf-f27b-49c9-ae4c-16f77c1a2567')
