@@ -8,7 +8,8 @@
 __pycache__/
 *.py[cod]
 *$py.class
-data/daily-logs/*
+Twitter-Utils/data/daily-logs/*
+Twitter-Utils/data/tweets/*
 
 # C extensions
 *.so

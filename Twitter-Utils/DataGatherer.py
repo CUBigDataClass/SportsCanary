@@ -1,39 +1,47 @@
-from twython import TwythonStreamer
 from TweetProcessing import TweetProcessor
 import os
+from tweepy.streaming import StreamListener
+from tweepy import OAuthHandler
+from tweepy import Stream
+from tweepy import API
 
 
-class DataGatherer(TwythonStreamer):
+class DataGatherer(StreamListener):
     """ Class to gather data from Twitter
         Twitter Streaming API: https://dev.twitter.com/streaming/overview/request-parameters#track
     """
 
-    def __init__(self, app_key, app_secret, oauth_token, oauth_token_secret):
-        super(DataGatherer, self).__init__(app_key, app_secret, oauth_token, oauth_token_secret)
+    def __init__(self):
+        super(DataGatherer, self).__init__()
+        self.APP_KEY = os.environ['TWITTER_APP_KEY']
+        self.APP_SECRET = os.environ['TWITTER_APP_SECRET']
+        self.OAUTH_TOKEN = os.environ['TWITTER_OAUTH_TOKEN']
+        self.OAUTH_TOKEN_SECRET = os.environ['TWITTER_OAUTH_TOKEN_SECRET']
         self.processor = TweetProcessor()
         self.game_id_to_store = ''
         self.game_name_to_store = ''
+        self.auth = OAuthHandler(self.APP_KEY, self.APP_SECRET)
+        self.auth.set_access_token(self.OAUTH_TOKEN, self.OAUTH_TOKEN_SECRET)
+        self.api = API(self.auth)
 
-    def on_success(self, data):
-        """
-        Called once every time a tweet is successfully streamed
-        :param data: data received from stream
-        """
-        if 'text' in data and 'user' in data:
-            processed_tweet = self.processor.standardize_tweet(data['text'])
+    def on_error(self, status_code):
+        print 'ERROR: ' + status_code
+        # if status_code == 420:
+        # returning False in on_data disconnects the stream
+        return False
+
+    def on_status(self, status):
+        if status.lang == 'en':
+            processed_tweet = self.processor.standardize_tweet(status.text)
+            print processed_tweet
             self.save_tweet_to_disk(processed_tweet)
 
-    def on_error(self, status_code, data):
-        print status_code
-        self._disconnect()
-
-    def _disconnect(self):
-        self.disconnect()
-
     def get_tweet_stream(self, track, game_id, game_name):
+        stream = Stream(self.auth, self)
         self.game_id_to_store = game_id
         self.game_name_to_store = game_name
-        self.statuses.filter(language='en', track=track)
+        print 'TRACK: ' + track
+        stream.filter(track=[track], async=True)
 
     def get_base_directory_path(self):
         return os.getcwd() + '/Twitter-Utils/data/tweets/' + self.game_name_to_store

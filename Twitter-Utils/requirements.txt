@@ -1,4 +1,4 @@
-twython
+tweepy
 simplejson
 nltk
 numpy
