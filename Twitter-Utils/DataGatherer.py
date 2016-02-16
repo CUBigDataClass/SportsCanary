@@ -33,7 +33,7 @@ class DataGatherer(StreamListener):
     def on_status(self, status):
         if status.lang == 'en':
             processed_tweet = self.processor.standardize_tweet(status.text)
-            print processed_tweet
+            # print processed_tweet
             self.save_tweet_to_disk(processed_tweet)
 
     def get_tweet_stream(self, track, game_id, game_name):
@@ -42,6 +42,7 @@ class DataGatherer(StreamListener):
         self.game_name_to_store = game_name
         print 'TRACK: ' + track
         stream.filter(track=[track], async=True)
+        return stream
 
     def get_base_directory_path(self):
         return os.getcwd() + '/Twitter-Utils/data/tweets/' + self.game_name_to_store

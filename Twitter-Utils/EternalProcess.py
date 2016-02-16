@@ -20,6 +20,8 @@ class EternalProcess:
         self.APP_SECRET = os.environ['TWITTER_APP_SECRET']
         self.OAUTH_TOKEN = os.environ['TWITTER_OAUTH_TOKEN']
         self.OAUTH_TOKEN_SECRET = os.environ['TWITTER_OAUTH_TOKEN_SECRET']
+        self.stream_list = []
+        self.end_times_list = []
 
     def start_process(self):
         """
@@ -32,7 +34,22 @@ class EternalProcess:
         # TODO - Add IOError as exception so our process doesn't crash
         while True:
             print 'Round'
+            print self.stream_list
+            print self.end_times_list
+
             time_now = datetime.datetime.now()
+            if self.end_times_list:
+                hour_min_time_now = time_now.strftime('%H:%M')
+
+                # TODO - Refactor the nonsense below this
+                for i in xrange(len(self.end_times_list) - 1, -1, -1):
+                    if self.end_times_list[i] == hour_min_time_now:
+                        stream = self.stream_list[i]
+                        print 'Stopping: ' + stream
+                        stream.disconnect()
+                        del self.stream_list[i]
+                        del self.end_times_list[i]
+
             if self.time_to_check_games_for_the_day == time_now.strftime('%H:%M'):
                 write_path = self.base_path + time_now.strftime('%Y-%m-%d') + '.json'
                 data_to_write = self.sports_data.get_nba_games_for_today()
@@ -63,11 +80,13 @@ class EternalProcess:
                             keyword_string_home = ','.join(search_terms_home)
                             keyword_string_away = ','.join(search_terms_away)
 
-                            keyword_string = keyword_string_home + ', ' + keyword_string_away
+                            keyword_string = keyword_string_home + ',' + keyword_string_away
                             game_name = datetime.datetime.now().strftime('%Y-%m-%d') + '-' + game['title'].replace(' ', '-')
 
                             data_gatherer = DataGatherer()
-                            data_gatherer.get_tweet_stream(keyword_string, game['uuid'], game_name)
+                            stream = data_gatherer.get_tweet_stream(keyword_string, game['uuid'], game_name)
+                            self.stream_list.append(stream)
+                            self.end_times_list.append(self.get_time_to_end_stream())
 
             except IOError:
                 print 'File not found'
@@ -95,3 +114,10 @@ class EternalProcess:
             
         except IOError:
                 print 'File not found'
+
+    @staticmethod
+    def get_time_to_end_stream():
+        time_now = datetime.datetime.now()
+        now_plus_10 = time_now + datetime.timedelta(minutes=1)
+        return now_plus_10.strftime('%H:%M')
+
