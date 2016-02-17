@@ -2,6 +2,7 @@
 import unittest
 from Twitter_Utils.TweetProcessing import TweetProcessor
 
+
 class TestTweetProcessor(unittest.TestCase):
     def test___init__(self):
         assert True
@@ -59,5 +60,5 @@ class TestTweetProcessor(unittest.TestCase):
         self.assertEqual('testing go buffs go heat nba',
                          tweet_processor.replace_hashtag_with_word('testing #go #buffs go #heat #nba'))
 
-if __name__ == '__main__':
+if __name__ == '__main__':  # pragma: no cover
     unittest.main()

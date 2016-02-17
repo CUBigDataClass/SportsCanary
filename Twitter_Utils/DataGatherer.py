@@ -45,12 +45,12 @@ class DataGatherer(StreamListener):
         return stream
 
     def get_base_directory_path(self):
-        return os.getcwd() + '/Twitter-Utils/data/tweets/' + self.game_name_to_store
+        return os.getcwd() + '/Twitter_Utils/data/tweets/' + self.game_name_to_store
 
     def get_base_file_path(self):
-        return os.getcwd() + '/Twitter-Utils/data/tweets/' + self.game_name_to_store + '/' + self.game_name_to_store + '.txt'
+        return os.getcwd() + '/Twitter_Utils/data/tweets/' + self.game_name_to_store + '/' + self.game_name_to_store + '.txt'
 
-    def save_tweet_to_disk(self, tweet):
+    def save_tweet_to_disk(self, tweet):  # pragma: no cover
         if not os.path.exists(self.get_base_directory_path()):
             os.makedirs(self.get_base_directory_path())
 
