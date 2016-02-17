@@ -39,34 +39,24 @@ class TweetProcessor:
         # Convert to lowercase
         tweet = tweet.lower()
 
-        # remove RT if it's there
-        # TODO: - Some sort of counter for this would be great
         tweet = self.remove_rt(tweet)
 
-        # Replace #{word} with word
         tweet = self.replace_hashtag_with_word(tweet)
 
-        # Replace @{user} with USER
         tweet = self.replace_at_with_word(tweet)
 
-        # Remove URL's
         tweet = self.remove_url(tweet)
 
-        # Remove Emoji's
         tweet = self.remove_emoji(tweet)
 
-        # Remove's everything that isn't a letter or space
         tweet = self.remove_non_letter_and_space(tweet)
 
-        # Remove repeated char's, currently replaces it with two, could replace it with one and have it check a dictionary?
         tweet = self.remove_repeated_chars(tweet)
 
-        # Remove extra whitespaces
         tweet = self.remove_extra_whitespaces(tweet)
         
         tweet = self.remove_stop_words(tweet)
 
-        # Remove things like tooURL,
         tweet = self.remove_appended_url_or_user(tweet)
 
         return tweet
@@ -118,7 +108,3 @@ class TweetProcessor:
     def remove_appended_url_or_user(self, tweet):
         tweet = tweet.replace('URL','')
         return tweet.replace('USER','')
-
-
-t = TweetProcessor()
-t.standardize_tweet('RT testing @user #test www.google.com testtiiiinnggg')

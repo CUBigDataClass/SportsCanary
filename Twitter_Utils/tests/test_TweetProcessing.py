@@ -17,7 +17,7 @@ class TestTweetProcessor(unittest.TestCase):
         tweet_processor = TweetProcessor()
         self.assertEqual('justt wanted tell people',
                          tweet_processor.standardize_tweet('RT So I justttt Wanted to @FReD'
-                                                           ' www.google.com tellll people that'))
+                                                           ' www.google.com tellll people that www.google.com'))
 
     def test_remove_appended_url_or_user(self):
         tweet_processor = TweetProcessor()
