@@ -82,3 +82,7 @@ class TweetProcessor:
         tweet = tweet.replace('USER','')
         return tweet
 
+    def remove_rt(self, tweet):
+        if tweet[:2] == "rt":
+            return tweet[3:]
+

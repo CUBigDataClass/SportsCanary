@@ -10,7 +10,7 @@ __pycache__/
 *$py.class
 Twitter-Utils/data/daily-logs/*
 Twitter-Utils/data/tweets/*
-
+Twitter-Utils/.pythoscope
 # C extensions
 *.so
 
