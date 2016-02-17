@@ -4,7 +4,7 @@ import simplejson as json
 
 class KeywordGenerator:
     def __init__(self):
-        self.team_data_path = os.getcwd() + '/Twitter-Utils/data/teams-data.json'
+        self.team_data_path = os.getcwd() + '/Twitter_Utils/data/teams-data.json'
 
     def generate_search_terms(self, team_id):
         """
