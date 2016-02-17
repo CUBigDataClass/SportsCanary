@@ -12,6 +12,7 @@ class KeywordGenerator:
         :param team_id: id of team, given by Stattleship API
         :return: returns list of key words
         """
+        # TODO - Add excpetion handler
         with open(self.team_data_path, 'r') as f:
             data = json.loads(f.read())
         f.close()
@@ -31,10 +32,15 @@ class KeywordGenerator:
                 if team['name']:
                     search_terms_list.append(team['name'])
 
+        search_terms_list = self.append_word_with_go_to_list(search_terms_list)
+        return search_terms_list
+
+    @staticmethod
+    def append_word_with_go_to_list(word_list):
         # TODO - Refactor this
         search_terms_list_with_go = []
-        for word in search_terms_list:
+        for word in word_list:
             search_terms_list_with_go.append('go' + word)
 
-        search_terms_list += search_terms_list_with_go
-        return search_terms_list
+        word_list += search_terms_list_with_go
+        return word_list
