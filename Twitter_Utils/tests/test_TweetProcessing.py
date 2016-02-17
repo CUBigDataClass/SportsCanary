@@ -41,6 +41,10 @@ class TestTweetProcessor(unittest.TestCase):
         tweet_processor = TweetProcessor()
         self.assertEqual('tessttingg', tweet_processor.remove_repeated_chars('tessssssssssssssssttttttttingggg'))
 
+    def test_remove_stop_words(self):
+        tweet_processor = TweetProcessor()
+        self.assertEqual('told tweet', tweet_processor.remove_stop_words('i told me my now should during tweet'))
+
     def test_remove_url(self):
         tweet_processor = TweetProcessor()
         self.assertEqual('testing URL URL', tweet_processor.remove_url('testing www.google.com https://www.testing.com'))
