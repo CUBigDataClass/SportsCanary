@@ -2,3 +2,5 @@ tweepy
 simplejson
 nltk
 numpy
+pytest
+coveralls

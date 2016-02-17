@@ -18,11 +18,11 @@ http://www.ranks.nl/stopwords for source
 """
 
 class TweetProcessor:
+
     def __init__(self):
         pass
 
-    @staticmethod
-    def standardize_tweet(tweet):
+    def standardize_tweet(self, tweet):
         """
         This method seeks to standardize tweets, currently it removes RT
         from the beginning of the tweet, it replaces #'s with those words,
@@ -39,50 +39,72 @@ class TweetProcessor:
         # Convert to lowercase
         tweet = tweet.lower()
 
-        # remove RT if it's there
-        # TODO: - Some sort of counter for this would be great
+        tweet = self.remove_rt(tweet)
+
+        tweet = self.replace_hashtag_with_word(tweet)
+
+        tweet = self.replace_at_with_word(tweet)
+
+        tweet = self.remove_url(tweet)
+
+        tweet = self.remove_emoji(tweet)
+
+        tweet = self.remove_non_letter_and_space(tweet)
+
+        tweet = self.remove_repeated_chars(tweet)
+
+        tweet = self.remove_extra_whitespaces(tweet)
+        
+        tweet = self.remove_stop_words(tweet)
+
+        tweet = self.remove_appended_url_or_user(tweet)
+
+        return tweet
+
+    @staticmethod
+    def remove_rt(tweet):
         if tweet[:2] == "rt":
-            tweet = tweet[3:]
+            return tweet[3:]
+        else:
+            return tweet
 
-        # Replace #{word} with word
-        tweet = re.sub(r'#([^\s]+)', r'\1', tweet)
+    @staticmethod
+    def replace_hashtag_with_word(tweet):
+        return re.sub(r'#([^\s]+)', r'\1', tweet)
 
-        # Replace @{user} with USER
-        tweet = re.sub(r'@[^\s]+', 'USER', tweet)
+    @staticmethod
+    def replace_at_with_word(tweet):
+        return re.sub(r'@[^\s]+', 'USER', tweet)
 
-        # Remove URL's
-        tweet = re.sub(r'((www\.[^\s]+)|(https?://[^\s]+))', 'URL', tweet)
+    @staticmethod
+    def remove_url(tweet):
+        return re.sub(r'((www\.[^\s]+)|(https?://[^\s]+))', 'URL', tweet)
 
-        # Remove Emoji's
+    @staticmethod
+    def remove_emoji(tweet):
         try:
         # UCS-4
             emoji_pattern = re.compile(u'([\U00002600-\U000027BF])|([\U0001f300-\U0001f64F])|([\U0001f680-\U0001f6FF])')
         except re.error:
         # UCS-2
             emoji_pattern = re.compile(u'([\u2600-\u27BF])|([\uD83C][\uDF00-\uDFFF])|([\uD83D][\uDC00-\uDE4F])|([\uD83D][\uDE80-\uDEFF])')
-        tweet = emoji_pattern.sub('', tweet)
+        return emoji_pattern.sub('', tweet)
 
-        # Remove's everything that isn't a letter or space
-        tweet = re.sub(r'[^a-zA-Z ]','', tweet)
+    def remove_non_letter_and_space(self, tweet):
+        return re.sub('[^a-zA-Z ]+', '', tweet)
 
-        # Remove repeated char's, currently replaces it with two, could replace it with one and have it check a dictionary?
-        tweet = re.sub(r'(.)\1+', r'\1\1', tweet)
+    def remove_repeated_chars(self, tweet):
+        return re.sub(r'(.)\1+', r'\1\1', tweet)
 
-        # Remove extra whitespaces
-        tweet = re.sub(r'[\s]+', ' ', tweet)
-        
+    def remove_extra_whitespaces(self, tweet):
+        return re.sub(r'[\s]+', ' ', tweet)
+
+    def remove_stop_words(self, tweet):
         english_stop_words = stopwords.words('english')
         english_stop_words.extend(('USER','URL'))
         words = nltk.word_tokenize(tweet)
+        return " ".join([x for x in words if x not in english_stop_words])
 
-        tweet = " ".join([x for x in words if x not in english_stop_words])
-
-        # Remove things like tooURL,
+    def remove_appended_url_or_user(self, tweet):
         tweet = tweet.replace('URL','')
-        tweet = tweet.replace('USER','')
-        return tweet
-
-    def remove_rt(self, tweet):
-        if tweet[:2] == "rt":
-            return tweet[3:]
-
+        return tweet.replace('USER','')
