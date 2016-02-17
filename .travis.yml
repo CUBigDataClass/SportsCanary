@@ -11,4 +11,5 @@ script:
     - py.test --cov=Twitter_Utils --cov-report=term-missing --cov-report=html
 after_success:
     - coveralls
-
+notifications:
+  slack: teambigdatamonsters:SZBACvYDgtzhNyZlchGPkvdK

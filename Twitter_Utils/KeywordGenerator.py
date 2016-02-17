@@ -12,7 +12,7 @@ class KeywordGenerator:
         :param team_id: id of team, given by Stattleship API
         :return: returns list of key words
         """
-        # TODO - Add excpetion handler
+        # TODO - Add exception handler
         with open(self.team_data_path, 'r') as f:
             data = json.loads(f.read())
         f.close()
