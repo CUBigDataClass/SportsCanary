@@ -3,6 +3,7 @@ import unittest
 class TestTweetProcessor(unittest.TestCase):
     def test___init__(self):
         # tweet_processor = TweetProcessor()
+        # tweet_processor.remove_rt("ok")
         assert False # TODO: implement your test here
 
     def test_remove_rt(self):
