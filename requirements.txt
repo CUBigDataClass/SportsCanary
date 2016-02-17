@@ -3,3 +3,4 @@ simplejson
 nltk
 numpy
 pytest
+coveralls
