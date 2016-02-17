@@ -1,4 +1,0 @@
-tweepy
-simplejson
-nltk
-numpy
