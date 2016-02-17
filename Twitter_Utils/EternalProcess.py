@@ -12,7 +12,6 @@ class EternalProcess:
     def __init__(self):
         self.sports_data = SportsData()
         self.keyword_generator = KeywordGenerator()
-        self.start_time = time.time()
         self.tick_time_in_seconds = 60.0
         self.time_to_check_games_for_the_day = '09:30'
         self.base_path = os.getcwd() + '/Twitter-Utils/data/daily-logs/'
@@ -31,37 +30,16 @@ class EternalProcess:
         """
         print 50 * '*' + '\n' + 10 * '*' + '  STARTING SCANNING PROCESS   ' + 10 * '*' + '\n' + 50 * '*'
 
-        # TODO - Add IOError as exception so our process doesn't crash
         while True:
-            print 'Round'
-            print self.stream_list
-            print self.end_times_list
+            print str(self.stream_list) + str(self.end_times_list)
 
-            time_now = datetime.datetime.now()
-            if self.end_times_list:
-                hour_min_time_now = time_now.strftime('%H:%M')
+            self.check_if_stream_should_end()
 
-                # TODO - Refactor the nonsense below this
-                for i in xrange(len(self.end_times_list) - 1, -1, -1):
-                    if self.end_times_list[i] == hour_min_time_now:
-                        stream = self.stream_list[i]
-                        print 'Stopping: ' + stream
-                        stream.disconnect()
-                        del self.stream_list[i]
-                        del self.end_times_list[i]
-
-            if self.time_to_check_games_for_the_day == time_now.strftime('%H:%M'):
-                write_path = self.base_path + time_now.strftime('%Y-%m-%d') + '.json'
-                data_to_write = self.sports_data.get_nba_games_for_today()
-                try:
-                    with open(write_path, 'w+') as f:
-                        f.write(data_to_write)
-                    f.close()
-                except IOError:
-                    print 'File not found'
+            if self.is_time_to_get_game_data_for_day:
+                self.write_days_games_data()
 
             # Read in file to see if it is time to analyze twitter
-            read_path = self.base_path + time_now.strftime('%Y-%m-%d') + '.json'
+            read_path = self.get_write_path_for_days_games()
 
             try:
                 with open(read_path) as f:
@@ -86,13 +64,13 @@ class EternalProcess:
                             data_gatherer = DataGatherer()
                             stream = data_gatherer.get_tweet_stream(keyword_string, game['uuid'], game_name)
                             self.stream_list.append(stream)
-                            self.end_times_list.append(self.get_time_to_end_stream())
+                            self.end_times_list.append(self.get_time_to_end_stream(1))
 
             except IOError:
                 print 'File not found'
 
             # restart loop after sleep, given by our tick_time
-            time.sleep(self.tick_time_in_seconds - ((time.time() - self.start_time) % self.tick_time_in_seconds))
+            self.sleep_for(self.tick_time_in_seconds)
 
     def update_is_streamed_json(self, index):
         """
@@ -116,8 +94,54 @@ class EternalProcess:
                 print 'File not found'
 
     @staticmethod
-    def get_time_to_end_stream():
+    def get_time_to_end_stream(minutes):
+        """
+        Function creates a time to end stream, currently in minutes
+        :param minutes:
+        :return: Time object
+        """
         time_now = datetime.datetime.now()
-        now_plus_10 = time_now + datetime.timedelta(minutes=1)
+        now_plus_10 = time_now + datetime.timedelta(minutes=minutes)
         return now_plus_10.strftime('%H:%M')
 
+    def check_if_stream_should_end(self):
+        if self.end_times_list:
+            hour_min_time_now = datetime.datetime.now().strftime('%H:%M')
+            did_delete = False
+            # TODO - Refactor the line below this
+            for i in xrange(len(self.end_times_list) - 1, -1, -1):
+                if self.end_times_list[i] == hour_min_time_now:
+                    stream = self.stream_list[i]
+                    print 'Stopping: ' + str(stream)
+                    stream.disconnect()
+                    del self.stream_list[i]
+                    del self.end_times_list[i]
+                    did_delete = True
+
+            return did_delete
+        else:
+            return False
+
+    def get_write_path_for_days_games(self):
+        return self.base_path + datetime.datetime.now().strftime('%Y-%m-%d') + '.json'
+
+    def is_time_to_get_game_data_for_day(self):
+        if self.time_to_check_games_for_the_day == datetime.datetime.now().strftime('%H:%M'):
+            return True
+        else:
+            return False
+
+    def write_days_games_data(self):
+        write_path = self.get_write_path_for_days_games()
+        data_to_write = self.sports_data.get_nba_games_for_today()
+        try:
+            with open(write_path, 'w+') as f:
+                f.write(data_to_write)
+            f.close()
+        except IOError:
+            print 'File not found'
+
+    @staticmethod
+    def sleep_for(tick_time):
+        start_time = time.time()
+        time.sleep(tick_time - ((time.time() - start_time) % tick_time))

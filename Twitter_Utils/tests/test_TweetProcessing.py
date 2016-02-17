@@ -2,6 +2,7 @@
 import unittest
 from Twitter_Utils.TweetProcessing import TweetProcessor
 
+
 class TestTweetProcessor(unittest.TestCase):
     def test___init__(self):
         assert True
