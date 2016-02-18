@@ -4,3 +4,4 @@ nltk
 numpy
 pytest
 coveralls
+python-dateutil
