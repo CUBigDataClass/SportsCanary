@@ -5,3 +5,4 @@ numpy
 pytest
 coveralls
 python-dateutil
+PySocks

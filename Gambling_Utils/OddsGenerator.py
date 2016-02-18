@@ -1,7 +1,7 @@
 import os
 import urllib2
 import json
-
+from Proxy import ProxyHandler
 
 class OddsGeneration:
     def __init__(self):
@@ -31,15 +31,18 @@ class OddsGeneration:
 
         try:
             session_key_request = urllib2.Request(session_key_url, data, session_key_headers)
-            session_key_response = urllib2.urlopen(session_key_request)
-            json_response = session_key_response.read()
-
+            proxy = ProxyHandler()
+            opener = proxy.url_request()
+            session_key_response = opener.open(session_key_request)
+            response = session_key_response.read()
+            json_response = json.loads(response)
             if json_response['status'] == 'SUCCESS':
+                print json_response['token']
                 return json_response['token']
             else:
                 return False
 
-        except urllib2.URLError:
+        except urllib2.HTTPError:
             print 'Oops no service available at ' + str(session_key_url)
         except urllib2.URLError:
             print 'No service found at ' + str(session_key_url)
@@ -48,7 +51,7 @@ class OddsGeneration:
         """
         This is our API caller, other functions pass in requests and it gets the info.
         :param json_request: request for information we want, based on method
-        :return: returns json reponse from API
+        :return: returns json response from API
         """
         try:
             request = urllib2.Request(self.api_base_url, json_request, self.api_call_headers)
@@ -91,3 +94,6 @@ class OddsGeneration:
                     return event['eventType']['id']
         else:
             print 'Error trying to get event type id with name input.'
+
+t = OddsGeneration()
+t.get_session_key()
