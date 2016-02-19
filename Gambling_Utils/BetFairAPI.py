@@ -1,7 +1,11 @@
 import os
 import urllib2
 import json
+
+import datetime
+
 from Proxy import ProxyHandler
+
 
 class OddsGeneration:
     def __init__(self):
@@ -11,12 +15,10 @@ class OddsGeneration:
         self.BET_FAIR_SESSION_TOKEN = ''
         self.BET_FAIR_USERNAME = os.environ['BET_FAIR_USERNAME']
         self.BET_FAIR_PASSWORD = os.environ['BET_FAIR_PASSWORD']
-        self.api_call_headers = {'X-Application': self.APP_KEY_DELAYED,
-                                 'X-Authentication': self.BET_FAIR_SESSION_TOKEN,
-                                 'content-type': 'application/json'}
+        self.api_call_headers = {}
 
     # TODO - We have to use a proxy to get this to work
-    def get_session_key(self):
+    def get_session_key_and_set_headers(self):
         """
         Gets session key from betfair, these last 20 minutes and have to get regenerated.
         Additionally we have to create some sort of proxy for them since they hate Freedom.
@@ -38,7 +40,10 @@ class OddsGeneration:
             json_response = json.loads(response)
             if json_response['status'] == 'SUCCESS':
                 print json_response['token']
-                return json_response['token']
+                self.BET_FAIR_SESSION_TOKEN = json_response['token']
+                self.api_call_headers = {'X-Application': self.APP_KEY_DELAYED,
+                                         'X-Authentication': self.BET_FAIR_SESSION_TOKEN,
+                                         'content-type': 'application/json'}
             else:
                 return False
 
@@ -54,6 +59,7 @@ class OddsGeneration:
         :return: returns json response from API
         """
         try:
+            self.get_session_key_and_set_headers()
             request = urllib2.Request(self.api_base_url, json_request, self.api_call_headers)
             response = urllib2.urlopen(request)
             json_response = response.read()
@@ -94,6 +100,3 @@ class OddsGeneration:
                     return event['eventType']['id']
         else:
             print 'Error trying to get event type id with name input.'
-
-t = OddsGeneration()
-t.get_session_key()
