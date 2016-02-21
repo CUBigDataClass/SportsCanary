@@ -79,6 +79,7 @@ class SportsData:
         :return: returns JSON object with all players name & team_id for each game
         """
         games_id=[]
+
         list_of_games = json.loads(SportsData().get_nba_games_for_today())
         for game in list_of_games:
             games_id.append(game.get('home_team_id'))
