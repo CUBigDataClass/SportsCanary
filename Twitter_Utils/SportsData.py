@@ -1,6 +1,6 @@
+import os
 import requests
 import simplejson as json
-from Eternal_Utils.CommonUtils import CommonUtils
 
 
 class SportsData:
@@ -14,9 +14,9 @@ class SportsData:
     """
 
     def __init__(self):
-        self.CLIENT_ID = CommonUtils.get_environ_variable('STAT_CLIENT_ID')
-        self.STAT_CLIENT_SECRET = CommonUtils.get_environ_variable('STAT_CLIENT_SECRET')
-        self.STAT_ACCESS_TOKEN = CommonUtils.get_environ_variable('STAT_ACCESS_TOKEN')
+        self.CLIENT_ID = os.environ['STAT_CLIENT_ID']
+        self.STAT_CLIENT_SECRET = os.environ['STAT_CLIENT_SECRET']
+        self.STAT_ACCESS_TOKEN = os.environ['STAT_ACCESS_TOKEN']
         self.base_url = 'https://www.stattleship.com/basketball/'
 
     def get_nba_games_for_today(self):
@@ -79,7 +79,6 @@ class SportsData:
         :return: returns JSON object with all players name & team_id for each game
         """
         games_id=[]
-
         list_of_games = json.loads(SportsData().get_nba_games_for_today())
         for game in list_of_games:
             games_id.append(game.get('home_team_id'))
