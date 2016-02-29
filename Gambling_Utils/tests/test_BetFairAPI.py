@@ -25,5 +25,10 @@ class TestOddsGeneration(unittest.TestCase):
         # self.assertEqual(expected, odds_generation.get_session_key())
         assert True # TODO: implement your test here
 
-if __name__ == '__main__':
+    def test_get_session_key_and_set_headers(self):
+        # odds_generation = OddsGeneration()
+        # self.assertEqual(expected, odds_generation.get_session_key_and_set_headers())
+        assert True # TODO: implement your test here
+
+if __name__ == '__main__':  # pragma: no cover
     unittest.main()

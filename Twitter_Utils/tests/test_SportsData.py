@@ -9,7 +9,9 @@ class TestSportsData(unittest.TestCase):
         assert True
 
     def test_get_nba_games_for_today(self):
-        assert True # TODO: implement your test here
+        sports_data = SportsData()
+        result = sports_data.get_nba_games_for_today()
+        self.assertIsNotNone(result)
 
     def test_create_game_log_object(self):
         sports_data = SportsData()
@@ -33,6 +35,16 @@ class TestSportsData(unittest.TestCase):
         # expected_response = [{"uuid": "4b2fb0bc-864c-4ede-be61-59ed14e1da50", "title": "Spurs vs Clippers", "start_time": "2016-02-18T19:30:00-08:00", "being_streamed": False, "home_team_id": "5bf2300f-777b-4caa-9ef3-3fda11f17ad1", "away_team_id": "ed803cc0-8e6e-4798-b5aa-9eecbc977801", "slug": "nba-2015-2016-sa-lac-2016-02-18-1930"}]
         # self.assertEqual(expected_response, sports_data.create_game_log_object(data))
 
+
+    def test_create_players_log_object(self):
+        # sports_data = SportsData()
+        # self.assertEqual(expected, sports_data.create_players_log_object())
+        assert True # TODO: implement your test here
+
+    def test_get_nba_players_for_today(self):
+        sports_data = SportsData()
+        result = sports_data.get_nba_players_for_today()
+        self.assertIsNotNone(result)
 
 if __name__ == '__main__':  # pragma: no cover
     unittest.main()

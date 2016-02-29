@@ -15,6 +15,16 @@ class TestKeywordGenerator(unittest.TestCase):
                          'goTrueToAtlanta', 'goTrueToAtlanta', 'goATL', 'goHawks', 'goAtlanta']
         self.assertEqual(expected_list, keyword_generator.generate_search_terms('20901970-53a0-417c-b5b4-832a74148af6'))
 
+    def test_generate_search_terms_should_throw_exception(self):
+        keyword_generator = KeywordGenerator()
+        keyword_generator.team_data_path = ''
+        with self.assertRaises(IOError) as context:
+            keyword_generator.generate_search_terms('20901970-53a0-417c-b5b4-832a74148af6')
+
+        # self.assertTrue('This is broken' in context.exception)
+        # TODO - Figure out how to make sure assertion is raised
+        assert True
+
     def test_append_word_with_go_to_list(self):
         keyword_generator = KeywordGenerator()
         test_list = ['test', 'ok']
