@@ -12,28 +12,32 @@ class KeywordGenerator:
         :param team_id: id of team, given by Stattleship API
         :return: returns list of key words
         """
-        # TODO - Add exception handler
-        with open(self.team_data_path, 'r') as f:
-            data = json.loads(f.read())
-        f.close()
+        try:
+            with open(self.team_data_path, 'r') as f:
+                data = json.loads(f.read())
+            f.close()
 
-        search_terms_list = []
-        team_data = data['teams']
-        for team in team_data:
-            if team['id'] == team_id:
-                if team['hashtag']:
-                    search_terms_list.append(team['hashtag'])
+            search_terms_list = []
+            team_data = data['teams']
+            for team in team_data:
+                if team['id'] == team_id:
+                    if team['hashtag']:
+                        search_terms_list.append(team['hashtag'])
 
-                for hashtag in team['hashtags']:
-                    search_terms_list.append(hashtag)
+                    for hashtag in team['hashtags']:
+                        search_terms_list.append(hashtag)
 
-                if team['nickname']:
-                    search_terms_list.append(team['nickname'])
-                if team['name']:
-                    search_terms_list.append(team['name'])
+                    if team['nickname']:
+                        search_terms_list.append(team['nickname'])
+                    if team['name']:
+                        search_terms_list.append(team['name'])
 
-        search_terms_list = self.append_word_with_go_to_list(search_terms_list)
-        return search_terms_list
+            search_terms_list = self.append_word_with_go_to_list(search_terms_list)
+            return search_terms_list
+
+        except IOError:
+            print 'File directory not found.'
+            raise IOError
 
     @staticmethod
     def append_word_with_go_to_list(word_list):

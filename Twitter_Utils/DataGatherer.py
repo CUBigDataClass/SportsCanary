@@ -53,6 +53,9 @@ class DataGatherer(StreamListener):
     def save_tweet_to_disk(self, tweet):  # pragma: no cover
         if not os.path.exists(self.get_base_directory_path()):
             os.makedirs(self.get_base_directory_path())
+        else:
+            print 'Error'
+            #TODO - Raise Exception
 
         with open(self.get_base_file_path(), 'a+b') as f:
             f.write(tweet)
