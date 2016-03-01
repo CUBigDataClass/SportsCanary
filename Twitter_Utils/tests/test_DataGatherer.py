@@ -30,6 +30,10 @@ class TestDataGatherer(unittest.TestCase):
         # self.assertEqual(expected, data_gatherer.on_status(status))
         assert True  # TODO: implement your test here
 
+    def test_create_feature_vector(self):
+        data_gatherer = DataGatherer()
+        expected = ['test','this']
+        self.assertEqual(expected, data_gatherer.create_feature_vector('test this'))
 
 if __name__ == '__main__': # pragma: no cover
     unittest.main()

@@ -67,7 +67,10 @@ class SportsData:
 
         res = requests.get(url, headers=headers)
         content = json.loads(res.content)
-        return self.create_players_log_object(content['players'])
+        if content['players']:
+            return self.create_players_log_object(content['players'])
+        else:
+            return False
 
     @staticmethod
     def create_players_log_object(data):
