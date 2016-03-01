@@ -76,5 +76,5 @@ class FeatureExtractor:
 
         return feature_vector
 
-f = FeatureExtractor()
-f.create_training_set()
+# f = FeatureExtractor()
+# f.create_training_set()

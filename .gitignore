@@ -11,7 +11,7 @@ __pycache__/
 Twitter_Utils/data/daily-logs/*
 Twitter_Utils/data/tweets/*
 Twitter_Utils/data/training_set.csv
-Twitter_Utils/data/training_set_short.csv
+#Twitter_Utils/data/training_set_short.csv
 Twitter_Utils/.pythoscope
 Gambling_Utils/.pythoscope
 .pythoscope
