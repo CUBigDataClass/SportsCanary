@@ -29,8 +29,8 @@ class KeywordGenerator:
 
                     if team['nickname']:
                         search_terms_list.append(team['nickname'])
-                    if team['name']:
-                        search_terms_list.append(team['name'])
+                    # if team['name']:
+                    #     search_terms_list.append(team['name'])
 
             search_terms_list = self.append_word_with_go_to_list(search_terms_list)
             return search_terms_list

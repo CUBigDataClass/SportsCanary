@@ -21,8 +21,7 @@ class SportsData:
 
     def get_nba_games_for_today(self):
         """Gets all games for today"""
-        # TODO - Change back to today rather than date with games
-        url = self.base_url + '/nba/games?on=February-18'
+        url = self.base_url + '/nba/games?on=today'
         headers = {
             'Authorization': str(self.STAT_ACCESS_TOKEN),
             'Accept': 'application/vnd.stattleship.com; version=1',
@@ -60,7 +59,6 @@ class SportsData:
         """Gets all players for today"""
         # TODO - Change back to today rather than date with games
         url = self.base_url + '/nba/game_logs?on=February-18'
-        # url = self.base_url + '/nba/players?on=February-18'
         headers = {
             'Authorization': str(self.STAT_ACCESS_TOKEN),
             'Accept': 'application/vnd.stattleship.com; version=1',
