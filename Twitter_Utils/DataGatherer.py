@@ -62,3 +62,12 @@ class DataGatherer(StreamListener):
             f.write(tweet)
             f.write('\n')
         f.close()
+
+    @staticmethod
+    def create_feature_vector(tweet):
+        feature_vector = []
+        words = tweet.split()
+        for word in words:
+            feature_vector.append(word)
+
+        return feature_vector

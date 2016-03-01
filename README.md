@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/CUBigDataClass/BigDataMonsters.svg?branch=master)](https://travis-ci.org/CUBigDataClass/BigDataMonsters)  [![Coverage Status](https://coveralls.io/repos/github/CUBigDataClass/BigDataMonsters/badge.svg?branch=master)](https://coveralls.io/github/CUBigDataClass/BigDataMonsters?branch=master)
+[![Coverage Status](https://coveralls.io/repos/github/CUBigDataClass/SportsCanary/badge.svg?branch=master)](https://coveralls.io/github/CUBigDataClass/SportsCanary?branch=master)
 
 #Sports Canary
 

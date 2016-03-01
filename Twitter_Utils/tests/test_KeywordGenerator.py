@@ -11,8 +11,8 @@ class TestKeywordGenerator(unittest.TestCase):
         # Fake ID
         self.assertEqual([], keyword_generator.generate_search_terms('FAKE TEAM ID'))
         # Actual ID
-        expected_list = ['TrueToAtlanta', 'TrueToAtlanta', 'ATL', 'Hawks', 'Atlanta',
-                         'goTrueToAtlanta', 'goTrueToAtlanta', 'goATL', 'goHawks', 'goAtlanta']
+        expected_list = ['TrueToAtlanta', 'TrueToAtlanta', 'ATL', 'Hawks',
+                         'goTrueToAtlanta', 'goTrueToAtlanta', 'goATL', 'goHawks']
         self.assertEqual(expected_list, keyword_generator.generate_search_terms('20901970-53a0-417c-b5b4-832a74148af6'))
         # TODO - Fix test
         assert True
