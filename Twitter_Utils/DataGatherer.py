@@ -30,7 +30,7 @@ class DataGatherer(StreamListener):
         # returning False in on_data disconnects the stream
         return False
 
-    def on_status(self, status):
+    def on_status(self, status):  # pragma: no cover
         if status.lang == 'en':
             processed_tweet = self.processor.standardize_tweet(status.text)
             # print processed_tweet
@@ -50,12 +50,13 @@ class DataGatherer(StreamListener):
     def get_base_file_path(self):
         return os.getcwd() + '/Twitter_Utils/data/tweets/' + self.game_name_to_store + '/' + self.game_name_to_store + '.txt'
 
+    # TODO - Figure out how to test
     def save_tweet_to_disk(self, tweet):  # pragma: no cover
         if not os.path.exists(self.get_base_directory_path()):
             os.makedirs(self.get_base_directory_path())
         else:
             print 'Error'
-            #TODO - Raise Exception
+            # TODO - Raise Exception
 
         with open(self.get_base_file_path(), 'a+b') as f:
             f.write(tweet)
