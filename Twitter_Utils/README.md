@@ -1,4 +1,4 @@
-###Big Data Monsters - Twitter Utilities
+###Sports Canary - Twitter Utilities
 
 
 ###Setup
@@ -34,7 +34,3 @@ Select the 'Corpora' tab and then download 'twitter_samples'
 $ py.test
 ```
 
-To generate test coverage:
-```
-py.test --cov=Twitter_Utils --cov-report=term-missing --cov-report=html
-```

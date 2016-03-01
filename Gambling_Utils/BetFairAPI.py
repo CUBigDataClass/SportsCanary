@@ -17,40 +17,57 @@ class OddsGeneration:
         self.BET_FAIR_PASSWORD = os.environ['BET_FAIR_PASSWORD']
         self.api_call_headers = {}
 
-    # TODO - We have to use a proxy to get this to work
+    def set_session_key_headers(self):
+        session_key_headers = {
+            'Accept': 'application/json',
+            'X-Application': self.APP_KEY_DELAYED
+        }
+        return session_key_headers
+
+    def set_data_for_session(self):
+        return 'username=' + self.BET_FAIR_USERNAME + '&password=' + self.BET_FAIR_PASSWORD
+
+    @staticmethod
+    def set_session_key_url():
+        return "https://identitysso.betfair.com/api/login"
+
+    @staticmethod
+    def create_urllib2_request(session_key_url, data, session_key_headers):
+        return urllib2.Request(session_key_url, data, session_key_headers)
+
     def get_session_key_and_set_headers(self):
         """
         Gets session key from betfair, these last 20 minutes and have to get regenerated.
         Additionally we have to create some sort of proxy for them since they hate Freedom.
         :return: session key
         """
-        session_key_headers = {
-            'Accept': 'application/json',
-            'X-Application': self.APP_KEY_DELAYED
-        }
-        data = 'username=' + self.BET_FAIR_USERNAME + '&password=' + self.BET_FAIR_PASSWORD
-        session_key_url = "https://identitysso.betfair.com/api/login"
+        session_key_headers = self.set_session_key_headers()
+        data = self.set_data_for_session()
+        session_key_url = self.set_session_key_url()
 
         try:
-            session_key_request = urllib2.Request(session_key_url, data, session_key_headers)
+            session_key_request = self.create_urllib2_request(session_key_url, data, session_key_headers)
             proxy = ProxyHandler()
             opener = proxy.url_request()
             session_key_response = opener.open(session_key_request)
             response = session_key_response.read()
             json_response = json.loads(response)
-            if json_response['status'] == 'SUCCESS':
-                print json_response['token']
-                self.BET_FAIR_SESSION_TOKEN = json_response['token']
-                self.api_call_headers = {'X-Application': self.APP_KEY_DELAYED,
-                                         'X-Authentication': self.BET_FAIR_SESSION_TOKEN,
-                                         'content-type': 'application/json'}
-            else:
-                return False
+            self.set_session_token_and_api_call_headers(json_response)
 
         except urllib2.HTTPError:
             print 'Oops no service available at ' + str(session_key_url)
         except urllib2.URLError:
             print 'No service found at ' + str(session_key_url)
+
+    def set_session_token_and_api_call_headers(self, json_response):
+        if json_response['status'] == 'SUCCESS':
+            self.BET_FAIR_SESSION_TOKEN = json_response['token']
+            self.api_call_headers = {'X-Application': self.APP_KEY_DELAYED,
+                                     'X-Authentication': self.BET_FAIR_SESSION_TOKEN,
+                                     'content-type': 'application/json'}
+            return json_response
+        else:
+            return False
 
     def call_api(self, json_request):
         """
