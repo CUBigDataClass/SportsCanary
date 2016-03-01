@@ -1,6 +1,8 @@
-import sys
+# TODO - Figure out how to test this
 
-for line in sys.stdin:
+import sys  # pragma: no cover
+
+for line in sys.stdin:  # pragma: no cover
     # remove leading and trailing whitespace
     line = line.strip()
     print '%s\t%s' % (line, 1)
