@@ -8,7 +8,7 @@
 __pycache__/
 *.py[cod]
 *$py.class
-Twitter_Utils/data/daily-logs/*
+#Twitter_Utils/data/daily-logs/*
 Twitter_Utils/data/tweets/*
 Twitter_Utils/.pythoscope
 Gambling_Utils/.pythoscope

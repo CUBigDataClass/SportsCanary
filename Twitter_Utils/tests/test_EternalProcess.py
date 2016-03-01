@@ -1,3 +1,4 @@
+import json
 import os
 import unittest
 import datetime
@@ -15,6 +16,17 @@ class TestEternalProcess(unittest.TestCase):
         self.end_times_list = []
         self.time_to_check_games_for_the_day = '09:30'
         self.data_gatherer = DataGatherer()
+
+        self.time_now = datetime.datetime.now()
+        path = self.eternalProcess.base_path + self.time_now.strftime('%Y-%m-%d') + '.json'
+        fo = open(path, 'w')
+        fo.write('[{"uuid": "4b2fb0bc-864c-4ede-be61-59ed14e1da50", "title": "Spurs vs Clippers",'
+                 '"start_time": "2016-02-18T17:18:00-08:00", "being_streamed": true, "home_team_id":'
+                 '"5bf2300f-777b-4caa-9ef3-3fda11f17ad1", "away_team_id": "ed803cc0-8e6e-4798-b5aa-9eecbc977801",'
+                 '"slug": "nba-2015-2016-sa-lac-2016-02-18-1930"}]')
+        fo.close()
+        # register remove function
+        self.addCleanup(os.remove, path)
 
     def test_check_if_stream_should_end(self):
         # Shouldn't end if there is no stream
@@ -45,21 +57,34 @@ class TestEternalProcess(unittest.TestCase):
         eternal_process.time_to_check_games_for_the_day = '04:14'
         self.assertEqual(False, eternal_process.is_time_to_get_game_data_for_day())
 
-    def test_write_days_games_data(self):
-        assert True
-
     def test_sleep_for(self):
+        eternal_process = EternalProcess()
+        time_now = datetime.datetime.now()
+        eternal_process.sleep_for(1)
+        time_now_plus_1 = datetime.datetime.now().strftime('%H:%M:%S')
+        time_now += datetime.timedelta(seconds=1)
+        time_now = time_now.strftime('%H:%M:%S')
+        self.assertEqual(time_now, time_now_plus_1)
+
+    def test_update_is_streamed_json(self):
+        eternal_process = EternalProcess()
+        eternal_process.update_is_streamed_json(0)
+        path = self.eternalProcess.base_path + self.time_now.strftime('%Y-%m-%d') + '.json'
+        json_file = open(path, 'r')
+        data = json.load(json_file)
+        self.assertEqual(True, data[0]['being_streamed'])
+
+    def test_update_is_streamed_throws_error(self):
+        eternal_process = EternalProcess()
+        eternal_process.base_path = ''
+        with self.assertRaises(IOError) as context:
+            eternal_process.update_is_streamed_json(0)
         assert True
 
-    # def test_start_process(self):
-    #     # eternal_process = EternalProcess()
-    #     # self.assertEqual(expected, eternal_process.start_process())
-    #     assert False # TODO: implement your test here
-    #
-    # def test_update_is_streamed_json(self):
-    #     # eternal_process = EternalProcess()
-    #     # self.assertEqual(expected, eternal_process.update_is_streamed_json(index))
-    #     assert False # TODO: implement your test here
+    def test_start_process(self):
+        # eternal_process = EternalProcess()
+        # self.assertEqual(expected, eternal_process.start_process())
+        assert True  # TODO: implement your test here
 
 if __name__ == '__main__':  # pragma: no cover
     unittest.main()

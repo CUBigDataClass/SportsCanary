@@ -9,11 +9,11 @@ class TestKeywordGenerator(unittest.TestCase):
     def test_generate_search_terms(self):
         keyword_generator = KeywordGenerator()
         # Fake ID
-        # self.assertEqual([], keyword_generator.generate_search_terms('FAKE TEAM ID'))
+        self.assertEqual([], keyword_generator.generate_search_terms('FAKE TEAM ID'))
         # Actual ID
         expected_list = ['TrueToAtlanta', 'TrueToAtlanta', 'ATL', 'Hawks', 'Atlanta',
                          'goTrueToAtlanta', 'goTrueToAtlanta', 'goATL', 'goHawks', 'goAtlanta']
-        # self.assertEqual(expected_list, keyword_generator.generate_search_terms('20901970-53a0-417c-b5b4-832a74148af6'))
+        self.assertEqual(expected_list, keyword_generator.generate_search_terms('20901970-53a0-417c-b5b4-832a74148af6'))
         # TODO - Fix test
         assert True
 
@@ -22,9 +22,6 @@ class TestKeywordGenerator(unittest.TestCase):
         keyword_generator.team_data_path = ''
         with self.assertRaises(IOError) as context:
             keyword_generator.generate_search_terms('20901970-53a0-417c-b5b4-832a74148af6')
-
-        # self.assertTrue('This is broken' in context.exception)
-        # TODO - Figure out how to make sure assertion is raised
         assert True
 
     def test_append_word_with_go_to_list(self):

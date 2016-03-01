@@ -22,7 +22,7 @@ class EternalProcess:
         self.stream_list = []
         self.end_times_list = []
 
-    def start_process(self):
+    def start_process(self):  # pragma: no cover
         """
         This process is our workhorse, it has to check if it should log games.
         It has to check if a game is starting and if that is the case, fork the process,
@@ -49,7 +49,6 @@ class EternalProcess:
                         game_time = dateutil.parser.parse(game['start_time']).strftime('%H:%M')
                         if game_time == current_time and not game['being_streamed']:
                             # TODO - Figure out how to call a fork or child process for a certain amount of time
-                            # TODO - Refactor this
                             self.update_is_streamed_json(index=idx)
                             print 'Time to get twitter data.'
 
@@ -68,6 +67,7 @@ class EternalProcess:
 
             except IOError:
                 print 'File not found'
+                # raise IOError
 
             # restart loop after sleep, given by our tick_time
             self.sleep_for(self.tick_time_in_seconds)
@@ -91,7 +91,9 @@ class EternalProcess:
             json_file.close()
             
         except IOError:
-                print 'File not found'
+            print 'File not found'
+            raise IOError
+
 
     @staticmethod
     def get_time_to_end_stream(minutes):
@@ -131,7 +133,7 @@ class EternalProcess:
         else:
             return False
 
-    def write_days_games_data(self):
+    def write_days_games_data(self):  # pragma: no cover
         write_path = self.get_write_path_for_days_games()
         data_to_write = self.sports_data.get_nba_games_for_today()
         try:
