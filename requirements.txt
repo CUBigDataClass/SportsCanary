@@ -6,3 +6,8 @@ pytest
 coveralls
 python-dateutil
 PySocks
+pyopenssl
+ndg-httpsclient
+pyasn1
+requests_oauthlib
+requests
