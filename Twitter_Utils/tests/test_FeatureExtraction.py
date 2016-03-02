@@ -29,7 +29,7 @@ class TestFeatureExtractor(unittest.TestCase):
         assert True # TODO: implement your test here
 
     def test_get_base_path_to_save_classifier(self):
-        expected = os.getcwd() + '/Twitter_Utils/data/NB.txt'
+        expected = os.getcwd() + '/Twitter_Utils/data/classifier.pickle'
         feature_extractor = FeatureExtraction.FeatureExtractor()
         self.assertEqual(expected, feature_extractor.get_base_path_to_save_classifier())
 
