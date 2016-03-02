@@ -13,7 +13,8 @@ class EternalProcess:
         self.sports_data = SportsData()
         self.keyword_generator = KeywordGenerator()
         self.tick_time_in_seconds = 60.0
-        self.time_to_check_games_for_the_day = '02:00'
+        self.time_prior_to_game_to_start_stream = 180
+        self.time_to_check_games_for_the_day = '16:45'
         self.base_path = os.getcwd() + '/Twitter_Utils/data/daily-logs/'
         self.APP_KEY = os.environ['TWITTER_APP_KEY']
         self.APP_SECRET = os.environ['TWITTER_APP_SECRET']
@@ -45,8 +46,9 @@ class EternalProcess:
                 with open(read_path) as f:
                     data = json.load(f)
                     current_time = datetime.datetime.now().strftime('%H:%M')
+                    print 'Current Time: ' + current_time
                     for idx, game in enumerate(data):
-                        game_time = dateutil.parser.parse(game['start_time']) - datetime.timedelta(minutes=180)
+                        game_time = dateutil.parser.parse(game['start_time']) - datetime.timedelta(minutes=self.time_prior_to_game_to_start_stream)
                         game_time = game_time.strftime('%H:%M')
                         print 'Game Time: ' + game_time
                         if game_time == current_time and not game['being_streamed']:
@@ -64,7 +66,7 @@ class EternalProcess:
                             data_gatherer = DataGatherer()
                             stream = data_gatherer.get_tweet_stream(keyword_string, game['uuid'], game_name)
                             self.stream_list.append(stream)
-                            self.end_times_list.append(self.get_time_to_end_stream(180))
+                            self.end_times_list.append(self.get_time_to_end_stream(self.time_prior_to_game_to_start_stream))
 
             except IOError:
                 print 'File not found'

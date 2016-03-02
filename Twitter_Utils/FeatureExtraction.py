@@ -1,5 +1,6 @@
 import csv
 import nltk
+import pickle
 import TweetProcessing
 import DataGatherer
 import os
@@ -41,7 +42,7 @@ class FeatureExtractor:
 
     @staticmethod
     def get_base_path_to_save_classifier():
-        return os.getcwd() + '/Twitter_Utils/data/NB.txt'
+        return os.getcwd() + '/Twitter_Utils/data/classifier.pickle'
 
     def remove_duplicates(self):
         self.feature_list = list(set(self.feature_list))
@@ -53,19 +54,35 @@ class FeatureExtractor:
             features['contains(%s)' % word] = (word in tweet_words)
         return features
 
+    def save_classifier(self, classifier):
+        print 'Saving new classifier.'
+        try:
+            f = open(self.get_base_path_to_save_classifier(), 'wb')
+            pickle.dump(classifier, f)
+            f.close()
+        except IOError:
+            print 'Error'
+            return False
+
+    def load_classifier(self):
+        try:
+            f = open(self.get_base_path_to_save_classifier(), 'rb')
+            classifier = pickle.load(f)
+            f.close()
+            return classifier
+        except IOError:
+            print 'No classifier was found.'
+            return None
+
     def create_training_set(self):
+        print 'Creating new classifier.'
         tweets = self.extract_feature()
         self.remove_duplicates()
         training_set = nltk.classify.util.apply_features(self.extract_features, tweets)
 
         naive_bayes_classifier = nltk.NaiveBayesClassifier.train(training_set)
-        with open(self.get_base_path_to_save_classifier(), 'w') as f:
-            f.write(str(naive_bayes_classifier))
-        f.close()
-
-        with open(os.getcwd() + '/Twitter_Utils/data/tweets/2016-02-16-Bulls-vs-Cavaliers/2016-02-16-Bulls-vs-Cavaliers.txt') as f:
-            for line in f:
-                print naive_bayes_classifier.classify(self.extract_features(self.create_feature_vector(line)))
+        self.save_classifier(naive_bayes_classifier)
+        return naive_bayes_classifier
 
     @staticmethod
     def create_feature_vector(tweet):
@@ -76,5 +93,14 @@ class FeatureExtractor:
 
         return feature_vector
 
-# f = FeatureExtractor()
-# f.create_training_set()
+    def analyze_tweets(self):
+        naive_bayes_classifier = self.load_classifier()
+        if naive_bayes_classifier is None:
+            naive_bayes_classifier = self.create_training_set()
+
+        with open(os.getcwd() + '/Twitter_Utils/data/tweets/2016-03-01-Hawks-vs-Warriors/2016-03-01-Hawks-vs-Warriors.txt') as f:
+            for line in f:
+                print naive_bayes_classifier.classify(self.extract_features(self.create_feature_vector(line)))
+
+k = FeatureExtractor()
+k.analyze_tweets()
