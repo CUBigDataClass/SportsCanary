@@ -101,6 +101,3 @@ class FeatureExtractor:
         with open(os.getcwd() + '/Twitter_Utils/data/tweets/2016-03-01-Hawks-vs-Warriors/2016-03-01-Hawks-vs-Warriors.txt') as f:
             for line in f:
                 print naive_bayes_classifier.classify(self.extract_features(self.create_feature_vector(line)))
-
-k = FeatureExtractor()
-k.analyze_tweets()
