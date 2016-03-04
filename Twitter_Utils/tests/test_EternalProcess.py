@@ -77,14 +77,17 @@ class TestEternalProcess(unittest.TestCase):
     def test_update_is_streamed_throws_error(self):
         eternal_process = EternalProcess()
         eternal_process.base_path = ''
-        with self.assertRaises(IOError) as context:
+        with self.assertRaises(IOError):
             eternal_process.update_is_streamed_json(0)
         assert True
 
-    def test_start_process(self):
-        # eternal_process = EternalProcess()
-        # self.assertEqual(expected, eternal_process.start_process())
-        assert True  # TODO: implement your test here
+    def test_create_keyword_string_for_game(self):
+        eternal_process = EternalProcess()
+        game = {'home_team_id': '20901970-53a0-417c-b5b4-832a74148af6',
+                'away_team_id': '1c65bbb6-bd10-4ef6-831a-89050d57fe16'}
+        expected = eternal_process.create_keyword_string_for_game(game)
+        self.assertEqual(expected, 'TrueToAtlanta,TrueToAtlanta,ATL,Hawks,goTrueToAtlanta,goTrueToAtlanta,goATL'
+                                   ',goHawks,Celtics,Celtics,Celtics,goCeltics,goCeltics,goCeltics')
 
 if __name__ == '__main__':  # pragma: no cover
     unittest.main()

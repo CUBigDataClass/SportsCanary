@@ -13,10 +13,10 @@ class DataGatherer(StreamListener):
 
     def __init__(self):
         super(DataGatherer, self).__init__()
-        self.APP_KEY = os.environ['TWITTER_APP_KEY']
-        self.APP_SECRET = os.environ['TWITTER_APP_SECRET']
-        self.OAUTH_TOKEN = os.environ['TWITTER_OAUTH_TOKEN']
-        self.OAUTH_TOKEN_SECRET = os.environ['TWITTER_OAUTH_TOKEN_SECRET']
+        self.APP_KEY = os.environ['TWITTER_APP_KEY_0']
+        self.APP_SECRET = os.environ['TWITTER_APP_SECRET_0']
+        self.OAUTH_TOKEN = os.environ['TWITTER_OAUTH_TOKEN_0']
+        self.OAUTH_TOKEN_SECRET = os.environ['TWITTER_OAUTH_TOKEN_SECRET_0']
         self.processor = TweetProcessor()
         self.game_id_to_store = ''
         self.game_name_to_store = ''

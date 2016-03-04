@@ -39,9 +39,11 @@ class TestFeatureExtractor(unittest.TestCase):
         self.assertEqual(expected, feature_extractor.get_base_training_file_path())
 
     def test_get_sentiment(self):
-        # feature_extractor = FeatureExtractor()
-        # self.assertEqual(expected, feature_extractor.get_sentiment())
-        assert True  # TODO: implement your test here
+        feature_extractor = FeatureExtraction.FeatureExtractor()
+        self.assertEqual('negative', feature_extractor.get_sentiment('0'))
+        self.assertEqual('neutral', feature_extractor.get_sentiment('2'))
+        self.assertEqual('positive', feature_extractor.get_sentiment('4'))
+        self.assertEqual('nil', feature_extractor.get_sentiment('-1'))
 
     def test_remove_duplicates(self):
         feature_extractor = FeatureExtraction.FeatureExtractor()

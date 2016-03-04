@@ -7,9 +7,9 @@ class TestOddsGeneration(unittest.TestCase):
         assert True  # TODO: implement your test here
 
     def test_call_api(self):
-        # odds_generation = OddsGeneration()
-        # self.assertEqual(expected, odds_generation.call_api(json_request))
-        assert True  # TODO: implement your test here
+        odds_generation = BetFairAPI.OddsGeneration()
+        json_request = event_type_req = '{"jsonrpc": "2.0", "method": "SportsAPING/v1.0/listEventTypes", "params": {"filter":{ }}, "id": 1}'
+        self.assertIsNotNone(odds_generation.call_api(json_request))
 
     def test_create_urllib2_request(self):
         odds_generation = BetFairAPI.OddsGeneration()
@@ -20,19 +20,18 @@ class TestOddsGeneration(unittest.TestCase):
         assert True
 
     def test_get_event_type_id_given_name(self):
-        # odds_generation = OddsGeneration()
-        # self.assertEqual(expected, odds_generation.get_event_type_id_given_name(requested_event_type_name))
-        assert True  # TODO: implement your test here
+        odds_generation = BetFairAPI.OddsGeneration()
+        self.assertEqual('7522', odds_generation.get_event_type_id_given_name('Basketball'))
 
-    def test_get_event_types(self):
-        # odds_generation = OddsGeneration()
-        # self.assertEqual(expected, odds_generation.get_event_types())
-        assert True  # TODO: implement your test here
+    # def test_get_event_types(self):
+    #     # odds_generation = OddsGeneration()
+    #     # self.assertEqual(expected, odds_generation.get_event_types())
+    #     assert True  # TODO: implement your test here
 
     def test_get_session_key_and_set_headers(self):
-        # odds_generation = OddsGeneration()
-        # self.assertEqual(expected, odds_generation.get_session_key_and_set_headers())
-        assert True  # TODO: implement your test here
+        odds_generation = BetFairAPI.OddsGeneration()
+        result = odds_generation.get_session_key_and_set_headers()
+        self.assertIsNot(False, result)
 
     def test_set_data_for_session(self):
         odds_generation = BetFairAPI.OddsGeneration()

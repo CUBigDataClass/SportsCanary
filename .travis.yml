@@ -1,12 +1,19 @@
 language: python
 python:
     - "2.7"
+
+addons:
+  ssh_known_hosts: 198.199.127.204
 before_install:
     - pip install pytest pytest-cov
     - pip install -r requirements.txt
     - pip install coveralls
     - python -m nltk.downloader stopwords
     - python -m nltk.downloader punkt
+    - sudo apt-get install sshpass
+
+before_script:
+  - sshpass -e ssh -D 8123 -f -C -q -N root@198.199.127.204
 script:
     - py.test --cov=Twitter_Utils --cov=Gambling_Utils --cov-report=term-missing --cov-report=html
 after_success:
