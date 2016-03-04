@@ -1,5 +1,6 @@
 import urllib2
 import socks
+import requests
 from sockshandler import SocksiPyHandler
 
 

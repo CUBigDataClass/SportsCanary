@@ -56,9 +56,10 @@ class SportsData:
         return list_of_games
 
     def get_nba_players_for_today(self):
-        """Gets all players for today"""
+        """ Gets results for games played already for the day, if no games
+            have been played then no results appear"""
         # TODO - Change back to today rather than date with games
-        url = self.base_url + '/nba/game_logs?on=today'
+        url = self.base_url + '/nba/game_logs?on=February-18'
         headers = {
             'Authorization': str(self.STAT_ACCESS_TOKEN),
             'Accept': 'application/vnd.stattleship.com; version=1',
@@ -67,6 +68,9 @@ class SportsData:
 
         res = requests.get(url, headers=headers)
         content = json.loads(res.content)
+        print content
+        if len(content['game_logs']) == 0:
+            return True
         if content['players']:
             return self.create_players_log_object(content['players'])
         else:

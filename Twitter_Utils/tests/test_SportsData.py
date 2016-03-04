@@ -37,11 +37,14 @@ class TestSportsData(unittest.TestCase):
 
     def test_create_players_log_object(self):
         # sports_data = SportsData()
+        # expected = sports_data.create_players_log_object()
         # self.assertEqual(expected, sports_data.create_players_log_object())
-        assert True # TODO: implement your test here
+        assert True  # TODO: implement your test here
 
     def test_get_nba_players_for_today(self):
-        assert True  # TODO: implement your test here
+        sports_data = SportsData()
+        result = sports_data.get_nba_players_for_today()
+        self.assertIsNot(False, result)
 
 if __name__ == '__main__':  # pragma: no cover
     unittest.main()

@@ -65,6 +65,7 @@ class OddsGeneration:
             self.api_call_headers = {'X-Application': self.APP_KEY_DELAYED,
                                      'X-Authentication': self.BET_FAIR_SESSION_TOKEN,
                                      'content-type': 'application/json'}
+            print self.BET_FAIR_SESSION_TOKEN
             return json_response
         else:
             return False
@@ -117,3 +118,6 @@ class OddsGeneration:
                     return event['eventType']['id']
         else:
             print 'Error trying to get event type id with name input.'
+
+# p = OddsGeneration()
+# p.get_session_key_and_set_headers()
