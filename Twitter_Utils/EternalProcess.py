@@ -30,7 +30,6 @@ class EternalProcess:
         And in that new process check for game data during the time period assigned to it.
         """
         print 50 * '*' + '\n' + 10 * '*' + '  STARTING SCANNING PROCESS   ' + 10 * '*' + '\n' + 50 * '*'
-
         while True:
             print str(self.stream_list) + str(self.end_times_list)
 
@@ -55,12 +54,8 @@ class EternalProcess:
                             self.update_is_streamed_json(index=idx)
                             print 'Time to get twitter data.'
 
-                            search_terms_home = self.keyword_generator.generate_search_terms(game['home_team_id'])
-                            search_terms_away = self.keyword_generator.generate_search_terms(game['away_team_id'])
-                            keyword_string_home = ','.join(search_terms_home)
-                            keyword_string_away = ','.join(search_terms_away)
+                            keyword_string = self.create_keyword_string(game)
 
-                            keyword_string = keyword_string_home + ',' + keyword_string_away
                             game_name = datetime.datetime.now().strftime('%Y-%m-%d') + '-' + game['title'].replace(' ', '-')
 
                             data_gatherer = DataGatherer()
@@ -73,6 +68,18 @@ class EternalProcess:
 
             # restart loop after sleep, given by our tick_time
             self.sleep_for(self.tick_time_in_seconds)
+
+    def create_keyword_string_for_game(self, game):
+        """
+        create string of keywords to pass into twitter filter.
+        :param game: game data, contains home and away team id
+        :return: string of keywords
+        """
+        search_terms_home = self.keyword_generator.generate_search_terms(game['home_team_id'])
+        search_terms_away = self.keyword_generator.generate_search_terms(game['away_team_id'])
+        keyword_string_home = ','.join(search_terms_home)
+        keyword_string_away = ','.join(search_terms_away)
+        return keyword_string_home + ',' + keyword_string_away
 
     def update_is_streamed_json(self, index):
         """
@@ -134,6 +141,7 @@ class EternalProcess:
         else:
             return False
 
+    # TODO - Figure out how to test this
     def write_days_games_data(self):  # pragma: no cover
         write_path = self.get_write_path_for_days_games()
         data_to_write = self.sports_data.get_nba_games_for_today()

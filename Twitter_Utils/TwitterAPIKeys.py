@@ -44,10 +44,11 @@ class TwitterAPIKeyHandler:
                         print entry
                         self.update_json_file(data, idx)
                         return idx
-            f.close()
+            # TODO - What do we do if none is found?
+            #f.close()
         except IOError:
             print 'File not found while checking which key to use in TwitterAPIKeys'
-            self.write_initial_keys_state_to_disk()
+            return self.write_initial_keys_state_to_disk()
 
     def clear_api_key_at_index_for_use(self, index):
         """
@@ -60,10 +61,9 @@ class TwitterAPIKeyHandler:
                 if data[index]['in_use']:
                     self.update_json_file(data, index)
                     return True
-            f.close()
         except IOError:
             print 'File not found while clearing key for use in TwitterAPIKeys'
-            return False
+            raise IOError
 
     def update_json_file(self, json_file, index):
         """
@@ -107,5 +107,5 @@ class TwitterAPIKeyHandler:
             print 'Key file written'
             return True
         except IOError:
-            print 'File not found while writing initial key state to disk in TwitterAPIKeys'
+            print 'IOError while writing initial key state to disk in TwitterAPIKeys'
             return False
