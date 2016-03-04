@@ -56,8 +56,10 @@ class OddsGeneration:
 
         except urllib2.HTTPError:
             print 'Oops no service available at ' + str(session_key_url)
+            assert urllib2.HTTPError
         except urllib2.URLError:
             print 'No service found at ' + str(session_key_url)
+            assert urllib2.URLError
 
     def set_session_token_and_api_call_headers(self, json_response):
         if json_response['status'] == 'SUCCESS':
@@ -66,7 +68,7 @@ class OddsGeneration:
                                      'X-Authentication': self.BET_FAIR_SESSION_TOKEN,
                                      'content-type': 'application/json'}
             print self.BET_FAIR_SESSION_TOKEN
-            return json_response
+            return self.BET_FAIR_SESSION_TOKEN
         else:
             return False
 
