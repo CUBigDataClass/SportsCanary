@@ -16,10 +16,10 @@ class EternalProcess:
         self.time_prior_to_game_to_start_stream = 180
         self.time_to_check_games_for_the_day = '16:45'
         self.base_path = os.getcwd() + '/Twitter_Utils/data/daily-logs/'
-        self.APP_KEY = os.environ['TWITTER_APP_KEY']
-        self.APP_SECRET = os.environ['TWITTER_APP_SECRET']
-        self.OAUTH_TOKEN = os.environ['TWITTER_OAUTH_TOKEN']
-        self.OAUTH_TOKEN_SECRET = os.environ['TWITTER_OAUTH_TOKEN_SECRET']
+        self.APP_KEY = os.environ['TWITTER_APP_KEY_0']
+        self.APP_SECRET = os.environ['TWITTER_APP_SECRET_0']
+        self.OAUTH_TOKEN = os.environ['TWITTER_OAUTH_TOKEN_0']
+        self.OAUTH_TOKEN_SECRET = os.environ['TWITTER_OAUTH_TOKEN_SECRET_0']
         self.stream_list = []
         self.end_times_list = []
 
