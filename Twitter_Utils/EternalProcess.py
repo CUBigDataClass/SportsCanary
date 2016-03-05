@@ -12,15 +12,17 @@ class EternalProcess:
     def __init__(self):
         self.sports_data = SportsData()
         self.keyword_generator = KeywordGenerator()
+        self.data_gatherer = DataGatherer()
         self.tick_time_in_seconds = 60.0
-        self.time_prior_to_game_to_start_stream = 180
-        self.time_to_check_games_for_the_day = '16:45'
+        self.time_prior_to_game_to_start_stream = 168
+        self.time_to_check_games_for_the_day = '15:34'
         self.base_path = os.getcwd() + '/Twitter_Utils/data/daily-logs/'
         self.APP_KEY = os.environ['TWITTER_APP_KEY_0']
         self.APP_SECRET = os.environ['TWITTER_APP_SECRET_0']
         self.OAUTH_TOKEN = os.environ['TWITTER_OAUTH_TOKEN_0']
         self.OAUTH_TOKEN_SECRET = os.environ['TWITTER_OAUTH_TOKEN_SECRET_0']
         self.stream_list = []
+        self.api_key_index_list = []
         self.end_times_list = []
 
     def start_process(self):  # pragma: no cover
@@ -34,6 +36,7 @@ class EternalProcess:
             print str(self.stream_list) + str(self.end_times_list)
 
             self.check_if_stream_should_end()
+            # TODO - If stream ends, map reduce tweets, then analyze them.
 
             if self.is_time_to_get_game_data_for_day:
                 self.write_days_games_data()
@@ -54,14 +57,15 @@ class EternalProcess:
                             self.update_is_streamed_json(index=idx)
                             print 'Time to get twitter data.'
 
-                            keyword_string = self.create_keyword_string(game)
+                            keyword_string = self.create_keyword_string_for_game(game)
 
                             game_name = datetime.datetime.now().strftime('%Y-%m-%d') + '-' + game['title'].replace(' ', '-')
 
-                            data_gatherer = DataGatherer()
-                            stream = data_gatherer.get_tweet_stream(keyword_string, game['uuid'], game_name)
-                            self.stream_list.append(stream)
-                            self.end_times_list.append(self.get_time_to_end_stream(self.time_prior_to_game_to_start_stream))
+                            self.data_gatherer = DataGatherer()
+                            stream_index = self.data_gatherer.get_tweet_stream(keyword_string, game['uuid'], game_name)
+                            self.stream_list.append(stream_index[0])
+                            self.api_key_index_list.append(stream_index[1])
+                            self.end_times_list.append(self.get_time_to_end_stream(5))
 
             except IOError:
                 print 'File not found'
@@ -98,7 +102,7 @@ class EternalProcess:
             json_file = open(read_path, 'w+')
             json_file.write(json.dumps(data))
             json_file.close()
-            
+
         except IOError:
             print 'File not found'
             raise IOError
@@ -124,6 +128,8 @@ class EternalProcess:
                     stream = self.stream_list[i]
                     print 'Stopping: ' + str(stream)
                     stream.disconnect()
+                    self.data_gatherer.key_handler.clear_api_key_at_index_for_use(self.api_key_index_list[i])
+                    del self.api_key_index_list[i]
                     del self.stream_list[i]
                     del self.end_times_list[i]
                     did_delete = True
