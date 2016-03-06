@@ -1,4 +1,5 @@
 from TweetProcessing import TweetProcessor
+from TwitterAPIKeys import TwitterAPIKeyHandler
 import os
 from tweepy.streaming import StreamListener
 from tweepy import OAuthHandler
@@ -18,14 +19,25 @@ class DataGatherer(StreamListener):
         self.OAUTH_TOKEN = os.environ['TWITTER_OAUTH_TOKEN_0']
         self.OAUTH_TOKEN_SECRET = os.environ['TWITTER_OAUTH_TOKEN_SECRET_0']
         self.processor = TweetProcessor()
+        self.key_handler = TwitterAPIKeyHandler()
+        self.key_array = self.key_handler.get_api_keys_from_environment()
         self.game_id_to_store = ''
         self.game_name_to_store = ''
         self.auth = OAuthHandler(self.APP_KEY, self.APP_SECRET)
         self.auth.set_access_token(self.OAUTH_TOKEN, self.OAUTH_TOKEN_SECRET)
         self.api = API(self.auth)
 
+    def get_auth(self):
+        index = self.key_handler.check_which_key_to_use()
+        if index:
+            self.auth = OAuthHandler(self.key_array[index]['app_key'], self.key_array[index]['app_secret'])
+            self.auth.set_access_token(self.key_array[index]['oauth_token'], self.key_array[index]['oauth_token_secret'])
+            return index
+        else:
+            return False
+
     def on_error(self, status_code):
-        print 'ERROR: ' + str(status_code)
+        print('ERROR: ' + str(status_code))
         # if status_code == 420:
         # returning False in on_data disconnects the stream
         return False
@@ -37,12 +49,17 @@ class DataGatherer(StreamListener):
             self.save_tweet_to_disk(processed_tweet)
 
     def get_tweet_stream(self, track, game_id, game_name):
+        index = self.get_auth()
+        # if index:
+        print('Using auth: ' + str(self.auth))
         stream = Stream(self.auth, self)
         self.game_id_to_store = game_id
         self.game_name_to_store = game_name
-        print 'TRACK: ' + track
+        print('TRACK: ' + track)
         stream.filter(track=[track], async=True)
-        return stream
+        return (stream, index)
+        # else:
+        #     print('No valid key found')
 
     def get_base_directory_path(self):
         return os.getcwd() + '/Twitter_Utils/data/tweets/' + self.game_name_to_store
