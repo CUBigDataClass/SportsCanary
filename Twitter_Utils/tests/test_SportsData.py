@@ -1,5 +1,3 @@
-import simplejson as json
-import os
 import unittest
 from Twitter_Utils.SportsData import SportsData
 

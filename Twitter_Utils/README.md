@@ -19,6 +19,7 @@ Then, either load a new bash prompt or run
 source ~/.bashrc
 ```
 
+If that does not work, copy the all the auth variables to the utils.env file
 
 ###NLTK Setup
 Make sure you've installed the requirements prior to this step.
