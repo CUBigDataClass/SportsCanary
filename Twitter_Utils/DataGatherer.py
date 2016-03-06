@@ -1,10 +1,11 @@
 from TweetProcessing import TweetProcessor
-import os
+from TwitterAPIKeys import TwitterAPIKeyHandler
 from tweepy.streaming import StreamListener
 from tweepy import OAuthHandler
 from tweepy import Stream
 from tweepy import API
 from Eternal_Utils.CommonUtils import CommonUtils
+import os
 
 
 class DataGatherer(StreamListener):
@@ -14,16 +15,27 @@ class DataGatherer(StreamListener):
 
     def __init__(self):
         super(DataGatherer, self).__init__()
-        self.APP_KEY = ['TWITTER_APP_KEY']
+        self.APP_KEY = CommonUtils.get_environ_variable('TWITTER_APP_KEY')
         self.APP_SECRET = CommonUtils.get_environ_variable('TWITTER_APP_SECRET_0')
         self.OAUTH_TOKEN = CommonUtils.get_environ_variable('TWITTER_OAUTH_TOKEN_0')
         self.OAUTH_TOKEN_SECRET = CommonUtils.get_environ_variable('TWITTER_OAUTH_TOKEN_SECRET_0')
         self.processor = TweetProcessor()
+        self.key_handler = TwitterAPIKeyHandler()
+        self.key_array = self.key_handler.get_api_keys_from_environment()
         self.game_id_to_store = ''
         self.game_name_to_store = ''
         self.auth = OAuthHandler(self.APP_KEY, self.APP_SECRET)
         self.auth.set_access_token(self.OAUTH_TOKEN, self.OAUTH_TOKEN_SECRET)
         self.api = API(self.auth)
+
+    def get_auth(self):
+        index = self.key_handler.check_which_key_to_use()
+        if index:
+            self.auth = OAuthHandler(self.key_array[index]['app_key'], self.key_array[index]['app_secret'])
+            self.auth.set_access_token(self.key_array[index]['oauth_token'], self.key_array[index]['oauth_token_secret'])
+            return index
+        else:
+            return False
 
     def on_error(self, status_code):
         print 'ERROR: ' + str(status_code)
@@ -38,12 +50,14 @@ class DataGatherer(StreamListener):
             self.save_tweet_to_disk(processed_tweet)
 
     def get_tweet_stream(self, track, game_id, game_name):
+        index = self.get_auth()
+        print('Using auth: ' + str(self.auth.consumer_key))
         stream = Stream(self.auth, self)
         self.game_id_to_store = game_id
         self.game_name_to_store = game_name
         print 'TRACK: ' + track
         stream.filter(track=[track], async=True)
-        return stream
+        return stream, index
 
     def get_base_directory_path(self):
         wd = os.getcwd()

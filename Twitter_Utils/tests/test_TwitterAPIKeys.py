@@ -37,7 +37,7 @@ class TestTwitterAPIKeyHandler(unittest.TestCase):
         path = twitter_api_key.key_check_write_path
         os.remove(path)
         expected = twitter_api_key.check_which_key_to_use()
-        self.assertTrue(expected)
+        self.assertIs(expected, 0)
 
     def test_clear_api_key_at_index_for_use(self):
         twitter_api_key_handler = TwitterAPIKeys.TwitterAPIKeyHandler()
