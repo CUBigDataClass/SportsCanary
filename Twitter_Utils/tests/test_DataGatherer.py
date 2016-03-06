@@ -11,14 +11,25 @@ class TestDataGatherer(unittest.TestCase):
     def test_get_base_directory_path(self):
         data_gatherer = DataGatherer()
         data_gatherer.game_name_to_store = ''
-
-        path = os.getcwd() + '/Twitter_Utils/data/tweets/'
+        wd = os.getcwd()
+        pos = wd.find("BigDataMonsters")
+        if pos > 0:
+            path = wd[0:pos+15]
+        else:
+            path = wd
+        path += '/Twitter_Utils/data/tweets/'
         self.assertEqual(path, data_gatherer.get_base_directory_path())
 
     def test_get_base_file_path(self):
         data_gatherer = DataGatherer()
         data_gatherer.game_name_to_store = '1'
-        path = os.getcwd() + '/Twitter_Utils/data/tweets/1/1.txt'
+        wd = os.getcwd()
+        pos = wd.find("BigDataMonsters")
+        if pos > 0:
+            path = wd[0:pos+15]
+        else:
+            path = wd
+        path += '/Twitter_Utils/data/tweets/1/1.txt'
         self.assertEqual(path, data_gatherer.get_base_file_path())
 
     def test_on_error(self):

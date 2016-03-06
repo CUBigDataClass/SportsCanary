@@ -1,8 +1,8 @@
-import os
 import urllib2
 import json
-
-import datetime
+from Eternal_Utils.CommonUtils import CommonUtils
+from Gambling_Utils.Games import Games
+from Gambling_Utils.Game import Game
 
 from Proxy import ProxyHandler
 
@@ -10,11 +10,11 @@ from Proxy import ProxyHandler
 class OddsGeneration:
     def __init__(self):
         self.api_base_url = 'https://api.betfair.com/exchange/betting/json-rpc/v1'
-        self.APP_KEY_DELAYED = os.environ['BET_FAIR_APP_KEY_DELAYED']
-        self.APP_KEY = os.environ['BET_FAIR_APP_KEY_NONDELAYED']
-        self.BET_FAIR_SESSION_TOKEN = ''
-        self.BET_FAIR_USERNAME = os.environ['BET_FAIR_USERNAME']
-        self.BET_FAIR_PASSWORD = os.environ['BET_FAIR_PASSWORD']
+        self.APP_KEY_DELAYED = CommonUtils.get_environ_variable('BET_FAIR_APP_KEY_DELAYED')
+        self.APP_KEY = CommonUtils.get_environ_variable('BET_FAIR_APP_KEY_NONDELAYED')
+        self.BET_FAIR_SESSION_TOKEN = CommonUtils.get_environ_variable('BET_FAIR_SESSION_TOKEN')
+        self.BET_FAIR_USERNAME = CommonUtils.get_environ_variable('BET_FAIR_USERNAME')
+        self.BET_FAIR_PASSWORD = CommonUtils.get_environ_variable('BET_FAIR_PASSWORD')
         self.api_call_headers = {}
 
     def set_session_key_headers(self):
@@ -67,7 +67,6 @@ class OddsGeneration:
             self.api_call_headers = {'X-Application': self.APP_KEY_DELAYED,
                                      'X-Authentication': self.BET_FAIR_SESSION_TOKEN,
                                      'content-type': 'application/json'}
-            print self.BET_FAIR_SESSION_TOKEN
             return self.BET_FAIR_SESSION_TOKEN
         else:
             return False
@@ -90,36 +89,60 @@ class OddsGeneration:
         except urllib2.URLError:
             print 'No service found at ' + str(self.api_base_url)
 
-    def get_event_types(self):
+    def get_list_events_filtered(self, game):
         """
-        Gets information for event types that bet-fair handles
-        :return: returns json of events
+        This method gives out the list of games filtered by the given pattern
+        :param game : game name pattern to search for :
+        :return json response (list of such games) from API:
         """
-        event_type_req = '{"jsonrpc": "2.0", "method": "SportsAPING/v1.0/listEventTypes", "params": {"filter":{ }}, "id": 1}'
-        print 'Calling listEventTypes to get event Type ID'
+        self.get_session_key_and_set_headers()
+        json_request = '[{ "jsonrpc": "2.0", "method": "SportsAPING/v1.0/listEventTypes", ' \
+                       '"params": { "filter": { "textQuery":"' + game + '" } },"id": 1}]'
+        response = self.call_api(json_request)
+        events = json.loads(response)
+        return events
+
+    def get_particular_event_list(self, game_id, game_start_from, game_end_at):
+        """
+        method to obtain game information based on game_id
+        :param game_start_from: filter start date with time
+        :param game_end_at: filter end date with time
+        :param game_id: id of the game in the Betfair APT db.
+        Id of the game can be found out from get_list_events_filtered method
+        :return game information of that particular game:
+        """
+        event_type_req = '[{"jsonrpc": "2.0","method": "SportsAPING/v1.0/listEvents","params": ' \
+                         '{"filter": {"eventTypeIds": ["' + game_id + '"], "marketStartTime": {"from": ' \
+                         '"' + game_start_from + '","to": "' + game_end_at + '"}}},"id": 1}]'
         response = self.call_api(event_type_req)
-        event_types_json = json.loads(response)
-    
+        event_list_json = json.loads(response)
+
         try:
-            event_types = event_types_json['result']
-            return event_types
-        except:
-            print 'Error while trying to get event types: ' + str(event_types_json['error'])
+            event_list = event_list_json[0]['result']
+            return event_list
+        except KeyError:
+            print 'Error while trying to get event types: ' + str(event_list_json['error'])
 
-    def get_event_type_id_given_name(self, requested_event_type_name):
+    def get_games(self, game_name, start_time, end_time):
         """
-        Input name get back event id
-        :param requested_event_type_name:
-        :return: id of event
+        :param game_name: name of the name to be queried on BetFair
+        :param start_time: query time range start
+        :param end_time: query time range end
+        :return: list of game events
         """
-        event_types = self.get_event_types()
-        if event_types is not None:
-            for event in event_types:
-                event_type_name = event['eventType']['name']
-                if event_type_name == requested_event_type_name:
-                    return event['eventType']['id']
-        else:
-            print 'Error trying to get event type id with name input.'
+        response = self.get_list_events_filtered(game_name)
+        try:
+            game_events = []
+            for r in response[0]["result"]:
+                game_events += [Game(r)]
 
-# p = OddsGeneration()
-# p.get_session_key_and_set_headers()
+            for g in game_events:
+                bb_game_list = self.get_particular_event_list(g.id, start_time, end_time)
+                for i in range(len(bb_game_list)):
+                    game_detail = Games(bb_game_list[i])
+                    g.add_games(game_detail)
+
+            return game_events
+        except KeyError:
+            print 'Error accumulating games' + str(response['error'])
+

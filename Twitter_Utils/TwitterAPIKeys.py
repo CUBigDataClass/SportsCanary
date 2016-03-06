@@ -5,8 +5,14 @@ import os
 class TwitterAPIKeyHandler:
     def __init__(self):
         self.api_key_array = []
-        self.number_of_keys = 5
-        self.key_check_write_path = os.getcwd() + '/Twitter_Utils/data/Active_API_Log.json'
+        self.number_of_keys = 2
+        wd = os.getcwd()
+        pos = wd.find("BigDataMonsters")
+        if pos > 0:
+            path = wd[0:pos+15]
+        else:
+            path = wd
+        self.key_check_write_path = path + '/Twitter_Utils/data/Active_API_Log.json'
 
     def get_api_keys_from_environment(self):
         """
@@ -45,7 +51,7 @@ class TwitterAPIKeyHandler:
                         self.update_json_file(data, idx)
                         return idx
             # TODO - What do we do if none is found?
-                return False
+            #f.close()
         except IOError:
             print 'File not found while checking which key to use in TwitterAPIKeys'
             return self.write_initial_keys_state_to_disk()

@@ -39,11 +39,23 @@ class FeatureExtractor:
 
     @staticmethod
     def get_base_training_file_path():
-        return os.getcwd() + '/Twitter_Utils/data/training_set_short.csv'
+        wd = os.getcwd()
+        pos = wd.find("BigDataMonsters")
+        if pos > 0:
+            path = wd[0:pos+15]
+        else:
+            path = wd
+        return path + '/Twitter_Utils/data/training_set_short.csv'
 
     @staticmethod
     def get_base_path_to_save_classifier():
-        return os.getcwd() + '/Twitter_Utils/data/classifier.pickle'
+        wd = os.getcwd()
+        pos = wd.find("BigDataMonsters")
+        if pos > 0:
+            path = wd[0:pos+15]
+        else:
+            path = wd
+        return path + '/Twitter_Utils/data/classifier.pickle'
 
     def remove_duplicates(self):
         self.feature_list = list(set(self.feature_list))
@@ -98,8 +110,13 @@ class FeatureExtractor:
         naive_bayes_classifier = self.load_classifier()
         if naive_bayes_classifier is None:
             naive_bayes_classifier = self.train_naive_bayes_classifier()
-
-        with open(os.getcwd() + '/Twitter_Utils/data/tweets/2016-03-01-Hawks-vs-Warriors/2016-03-01-Hawks-vs-Warriors.txt') as f:
+        wd = os.getcwd()
+        pos = wd.find("BigDataMonsters")
+        if pos > 0:
+            path = wd[0:pos+15]
+        else:
+            path = wd
+        with open(path + '/Twitter_Utils/data/tweets/2016-03-01-Hawks-vs-Warriors/2016-03-01-Hawks-vs-Warriors.txt') as f:
             for line in f:
                 print naive_bayes_classifier.classify(self.extract_features(self.create_feature_vector(line)))
 

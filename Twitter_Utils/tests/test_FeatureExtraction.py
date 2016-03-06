@@ -29,12 +29,24 @@ class TestFeatureExtractor(unittest.TestCase):
         assert True # TODO: implement your test here
 
     def test_get_base_path_to_save_classifier(self):
-        expected = os.getcwd() + '/Twitter_Utils/data/classifier.pickle'
+        wd = os.getcwd()
+        pos = wd.find("BigDataMonsters")
+        if pos > 0:
+            path = wd[0:pos+15]
+        else:
+            path = wd
+        expected = path + '/Twitter_Utils/data/classifier.pickle'
         feature_extractor = FeatureExtraction.FeatureExtractor()
         self.assertEqual(expected, feature_extractor.get_base_path_to_save_classifier())
 
     def test_get_base_training_file_path(self):
-        expected = os.getcwd() + '/Twitter_Utils/data/training_set_short.csv'
+        wd = os.getcwd()
+        pos = wd.find("BigDataMonsters")
+        if pos > 0:
+            path = wd[0:pos+15]
+        else:
+            path = wd
+        expected = path + '/Twitter_Utils/data/training_set_short.csv'
         feature_extractor = FeatureExtraction.FeatureExtractor()
         self.assertEqual(expected, feature_extractor.get_base_training_file_path())
 
