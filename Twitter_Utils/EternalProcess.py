@@ -128,7 +128,7 @@ class EternalProcess:
                     stream = self.stream_list[i]
                     print 'Stopping: ' + str(stream)
                     stream.disconnect()
-                    self.data_gatherer.key_handler.clear_api_key_at_index_for_use(self.api_key_index_list[i])
+                    self.data_gatherer.key_handler.clear_api_key_at_index_for_use(index=self.api_key_index_list[i])
                     del self.api_key_index_list[i]
                     del self.stream_list[i]
                     del self.end_times_list[i]

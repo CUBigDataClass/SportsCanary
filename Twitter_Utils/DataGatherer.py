@@ -57,7 +57,7 @@ class DataGatherer(StreamListener):
         self.game_name_to_store = game_name
         print('TRACK: ' + track)
         stream.filter(track=[track], async=True)
-        return stream, index
+        return (stream, index)
         # else:
         #     print('No valid key found')
 

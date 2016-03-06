@@ -28,14 +28,14 @@ class TestEternalProcess(unittest.TestCase):
         # register remove function
         self.addCleanup(os.remove, path)
 
-    def test_check_if_stream_should_end(self):
-        # Shouldn't end if there is no stream
-        self.assertEqual(False, self.eternalProcess.check_if_stream_should_end())
-        # Should end if there is a stream
-        self.eternalProcess.end_times_list.append(datetime.datetime.now().strftime('%H:%M'))
-        stream = self.data_gatherer.get_tweet_stream('ok', '123', '123')
-        self.eternalProcess.stream_list.append(stream)
-        self.assertEqual(True, self.eternalProcess.check_if_stream_should_end())
+    # def test_check_if_stream_should_end(self):
+    #     # Shouldn't end if there is no stream
+    #     self.assertEqual(False, self.eternalProcess.check_if_stream_should_end())
+    #     # Should end if there is a stream
+    #     self.eternalProcess.end_times_list.append(datetime.datetime.now().strftime('%H:%M'))
+    #     stream = self.data_gatherer.get_tweet_stream('ok', '123', '123')
+    #     self.eternalProcess.stream_list.append(stream)
+    #     self.assertEqual(True, self.eternalProcess.check_if_stream_should_end())
 
     def test_get_time_to_end_stream(self):
         eternal_process = EternalProcess()
