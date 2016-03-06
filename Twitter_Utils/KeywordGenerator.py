@@ -6,7 +6,10 @@ class KeywordGenerator:
     def __init__(self):
         wd = os.getcwd()
         pos = wd.find("BigDataMonsters")
-        path = wd[0:pos+15]
+        if pos > 0:
+            path = wd[0:pos+15]
+        else:
+            path = wd
         self.team_data_path = path + '/Twitter_Utils/data/teams-data.json'
 
     def generate_search_terms(self, team_id):

@@ -48,7 +48,10 @@ class TestEternalProcess(unittest.TestCase):
         eternal_process = EternalProcess()
         wd = os.getcwd()
         pos = wd.find("BigDataMonsters")
-        path = wd[0:pos+15]
+        if pos > 0:
+            path = wd[0:pos+15]
+        else:
+            path = wd
         base = path + '/Twitter_Utils/data/daily-logs/'
         end = datetime.datetime.now().strftime('%Y-%m-%d') + '.json'
         self.assertEqual(base + end, eternal_process.get_write_path_for_days_games())
