@@ -23,7 +23,6 @@ class FeatureExtractor:
             feature_vector = self.data_gatherer.create_feature_vector(processed_tweet)
             self.feature_list.extend(feature_vector)
             tweets.append((feature_vector, sentiment))
-            # print tweets
         return tweets
 
     @staticmethod
@@ -41,7 +40,7 @@ class FeatureExtractor:
     def get_base_training_file_path():
         wd = os.getcwd()
         pos = wd.find("BigDataMonsters")
-        if pos > 0:
+        if pos > 0:  # pragma: No cover
             path = wd[0:pos+15]
         else:
             path = wd
@@ -51,7 +50,7 @@ class FeatureExtractor:
     def get_base_path_to_save_classifier():
         wd = os.getcwd()
         pos = wd.find("BigDataMonsters")
-        if pos > 0:
+        if pos > 0:  # pragma: No cover
             path = wd[0:pos+15]
         else:
             path = wd
@@ -61,13 +60,17 @@ class FeatureExtractor:
         self.feature_list = list(set(self.feature_list))
 
     def extract_features(self, tweet):
-        tweet_words = set(tweet)
+        # tweet_words = set(tweet)
+        tweet_words = tweet.split()
+        print tweet_words
         features = {}
         for word in self.feature_list:
             features['contains(%s)' % word] = (word in tweet_words)
+
+        print features
         return features
 
-    def save_classifier(self, classifier):
+    def save_classifier(self, classifier):  # pragma: No cover
         print 'Saving new classifier.'
         try:
             f = open(self.get_base_path_to_save_classifier(), 'wb')
@@ -77,7 +80,7 @@ class FeatureExtractor:
             print 'Error'
             return False
 
-    def load_classifier(self):
+    def load_classifier(self):  # pragma: No cover
         try:
             f = open(self.get_base_path_to_save_classifier(), 'rb')
             classifier = pickle.load(f)
@@ -87,7 +90,7 @@ class FeatureExtractor:
             print 'No classifier was found.'
             return None
 
-    def train_naive_bayes_classifier(self):
+    def train_naive_bayes_classifier(self):  # pragma: No cover
         print 'Creating new classifier.'
         tweets = self.create_tweets_list_with_sentiment()
         self.remove_duplicates()
@@ -106,7 +109,7 @@ class FeatureExtractor:
 
         return feature_vector
 
-    def analyze_tweets(self):
+    def analyze_tweets(self):  # pragma: No cover
         naive_bayes_classifier = self.load_classifier()
         if naive_bayes_classifier is None:
             naive_bayes_classifier = self.train_naive_bayes_classifier()

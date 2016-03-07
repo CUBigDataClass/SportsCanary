@@ -21,5 +21,5 @@ class TestGame(unittest.TestCase):
         # self.assertEqual(expected, game.clear_game())
         assert True # TODO: implement your test here
 
-if __name__ == '__main__':
+if __name__ == '__main__':  # pragma: no cover
     unittest.main()

@@ -14,8 +14,6 @@ class TestKeywordGenerator(unittest.TestCase):
         expected_list = ['TrueToAtlanta', 'TrueToAtlanta', 'ATL', 'Hawks',
                          'goTrueToAtlanta', 'goTrueToAtlanta', 'goATL', 'goHawks']
         self.assertEqual(expected_list, keyword_generator.generate_search_terms('20901970-53a0-417c-b5b4-832a74148af6'))
-        # TODO - Fix test
-        assert True
 
     def test_generate_search_terms_should_throw_exception(self):
         keyword_generator = KeywordGenerator()
