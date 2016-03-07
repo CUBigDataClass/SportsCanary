@@ -54,12 +54,12 @@ class OddsGeneration:
             json_response = json.loads(response)
             self.set_session_token_and_api_call_headers(json_response)
 
-        except urllib2.HTTPError:
+        except urllib2.HTTPError:  # pragma: no cover
             print 'Oops no service available at ' + str(session_key_url)
-            assert urllib2.HTTPError
-        except urllib2.URLError:
+            raise urllib2.HTTPError
+        except urllib2.URLError:  # pragma: no cover
             print 'No service found at ' + str(session_key_url)
-            assert urllib2.URLError
+            raise urllib2.URLError
 
     def set_session_token_and_api_call_headers(self, json_response):
         if json_response['status'] == 'SUCCESS':

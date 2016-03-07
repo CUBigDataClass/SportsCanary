@@ -5,8 +5,7 @@ from Twitter_Utils.DataGatherer import DataGatherer
 
 class TestDataGatherer(unittest.TestCase):
     def test___init__(self):
-        # data_gatherer = DataGatherer()
-        assert True  # TODO: implement your test here
+        assert True
 
     def test_get_base_directory_path(self):
         data_gatherer = DataGatherer()
@@ -45,6 +44,13 @@ class TestDataGatherer(unittest.TestCase):
         data_gatherer = DataGatherer()
         expected = ['test','this']
         self.assertEqual(expected, data_gatherer.create_feature_vector('test this'))
+
+    def test_get_auth_exception(self):
+        data_gatherer = DataGatherer()
+        data_gatherer.key_handler.key_check_write_path = ''
+        with self.assertRaises(Exception):
+            data_gatherer.get_auth()
+        assert True
 
 if __name__ == '__main__': # pragma: no cover
     unittest.main()

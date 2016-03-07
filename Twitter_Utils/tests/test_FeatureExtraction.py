@@ -13,20 +13,11 @@ class TestFeatureExtractor(unittest.TestCase):
         expected = ['I', 'test', 'this']
         self.assertEqual(expected, feature_extractor.create_feature_vector(tweet))
 
-    def test_create_training_set(self):
-        # feature_extractor = FeatureExtractor()
-        # self.assertEqual(expected, feature_extractor.create_training_set())
-        assert True # TODO: implement your test here
-
-    def test_extract_feature(self):
-        # feature_extractor = FeatureExtractor()
-        # self.assertEqual(expected, feature_extractor.extract_feature())
-        assert True # TODO: implement your test here
-
     def test_extract_features(self):
-        # feature_extractor = FeatureExtractor()
-        # self.assertEqual(expected, feature_extractor.extract_features(tweet))
-        assert True # TODO: implement your test here
+        feature_extractor = FeatureExtraction.FeatureExtractor()
+        feature_extractor.feature_list = ['test', 'tweet', 'this']
+        self.assertEqual({'contains(test)': True, 'contains(this)': True, 'contains(tweet)': True},
+                         feature_extractor.extract_features('test tweet this'))
 
     def test_get_base_path_to_save_classifier(self):
         wd = os.getcwd()
@@ -63,6 +54,10 @@ class TestFeatureExtractor(unittest.TestCase):
         feature_extractor.feature_list = [1, 1, 1, 2, 2, 2, 3, 3, 3]
         feature_extractor.remove_duplicates()
         self.assertEqual(expected, feature_extractor.feature_list)
+
+    def test_create_tweets_list_with_sentiment(self):
+        feature_extractor = FeatureExtraction.FeatureExtractor()
+        self.assertIsNotNone(feature_extractor.create_tweets_list_with_sentiment())
 
 if __name__ == '__main__':  # pragma: no cover
     unittest.main()
