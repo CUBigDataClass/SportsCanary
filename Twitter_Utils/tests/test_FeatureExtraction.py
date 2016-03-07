@@ -31,7 +31,7 @@ class TestFeatureExtractor(unittest.TestCase):
     def test_get_base_path_to_save_classifier(self):
         wd = os.getcwd()
         pos = wd.find("BigDataMonsters")
-        if pos > 0:
+        if pos > 0:  # pragma: no cover
             path = wd[0:pos+15]
         else:
             path = wd
@@ -42,7 +42,7 @@ class TestFeatureExtractor(unittest.TestCase):
     def test_get_base_training_file_path(self):
         wd = os.getcwd()
         pos = wd.find("BigDataMonsters")
-        if pos > 0:
+        if pos > 0:  # pragma: no cover
             path = wd[0:pos+15]
         else:
             path = wd

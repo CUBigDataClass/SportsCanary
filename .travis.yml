@@ -15,7 +15,7 @@ before_install:
 before_script:
   - sshpass -e ssh -D 8123 -f -C -q -N root@198.199.127.204
 script:
-    - py.test --cov=Twitter_Utils --cov=Gambling_Utils --cov-report=term-missing --cov-report=html
+    - py.test --cov=Twitter_Utils --cov=Gambling_Utils --cov=Eternal_Utils --cov-report=term-missing --cov-report=html
 after_success:
     - coveralls
 notifications:

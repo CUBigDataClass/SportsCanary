@@ -30,12 +30,13 @@ class DataGatherer(StreamListener):
 
     def get_auth(self):
         index = self.key_handler.check_which_key_to_use()
-        if index:
+        if index is not None:
             self.auth = OAuthHandler(self.key_array[index]['app_key'], self.key_array[index]['app_secret'])
-            self.auth.set_access_token(self.key_array[index]['oauth_token'], self.key_array[index]['oauth_token_secret'])
+            self.auth.set_access_token(self.key_array[index]['oauth_token'],
+                                       self.key_array[index]['oauth_token_secret'])
             return index
         else:
-            return False
+            raise Exception
 
     def on_error(self, status_code):
         print 'ERROR: ' + str(status_code)
@@ -62,8 +63,8 @@ class DataGatherer(StreamListener):
     def get_base_directory_path(self):
         wd = os.getcwd()
         pos = wd.find("BigDataMonsters")
-        if pos > 0:
-            path = wd[0:pos+15]
+        if pos > 0:  # pragma: no cover
+            path = wd[0:pos + 15]
         else:
             path = wd
         return path + '/Twitter_Utils/data/tweets/' + self.game_name_to_store
@@ -71,8 +72,8 @@ class DataGatherer(StreamListener):
     def get_base_file_path(self):
         wd = os.getcwd()
         pos = wd.find("BigDataMonsters")
-        if pos > 0:
-            path = wd[0:pos+15]
+        if pos > 0:  # pragma: no cover
+            path = wd[0:pos + 15]
         else:
             path = wd
         return path + '/Twitter_Utils/data/tweets/' + self.game_name_to_store + '/' + self.game_name_to_store + '.txt'

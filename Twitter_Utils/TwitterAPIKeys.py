@@ -8,7 +8,7 @@ class TwitterAPIKeyHandler:
         self.number_of_keys = 9
         wd = os.getcwd()
         pos = wd.find("BigDataMonsters")
-        if pos > 0:
+        if pos > 0:  # pragma: no cover
             path = wd[0:pos+15]
         else:
             path = wd
@@ -53,8 +53,7 @@ class TwitterAPIKeyHandler:
             # TODO - What do we do if none is found?
         except IOError:
             print 'File not found while checking which key to use in TwitterAPIKeys'
-            self.write_initial_keys_state_to_disk()
-            return 0
+            return self.write_initial_keys_state_to_disk()
 
     def clear_api_key_at_index_for_use(self, index):
         """
@@ -111,7 +110,7 @@ class TwitterAPIKeyHandler:
                 f.write(content)
             f.close()
             print 'Key file written'
-            return True
+            return 0
         except IOError:
             print 'IOError while writing initial key state to disk in TwitterAPIKeys'
-            return False
+            return None

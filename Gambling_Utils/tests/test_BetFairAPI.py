@@ -76,10 +76,10 @@ class TestOddsGeneration(unittest.TestCase):
         expected = 'https://identitysso.betfair.com/api/login'
         self.assertEqual(expected, odds_generation.set_session_key_url())
 
-    def test_set_session_token_and_api_call_headers(self):
+    def test_get_list_events_filtered(self):
         # odds_generation = OddsGeneration()
-        # self.assertEqual(expected, odds_generation.set_session_token_and_api_call_headers(json_response))
-        assert True # TODO: implement your test here
+        # self.assertEqual(expected, odds_generation.get_list_events_filtered(game))
+        assert True  # TODO: implement your test here
 
 if __name__ == '__main__':  # pragma: no cover
     unittest.main()
