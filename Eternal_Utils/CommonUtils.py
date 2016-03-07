@@ -3,7 +3,7 @@ import os
 
 class CommonUtils:
     def __init__(self):
-        self.test = ""
+        pass
 
     @staticmethod
     def get_environ_variable(var_name):

@@ -18,6 +18,7 @@ Twitter_Utils/data/Active_API_Log.json
 .pythoscope
 # C extensions
 *.so
+utils.env
 
 # Distribution / packaging
 .Python

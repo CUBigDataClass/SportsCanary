@@ -4,7 +4,6 @@ from sockshandler import SocksiPyHandler
 
 
 class ProxyHandler:
-    """This proxy only works from certain IP's so we might have to find another one or just set it to the server ip"""
     def __init__(self):
         self.proxy_ip = 'localhost'
         self.proxy_port = 8123
