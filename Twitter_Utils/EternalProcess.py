@@ -16,6 +16,7 @@ class EternalProcess:
         self.tick_time_in_seconds = 60.0
         self.time_prior_to_game_to_start_stream = 180
         self.time_to_check_games_for_the_day = '18:43'
+        self.data_gatherer = DataGatherer()
         wd = os.getcwd()
         pos = wd.find("BigDataMonsters")
         if pos > 0:
@@ -41,7 +42,7 @@ class EternalProcess:
             print str(self.stream_list) + str(self.end_times_list)
 
             self.check_if_stream_should_end()
-
+            # TODO - If stream ends, map reduce tweets, then analyze them.
             if self.is_time_to_get_game_data_for_day:
                 self.write_days_games_data()
 
@@ -69,6 +70,7 @@ class EternalProcess:
                             data_gatherer = DataGatherer()
                             stream = data_gatherer.get_tweet_stream(keyword_string, game['uuid'], game_name)
                             self.stream_list.append(stream)
+                            # self.api_key_index_list.append(stream[1])
                             self.end_times_list.append(self.get_time_to_end_stream(self.time_prior_to_game_to_start_stream))
 
             except IOError:
@@ -106,7 +108,7 @@ class EternalProcess:
             json_file = open(read_path, 'w+')
             json_file.write(json.dumps(data))
             json_file.close()
-            
+
         except IOError:
             print 'File not found'
             raise IOError
@@ -130,8 +132,14 @@ class EternalProcess:
             for i in xrange(len(self.end_times_list) - 1, -1, -1):
                 if self.end_times_list[i] == hour_min_time_now:
                     stream = self.stream_list[i]
+                    stream = stream[0]
+                    index = self.stream_list[i]
+                    index = index[1]
+                    print self.stream_list
                     print 'Stopping: ' + str(stream)
                     stream.disconnect()
+                    self.data_gatherer.key_handler.clear_api_key_at_index_for_use(index)
+                    # del self.api_key_index_list[i]
                     del self.stream_list[i]
                     del self.end_times_list[i]
                     did_delete = True
