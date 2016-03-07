@@ -10,5 +10,5 @@ $ cat AllStarsGameData.txt| python Twitter_Utils/Mapper.py | sort | python Twitt
 ###To generate test coverage
 
 ```
-py.test --cov=Twitter_Utils --cov=Gambling_Utils --cov-report=term-missing --cov-report=html
+py.test --cov=Twitter_Utils --cov=Gambling_Utils --cov=Eternal_Utils --cov-report=term-missing --cov-report=html
 ```
