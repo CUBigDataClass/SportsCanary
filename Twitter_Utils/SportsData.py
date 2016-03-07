@@ -59,7 +59,7 @@ class SportsData:
         """ Gets results for games played already for the day, if no games
             have been played then no results appear"""
         # TODO - Change back to today rather than date with games
-        url = self.base_url + '/nba/game_logs?on=February-18'
+        url = self.base_url + '/nba/game_logs?on=March-5'
         headers = {
             'Authorization': str(self.STAT_ACCESS_TOKEN),
             'Accept': 'application/vnd.stattleship.com; version=1',
@@ -69,11 +69,11 @@ class SportsData:
         res = requests.get(url, headers=headers)
         content = json.loads(res.content)
         print content
-        if len(content['game_logs']) == 0:
+        if len(content['game_logs']) == 0:  # pragma: no cover
             return True
         if content['players']:
             return self.create_players_log_object(content['players'])
-        else:
+        else:  # pragma: no cover
             return False
 
     @staticmethod
@@ -83,7 +83,7 @@ class SportsData:
         :param data: input of data object from Stattleship
         :return: returns JSON object with all players name & team_id for each game
         """
-        games_id=[]
+        games_id = []
         list_of_games = json.loads(SportsData().get_nba_games_for_today())
         for game in list_of_games:
             games_id.append(game.get('home_team_id'))

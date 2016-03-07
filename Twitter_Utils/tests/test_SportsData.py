@@ -1,3 +1,4 @@
+import json
 import unittest
 from Twitter_Utils.SportsData import SportsData
 
@@ -29,15 +30,17 @@ class TestSportsData(unittest.TestCase):
                  'home_team_id': '5bf2300f-777b-4caa-9ef3-3fda11f17ad1', 'away_team_score': 0, 'wind_speed_unit': None,
                  'home_team_score': 0}]
 
-        # TODO - Figure out how to test this correctly, currently having true in the JSON causes problem with python.
-        # expected_response = [{"uuid": "4b2fb0bc-864c-4ede-be61-59ed14e1da50", "title": "Spurs vs Clippers", "start_time": "2016-02-18T19:30:00-08:00", "being_streamed": False, "home_team_id": "5bf2300f-777b-4caa-9ef3-3fda11f17ad1", "away_team_id": "ed803cc0-8e6e-4798-b5aa-9eecbc977801", "slug": "nba-2015-2016-sa-lac-2016-02-18-1930"}]
-        # self.assertEqual(expected_response, sports_data.create_game_log_object(data))
+        expected_response = [{"uuid": "4b2fb0bc-864c-4ede-be61-59ed14e1da50", "title": "Spurs vs Clippers",
+                              "start_time": "2016-02-18T19:30:00-08:00", "slug": "nba-2015-2016-sa-lac-2016-02-18-1930",
+                              "home_team_id": "5bf2300f-777b-4caa-9ef3-3fda11f17ad1",
+                              "away_team_id": "ed803cc0-8e6e-4798-b5aa-9eecbc977801", "being_streamed": False}]
+        expected_response = json.dumps(expected_response)
+        self.assertEqual(expected_response, sports_data.create_game_log_object(data))
 
-    def test_create_players_log_object(self):
-        # sports_data = SportsData()
-        # expected = sports_data.create_players_log_object()
-        # self.assertEqual(expected, sports_data.create_players_log_object())
-        assert True  # TODO: implement your test here
+    # def test_create_players_log_object(self):
+    #     sports_data = SportsData()
+    #     # expected = sports_data.create_players_log_object()
+    #     self.assertEqual('', sports_data.create_players_log_object())
 
     def test_get_nba_players_for_today(self):
         sports_data = SportsData()

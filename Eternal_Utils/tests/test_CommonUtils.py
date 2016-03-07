@@ -11,5 +11,9 @@ class TestCommonUtils(unittest.TestCase):
         expected = common_utils.get_environ_variable('BET_FAIR_USERNAME')
         self.assertEqual('johnbd1', expected)
 
-if __name__ == '__main__':
+    def test_get_environ_variable_except(self):
+        common_utils = CommonUtils.CommonUtils()
+        self.assertEqual('Test_Case', common_utils.get_environ_variable('Test_Cases_Coverage'))
+
+if __name__ == '__main__':  # pragma: no cover
     unittest.main()

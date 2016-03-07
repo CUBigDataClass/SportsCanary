@@ -12,7 +12,7 @@ class CommonUtils:
         except KeyError:
             wd = os.getcwd()
             pos = wd.find("BigDataMonsters")
-            if pos > 0:
+            if pos > 0:  # pragma: no cover
                 path = wd[0:pos+15]
             else:
                 path = wd
