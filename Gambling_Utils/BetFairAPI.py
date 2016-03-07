@@ -84,9 +84,9 @@ class OddsGeneration:
             json_response = response.read()
             return json_response
 
-        except urllib2.HTTPError:
+        except urllib2.HTTPError:  # pragma: No cover
             print 'Invalid Operation from the service: ' + str(self.api_base_url)
-        except urllib2.URLError:
+        except urllib2.URLError:  # pragma: No cover
             print 'No service found at ' + str(self.api_base_url)
 
     def get_list_events_filtered(self, game):

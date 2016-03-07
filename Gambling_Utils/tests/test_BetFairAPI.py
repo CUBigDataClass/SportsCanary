@@ -85,6 +85,7 @@ class TestOddsGeneration(unittest.TestCase):
     def test_set_session_token_and_api_call_headers_exception(self):
         odds_generation = BetFairAPI.OddsGeneration()
         odds_generation.APP_KEY_DELAYED = '12345'
+        odds_generation.BET_FAIR_USERNAME = 'NotARealUsername'
         self.assertFalse(odds_generation.get_session_key_and_set_headers())
 
 if __name__ == '__main__':  # pragma: no cover
