@@ -14,11 +14,12 @@ Twitter_Utils/data/training_set.csv
 #Twitter_Utils/data/training_set_short.csv
 Twitter_Utils/.pythoscope
 Gambling_Utils/.pythoscope
+classifier.pickle
 Twitter_Utils/data/Active_API_Log.json
 .pythoscope
 # C extensions
 *.so
-utils.env
+Eternal_Utils/utils.env
 
 # Distribution / packaging
 .Python

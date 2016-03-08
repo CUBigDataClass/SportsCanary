@@ -3,6 +3,7 @@ import datetime
 import dateutil.parser
 import os
 import json
+from subprocess import Popen, PIPE
 from SportsData import SportsData
 from DataGatherer import DataGatherer
 from KeywordGenerator import KeywordGenerator
@@ -14,13 +15,13 @@ class EternalProcess:
         self.sports_data = SportsData()
         self.keyword_generator = KeywordGenerator()
         self.tick_time_in_seconds = 60.0
-        self.time_prior_to_game_to_start_stream = 180
-        self.time_to_check_games_for_the_day = '18:43'
+        self.time_prior_to_game_to_start_stream = 1
+        self.time_to_check_games_for_the_day = '19:42'
         self.data_gatherer = DataGatherer()
         wd = os.getcwd()
         pos = wd.find("BigDataMonsters")
         if pos > 0:  # pragma: no cover
-            path = wd[0:pos+15]
+            path = wd[0:pos + 15]
         else:
             path = wd
         self.base_path = path + '/Twitter_Utils/data/daily-logs/'
@@ -30,6 +31,7 @@ class EternalProcess:
         self.OAUTH_TOKEN_SECRET = CommonUtils.get_environ_variable('TWITTER_OAUTH_TOKEN_SECRET_0')
         self.stream_list = []
         self.end_times_list = []
+        self.game_name_list = []
 
     def start_process(self):  # pragma: no cover
         """
@@ -65,13 +67,15 @@ class EternalProcess:
 
                             keyword_string = self.create_keyword_string_for_game(game)
 
-                            game_name = datetime.datetime.now().strftime('%Y-%m-%d') + '-' + game['title'].replace(' ', '-')
+                            game_name = datetime.datetime.now().strftime('%Y-%m-%d') + '-' + game['title'].replace(' ',
+                                                                                                                   '-')
+                            self.game_name_list.append(game_name)
 
                             data_gatherer = DataGatherer()
                             stream = data_gatherer.get_tweet_stream(keyword_string, game['uuid'], game_name)
                             self.stream_list.append(stream)
-                            # self.api_key_index_list.append(stream[1])
-                            self.end_times_list.append(self.get_time_to_end_stream(self.time_prior_to_game_to_start_stream))
+                            self.end_times_list.append(
+                                self.get_time_to_end_stream(self.time_prior_to_game_to_start_stream))
 
             except IOError:
                 print 'File not found'
@@ -139,9 +143,12 @@ class EternalProcess:
                     print 'Stopping: ' + str(stream)
                     stream.disconnect()
                     self.data_gatherer.key_handler.clear_api_key_at_index_for_use(index)
-                    # del self.api_key_index_list[i]
+                    map_reduced_tweets = self.map_reduce_tweets_after_disconnect(i)
+                    self.replace_written_tweets_with_map_reduced_version(i, map_reduced_tweets)
+                    self.remove_first_line_from_file(self.get_game_name_base_file_path(i))
                     del self.stream_list[i]
                     del self.end_times_list[i]
+                    del self.game_name_list[i]
                     did_delete = True
 
             return did_delete
@@ -157,6 +164,50 @@ class EternalProcess:
         else:
             return False
 
+    def map_reduce_tweets_after_disconnect(self, index):
+        # TODO - Currently breaks if list has no repeated tweets
+        self.game_name_list.append('2016-03-05-Pacers-vs-Wizards')
+        try:
+            game_path = self.get_game_name_directory(index)
+            p1 = Popen(['cat', game_path], stdout=PIPE)
+            p2 = Popen(['python', 'Twitter_Utils/Mapper.py'], stdin=p1.stdout, stdout=PIPE)
+            p3 = Popen(['sort'], stdin=p2.stdout, stdout=PIPE)
+            p4 = Popen(['python', 'Twitter_Utils/Reducer.py'], stdin=p3.stdout, stdout=PIPE)
+            p5 = Popen(['sort', '-n'], stdin=p4.stdout, stdout=PIPE)
+            # Allow p1 to receive a SIGPIPE if p2 exits.
+            p1.stdout.close()
+            p2.stdout.close()
+            p3.stdout.close()
+            p4.stdout.close()
+            map_reduced_tweets = p5.communicate()[0]
+            print map_reduced_tweets
+            return map_reduced_tweets
+
+        except IndexError:
+            print 'List out of range'
+
+    def replace_written_tweets_with_map_reduced_version(self, index, map_reduced_tweets):
+        try:
+            with open(self.get_game_name_base_file_path(index), 'w+') as f:
+                f.write(map_reduced_tweets)
+            f.close()
+        except IOError:
+            print 'File not found'
+
+    def get_game_name_directory(self, index):
+        game_name = self.game_name_list[index]
+        return 'Twitter_Utils/data/tweets/' + game_name + '/' + game_name + '.txt'
+
+    def get_game_name_base_file_path(self, index):
+        game_name = self.game_name_list[index]
+        wd = os.getcwd()
+        pos = wd.find("BigDataMonsters")
+        if pos > 0:  # pragma: no cover
+            path = wd[0:pos + 15]
+        else:
+            path = wd
+        return path + '/Twitter_Utils/data/tweets/' + game_name + '/' + game_name + '.txt'
+
     # TODO - Figure out how to test this
     def write_days_games_data(self):  # pragma: no cover
         write_path = self.get_write_path_for_days_games()
@@ -167,6 +218,25 @@ class EternalProcess:
             f.close()
         except IOError:
             print 'File not found'
+
+    @staticmethod
+    def remove_first_line_from_file(path):
+        try:
+            with open(path, 'r') as fin:
+                data = fin.read().splitlines(True)
+            with open(path, 'w') as fout:
+                fout.writelines(data[1:])
+                fout.close()
+        except IOError:
+            print 'File not found'
+
+    @staticmethod
+    def remove_last_line_from_file(path):
+        with open(path, 'r') as fin:
+            data = fin.read().splitlines(True)
+        with open(path, 'w') as fout:
+            fout.writelines(data[:-1])
+            fout.close()
 
     @staticmethod
     def sleep_for(tick_time):

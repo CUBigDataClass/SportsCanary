@@ -33,13 +33,14 @@ class TestEternalProcess(unittest.TestCase):
         self.assertEqual(False, self.eternalProcess.check_if_stream_should_end())
         # Should end if there is a stream
         self.eternalProcess.end_times_list.append(datetime.datetime.now().strftime('%H:%M'))
+        self.eternalProcess.game_name_list.append('2016-03-05-Pacers-vs-Wizards')
         stream = self.data_gatherer.get_tweet_stream('ok', '123', '123')
         self.eternalProcess.stream_list.append(stream)
         self.assertEqual(True, self.eternalProcess.check_if_stream_should_end())
 
     def test_get_time_to_end_stream(self):
-        eternal_process = EternalProcess()
         now = datetime.datetime.now()
+        eternal_process = EternalProcess()
         now_plus_10 = now + datetime.timedelta(minutes=10)
         now_plus_10 = now_plus_10.strftime('%H:%M')
         self.assertEqual(now_plus_10, eternal_process.get_time_to_end_stream(10))
@@ -94,6 +95,23 @@ class TestEternalProcess(unittest.TestCase):
         expected = eternal_process.create_keyword_string_for_game(game)
         self.assertEqual(expected, 'TrueToAtlanta,TrueToAtlanta,ATL,Hawks,goTrueToAtlanta,goTrueToAtlanta,goATL'
                                    ',goHawks,Celtics,Celtics,Celtics,goCeltics,goCeltics,goCeltics')
+
+    def test_map_reduce_tweets_after_disconnect(self):
+        self.eternalProcess.game_name_list.append('123')
+        self.assertIsNotNone(self.eternalProcess.map_reduce_tweets_after_disconnect(0))
+
+    def test_map_reduce_tweets_after_disconnect_raises_assertion(self):
+        with self.assertRaises(IndexError):
+            self.eternalProcess.update_is_streamed_json(3)
+        assert True
+
+    def test_start_process(self):
+        assert True  # TODO: implement your test here
+
+    def test_get_game_name_file_path(self):
+        self.eternalProcess.game_name_list.append('2016-03-05-Pacers-vs-Wizards')
+        self.assertEqual('Twitter_Utils/data/tweets/2016-03-05-Pacers-vs-Wizards/2016-03-05-Pacers-vs-Wizards.txt',
+                         self.eternalProcess.get_game_name_directory(0))
 
 if __name__ == '__main__':  # pragma: no cover
     unittest.main()

@@ -60,25 +60,21 @@ class FeatureExtractor:
         self.feature_list = list(set(self.feature_list))
 
     def extract_features(self, tweet):
-        # tweet_words = set(tweet)
-        tweet_words = tweet.split()
-        print tweet_words
+        tweet_words = set(tweet)
         features = {}
         for word in self.feature_list:
             features['contains(%s)' % word] = (word in tweet_words)
-
-        print features
         return features
 
     def save_classifier(self, classifier):  # pragma: No cover
         print 'Saving new classifier.'
         try:
             f = open(self.get_base_path_to_save_classifier(), 'wb')
-            pickle.dump(classifier, f)
+            pickle.dump(classifier, f, pickle.HIGHEST_PROTOCOL)
             f.close()
         except IOError:
-            print 'Error'
-            return False
+            print 'Error while saving classifier'
+            return IOError
 
     def load_classifier(self):  # pragma: No cover
         try:
@@ -87,7 +83,7 @@ class FeatureExtractor:
             f.close()
             return classifier
         except IOError:
-            print 'No classifier was found.'
+            print 'Error while loading classifier'
             return None
 
     def train_naive_bayes_classifier(self):  # pragma: No cover

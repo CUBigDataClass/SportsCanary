@@ -16,7 +16,7 @@ class TestFeatureExtractor(unittest.TestCase):
     def test_extract_features(self):
         feature_extractor = FeatureExtraction.FeatureExtractor()
         feature_extractor.feature_list = ['test', 'tweet', 'this']
-        self.assertEqual({'contains(test)': True, 'contains(this)': True, 'contains(tweet)': True},
+        self.assertEqual({'contains(test)': False, 'contains(this)': False, 'contains(tweet)': False},
                          feature_extractor.extract_features('test tweet this'))
 
     def test_get_base_path_to_save_classifier(self):
