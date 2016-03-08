@@ -3,6 +3,7 @@ import datetime
 import dateutil.parser
 import os
 import json
+from subprocess import Popen, PIPE
 from SportsData import SportsData
 from DataGatherer import DataGatherer
 from KeywordGenerator import KeywordGenerator
@@ -20,7 +21,7 @@ class EternalProcess:
         wd = os.getcwd()
         pos = wd.find("BigDataMonsters")
         if pos > 0:  # pragma: no cover
-            path = wd[0:pos+15]
+            path = wd[0:pos + 15]
         else:
             path = wd
         self.base_path = path + '/Twitter_Utils/data/daily-logs/'
@@ -30,6 +31,7 @@ class EternalProcess:
         self.OAUTH_TOKEN_SECRET = CommonUtils.get_environ_variable('TWITTER_OAUTH_TOKEN_SECRET_0')
         self.stream_list = []
         self.end_times_list = []
+        self.game_name_list = []
 
     def start_process(self):  # pragma: no cover
         """
@@ -65,13 +67,15 @@ class EternalProcess:
 
                             keyword_string = self.create_keyword_string_for_game(game)
 
-                            game_name = datetime.datetime.now().strftime('%Y-%m-%d') + '-' + game['title'].replace(' ', '-')
+                            game_name = datetime.datetime.now().strftime('%Y-%m-%d') + '-' + game['title'].replace(' ',
+                                                                                                                   '-')
+                            self.game_name_list.append(game_name)
 
                             data_gatherer = DataGatherer()
                             stream = data_gatherer.get_tweet_stream(keyword_string, game['uuid'], game_name)
                             self.stream_list.append(stream)
-                            # self.api_key_index_list.append(stream[1])
-                            self.end_times_list.append(self.get_time_to_end_stream(self.time_prior_to_game_to_start_stream))
+                            self.end_times_list.append(
+                                self.get_time_to_end_stream(self.time_prior_to_game_to_start_stream))
 
             except IOError:
                 print 'File not found'
@@ -157,6 +161,21 @@ class EternalProcess:
         else:
             return False
 
+    def map_reduce_tweets_after_disconnect(self, index):
+        game_name = self.game_name_list[index]
+
+        p1 = Popen(['cat', 'AllStarsGameData.txt'], stdout=PIPE)
+        p2 = Popen(['python', 'Twitter_Utils/Mapper.py'], stdin=p1.stdout, stdout=PIPE)
+        p3 = Popen(['sort'], stdin=p2.stdout, stdout=PIPE)
+        p4 = Popen(['python', 'Twitter_Utils/Reducer.py'], stdin=p3.stdout, stdout=PIPE)
+        p5 = Popen(['sort', '-n'], stdin=p4.stdout, stdout=PIPE)
+        # Allow p1 to receive a SIGPIPE if p2 exits.
+        p1.stdout.close()
+        p2.stdout.close()
+        p3.stdout.close()
+        p4.stdout.close()
+        print p5.communicate()[0]
+
     # TODO - Figure out how to test this
     def write_days_games_data(self):  # pragma: no cover
         write_path = self.get_write_path_for_days_games()
@@ -172,3 +191,7 @@ class EternalProcess:
     def sleep_for(tick_time):
         start_time = time.time()
         time.sleep(tick_time - ((time.time() - start_time) % tick_time))
+
+
+t = EternalProcess()
+t.map_reduce_tweets_after_disconnect()
