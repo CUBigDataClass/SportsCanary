@@ -143,9 +143,11 @@ class EternalProcess:
                     print 'Stopping: ' + str(stream)
                     stream.disconnect()
                     self.data_gatherer.key_handler.clear_api_key_at_index_for_use(index)
-                    # del self.api_key_index_list[i]
+                    self.map_reduce_tweets_after_disconnect(i)
+
                     del self.stream_list[i]
                     del self.end_times_list[i]
+                    del self.game_name_list[i]
                     did_delete = True
 
             return did_delete
@@ -162,19 +164,29 @@ class EternalProcess:
             return False
 
     def map_reduce_tweets_after_disconnect(self, index):
-        game_name = self.game_name_list[index]
+        # TODO - Currently breaks if list has no repeated tweets
+        try:
+            game_path = self.get_game_name_file_path(index)
+            p1 = Popen(['cat', game_path], stdout=PIPE)
+            p2 = Popen(['python', 'Twitter_Utils/Mapper.py'], stdin=p1.stdout, stdout=PIPE)
+            p3 = Popen(['sort'], stdin=p2.stdout, stdout=PIPE)
+            p4 = Popen(['python', 'Twitter_Utils/Reducer.py'], stdin=p3.stdout, stdout=PIPE)
+            p5 = Popen(['sort', '-n'], stdin=p4.stdout, stdout=PIPE)
+            # Allow p1 to receive a SIGPIPE if p2 exits.
+            p1.stdout.close()
+            p2.stdout.close()
+            p3.stdout.close()
+            p4.stdout.close()
+            map_reduced_tweets = p5.communicate()[0]
+            print map_reduced_tweets
+            return map_reduced_tweets
 
-        p1 = Popen(['cat', 'AllStarsGameData.txt'], stdout=PIPE)
-        p2 = Popen(['python', 'Twitter_Utils/Mapper.py'], stdin=p1.stdout, stdout=PIPE)
-        p3 = Popen(['sort'], stdin=p2.stdout, stdout=PIPE)
-        p4 = Popen(['python', 'Twitter_Utils/Reducer.py'], stdin=p3.stdout, stdout=PIPE)
-        p5 = Popen(['sort', '-n'], stdin=p4.stdout, stdout=PIPE)
-        # Allow p1 to receive a SIGPIPE if p2 exits.
-        p1.stdout.close()
-        p2.stdout.close()
-        p3.stdout.close()
-        p4.stdout.close()
-        print p5.communicate()[0]
+        except IndexError:
+            print 'List out of range'
+
+    def get_game_name_file_path(self, index):
+        game_name = self.game_name_list[index]
+        return 'Twitter_Utils/data/tweets/' + game_name + '/' + game_name + '.txt'
 
     # TODO - Figure out how to test this
     def write_days_games_data(self):  # pragma: no cover
@@ -194,4 +206,4 @@ class EternalProcess:
 
 
 t = EternalProcess()
-t.map_reduce_tweets_after_disconnect()
+t.map_reduce_tweets_after_disconnect(0)
