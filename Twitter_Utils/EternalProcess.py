@@ -187,9 +187,12 @@ class EternalProcess:
             print 'List out of range'
 
     def replace_written_tweets_with_map_reduced_version(self, index, map_reduced_tweets):
-        with open(self.get_game_name_base_file_path(index), 'w+') as f:
-            f.write(map_reduced_tweets)
-        f.close()
+        try:
+            with open(self.get_game_name_base_file_path(index), 'w+') as f:
+                f.write(map_reduced_tweets)
+            f.close()
+        except IOError:
+            print 'File not found'
 
     def get_game_name_directory(self, index):
         game_name = self.game_name_list[index]
@@ -218,11 +221,14 @@ class EternalProcess:
 
     @staticmethod
     def remove_first_line_from_file(path):
-        with open(path, 'r') as fin:
-            data = fin.read().splitlines(True)
-        with open(path, 'w') as fout:
-            fout.writelines(data[1:])
-            fout.close()
+        try:
+            with open(path, 'r') as fin:
+                data = fin.read().splitlines(True)
+            with open(path, 'w') as fout:
+                fout.writelines(data[1:])
+                fout.close()
+        except IOError:
+            print 'File not found'
 
     @staticmethod
     def remove_last_line_from_file(path):
