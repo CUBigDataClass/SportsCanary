@@ -15,8 +15,8 @@ class EternalProcess:
         self.sports_data = SportsData()
         self.keyword_generator = KeywordGenerator()
         self.tick_time_in_seconds = 60.0
-        self.time_prior_to_game_to_start_stream = 180
-        self.time_to_check_games_for_the_day = '18:43'
+        self.time_prior_to_game_to_start_stream = 1
+        self.time_to_check_games_for_the_day = '19:42'
         self.data_gatherer = DataGatherer()
         wd = os.getcwd()
         pos = wd.find("BigDataMonsters")
@@ -143,8 +143,9 @@ class EternalProcess:
                     print 'Stopping: ' + str(stream)
                     stream.disconnect()
                     self.data_gatherer.key_handler.clear_api_key_at_index_for_use(index)
-                    self.map_reduce_tweets_after_disconnect(i)
-
+                    map_reduced_tweets = self.map_reduce_tweets_after_disconnect(i)
+                    self.replace_written_tweets_with_map_reduced_version(i, map_reduced_tweets)
+                    self.remove_first_line_from_file(self.get_game_name_base_file_path(i))
                     del self.stream_list[i]
                     del self.end_times_list[i]
                     del self.game_name_list[i]
@@ -165,8 +166,9 @@ class EternalProcess:
 
     def map_reduce_tweets_after_disconnect(self, index):
         # TODO - Currently breaks if list has no repeated tweets
+        self.game_name_list.append('2016-03-05-Pacers-vs-Wizards')
         try:
-            game_path = self.get_game_name_file_path(index)
+            game_path = self.get_game_name_directory(index)
             p1 = Popen(['cat', game_path], stdout=PIPE)
             p2 = Popen(['python', 'Twitter_Utils/Mapper.py'], stdin=p1.stdout, stdout=PIPE)
             p3 = Popen(['sort'], stdin=p2.stdout, stdout=PIPE)
@@ -184,9 +186,24 @@ class EternalProcess:
         except IndexError:
             print 'List out of range'
 
-    def get_game_name_file_path(self, index):
+    def replace_written_tweets_with_map_reduced_version(self, index, map_reduced_tweets):
+        with open(self.get_game_name_base_file_path(index), 'w+') as f:
+            f.write(map_reduced_tweets)
+        f.close()
+
+    def get_game_name_directory(self, index):
         game_name = self.game_name_list[index]
         return 'Twitter_Utils/data/tweets/' + game_name + '/' + game_name + '.txt'
+
+    def get_game_name_base_file_path(self, index):
+        game_name = self.game_name_list[index]
+        wd = os.getcwd()
+        pos = wd.find("BigDataMonsters")
+        if pos > 0:  # pragma: no cover
+            path = wd[0:pos + 15]
+        else:
+            path = wd
+        return path + '/Twitter_Utils/data/tweets/' + game_name + '/' + game_name + '.txt'
 
     # TODO - Figure out how to test this
     def write_days_games_data(self):  # pragma: no cover
@@ -200,10 +217,22 @@ class EternalProcess:
             print 'File not found'
 
     @staticmethod
+    def remove_first_line_from_file(path):
+        with open(path, 'r') as fin:
+            data = fin.read().splitlines(True)
+        with open(path, 'w') as fout:
+            fout.writelines(data[1:])
+            fout.close()
+
+    @staticmethod
+    def remove_last_line_from_file(path):
+        with open(path, 'r') as fin:
+            data = fin.read().splitlines(True)
+        with open(path, 'w') as fout:
+            fout.writelines(data[:-1])
+            fout.close()
+
+    @staticmethod
     def sleep_for(tick_time):
         start_time = time.time()
         time.sleep(tick_time - ((time.time() - start_time) % tick_time))
-
-
-t = EternalProcess()
-t.map_reduce_tweets_after_disconnect(0)

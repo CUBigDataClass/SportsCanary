@@ -97,22 +97,21 @@ class TestEternalProcess(unittest.TestCase):
                                    ',goHawks,Celtics,Celtics,Celtics,goCeltics,goCeltics,goCeltics')
 
     def test_map_reduce_tweets_after_disconnect(self):
-        eternal_process = EternalProcess()
-        eternal_process.game_name_list.append('123')
-        self.assertIsNotNone(eternal_process.map_reduce_tweets_after_disconnect(0))
+        self.eternalProcess.game_name_list.append('123')
+        self.assertIsNotNone(self.eternalProcess.map_reduce_tweets_after_disconnect(0))
+
+    def test_map_reduce_tweets_after_disconnect_raises_assertion(self):
+        with self.assertRaises(IndexError):
+            self.eternalProcess.update_is_streamed_json(3)
+        assert True
 
     def test_start_process(self):
         assert True  # TODO: implement your test here
 
-    # def test_write_days_games_data(self):
-    #     # eternal_process = EternalProcess()
-    #     # self.assertEqual(expected, eternal_process.write_days_games_data())
-    #     assert True  # TODO: implement your test here
-
     def test_get_game_name_file_path(self):
         self.eternalProcess.game_name_list.append('2016-03-05-Pacers-vs-Wizards')
         self.assertEqual('Twitter_Utils/data/tweets/2016-03-05-Pacers-vs-Wizards/2016-03-05-Pacers-vs-Wizards.txt',
-                         self.eternalProcess.get_game_name_file_path(0))
+                         self.eternalProcess.get_game_name_directory(0))
 
 if __name__ == '__main__':  # pragma: no cover
     unittest.main()
