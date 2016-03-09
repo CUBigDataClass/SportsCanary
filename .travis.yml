@@ -1,5 +1,8 @@
 language: python
 cache: pip
+  directories:
+    - node_modules
+
 python:
     - "2.7"
 
@@ -18,7 +21,7 @@ before_script:
 script:
     - py.test --cov=Twitter_Utils --cov=Gambling_Utils --cov=Eternal_Utils --cov-report=term-missing --cov-report=html
     - coveralls
-    - cd Website && npm install && mocha
+#    - cd Website && npm install && mocha
 after_success:
 #    - coveralls
 notifications:

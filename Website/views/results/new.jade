@@ -1,0 +1,18 @@
+extends ../layout
+
+block content
+    h1.
+        #{title}
+    form#formAddResult(name="addresult",method="post",action="/api/results")
+        p Event Name:
+            input#inputEventName(type="text", placeholder="ex. Cavaliers vs Rockets", name="event_name")
+        p Score 1:
+            input#inputScore1(type="number", placeholder="ex. 100", name="score_1")
+        p Score 2:
+            input#inputScore2(type="number", placeholder="ex. 100", name="score_2")
+        p Event Date:
+            input#inputDob(type="date", name="event_date")
+        p Score Applicable:
+            input#inputIsLoved(type="checkbox", name="score_applicable")
+        p
+            button#btnSubmit(type="submit") submit

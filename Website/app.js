@@ -4,9 +4,14 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
-var robots = require('robots.txt')
+
+var db = require('./model/db');
+var result = require('./model/results');
+
+var robots = require('robots.txt');
 var routes = require('./routes/index');
 var users = require('./routes/users');
+var results = require('./routes/results');
 
 var app = express();
 
@@ -23,9 +28,10 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 // Pass in the absolute path to your robots.txt file
-app.use(robots(__dirname + '/robots.txt'))
+app.use(robots(__dirname + '/robots.txt'));
 app.use('/', routes);
 app.use('/users', users);
+app.use('/api/results', results);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
