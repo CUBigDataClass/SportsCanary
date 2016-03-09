@@ -1,11 +1,12 @@
 import json
 import os
+from Eternal_Utils.CommonUtils import CommonUtils
 
 
 class TwitterAPIKeyHandler:
     def __init__(self):
         self.api_key_array = []
-        self.number_of_keys = 9
+        self.number_of_keys = int(CommonUtils.get_environ_variable('NUMBER_OF_TWITTER_KEYS_AVAILABLE'))
         wd = os.getcwd()
         pos = wd.find("BigDataMonsters")
         if pos > 0:  # pragma: no cover
