@@ -68,8 +68,6 @@ describe('Results', function() {
                 response.should.be.json;
                 response.body.should.be.a('object');
                 response.body.should.have.property('ok', 1);
-                response.body.should.have.property('nModified', 1);
-                response.body.should.have.property('n', 1);
                 done();
             });
     });
