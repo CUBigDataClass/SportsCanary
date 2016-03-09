@@ -1,4 +1,5 @@
 var mongoose = require('mongoose');
+
 var resultSchema = new mongoose.Schema({
     event_name: String,
     score_applicable: Boolean,

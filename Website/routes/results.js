@@ -1,8 +1,8 @@
-//noinspection JSUnresolvedFunction
 var express = require('express'),
     router = express.Router(),
     // MongoDB Connection
     mongoose = require('mongoose'),
+    result = mongoose.model('Result'),
     // Parses Body
     bodyParser = require('body-parser'),
     // Manipulates Post
@@ -20,7 +20,7 @@ router.use(methodOverride(function(req, res){
 
 router.route('/')
     .get(function(req, res, next) {
-        mongoose.model('Results').find({}, function (err, results) {
+        mongoose.model('Result').find({}, function (err, results) {
             if (err) {
                 return console.error(err);
             } else {
@@ -57,7 +57,7 @@ router.route('/')
                 console.log('POST new result: ' + result);
                 res.format({
                     html: function(){
-                        res.location("results");
+                        res.location("/api/results");
                         res.redirect("/api/results");
                     },
                     json: function(){
@@ -70,16 +70,39 @@ router.route('/')
 router.get('/new', function(req, res) {
     res.render('results/new', { title: 'Add New Result' });
 });
+router.param('id', function(req, res, next, id) {
+    console.log('Validating ' + id + ' exists.');
+    mongoose.model('Result').findById(id, function (err, result) {
+        if (err) {
+            console.log(id + ' was not found');
+            res.status(404);
+            var err = new Error('Not Found');
+            err.status = 404;
+            res.format({
+                html: function(){
+                    next(err);
+                },
+                json: function(){
+                    res.json({message : err.status  + ' ' + err});
+                }
+            });
+            //if it is found we continue on
+        } else {
+            req.id = id;
+            next();
+        }
+    });
+});
 router.route('/:id')
     .get(function(req, res) {
         mongoose.model('Result').findById(req.id, function (err, result) {
             if (err) {
                 console.log('GET Error: There was a problem retrieving: ' + err);
             } else {
-                console.log('GET Retrieving ID: ' + result._id);
+                //console.log('GET Retrieving ID: ' + result.event_name);
                 res.format({
                     html: function(){
-                        res.render('result/show', {
+                        res.render('results/show', {
                             "result" : result
                         });
                     },
@@ -134,7 +157,7 @@ router.put('/:id/edit', function(req, res) {
             else {
                 res.format({
                     html: function(){
-                        res.redirect("/results/" + result._id);
+                        res.redirect("/api/results/" + result._id);
                     },
                     json: function(){
                         res.json(result);
@@ -156,7 +179,7 @@ router.delete('/:id/edit', function (req, res){
                     console.log('DELETE removing ID: ' + result._id);
                     res.format({
                         html: function(){
-                            res.redirect("/results");
+                            res.redirect("/api/results");
                         },
                         json: function(){
                             res.json({message : 'deleted',
