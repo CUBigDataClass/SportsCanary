@@ -33,11 +33,20 @@ Select the 'Corpora' tab and then download 'twitter_samples'
 
 ###Testing
 ```
+Within Outer Directory
 $ py.test
 ```
 **With Coverage**
 ```
+Within Outer Directory
 $ py.test --cov=Twitter_Utils --cov=Gambling_Utils --cov=Eternal_Utils --cov-report=term-missing --cov-report=html
+```
+
+
+####To test Map and Reduce
+```
+Within the Twitter_Utils directory
+$ cat AllStarsGameData.txt| python Mapper.py | sort | python Reducer.py | sort -n
 ```
 
 
