@@ -1,7 +1,5 @@
 language: python
 cache: pip
-  directories:
-    - node_modules
 
 python:
     - "2.7"
