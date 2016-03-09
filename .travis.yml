@@ -1,8 +1,6 @@
 language: python
 cache:
   - pip
-  directories:
-    - node_modules
 
 services:
   - mongodb
