@@ -28,6 +28,17 @@ class TestEternalProcess(unittest.TestCase):
         # register remove function
         self.addCleanup(os.remove, path)
 
+        dir_path = os.getcwd() + '/Twitter_Utils/data/tweets/base_tweets_for_tests'
+        if not os.path.exists(dir_path):
+            os.makedirs(dir_path)
+
+        self.addCleanup(os.rmdir, dir_path)
+        path_2 = os.getcwd() + '/Twitter_Utils/data/tweets/base_tweets_for_tests/base_tweets_for_tests.txt'
+        fo = open(path_2, 'w+')
+        fo.write('test tweet 1\ntest tweet 1\ntest tweet 1\ntest tweet 1\ntest tweet 2\ntest tweet 2\ntest tweet 2\n')
+        fo.close()
+        self.addCleanup(os.remove, path_2)
+
     def test_check_if_stream_should_end(self):
         # Shouldn't end if there is no stream
         self.assertEqual(False, self.eternalProcess.check_if_stream_should_end())
@@ -137,6 +148,63 @@ class TestEternalProcess(unittest.TestCase):
         eternal_process.game_name_list.append('Test_game')
         expected = 'Twitter_Utils/data/tweets/Test_game/Test_game.txt'
         self.assertEqual(expected, eternal_process.get_game_name_directory(0))
+
+    def test_remove_first_line_from_file(self):
+        eternal_process = EternalProcess()
+        path = os.getcwd() + '/Twitter_Utils/data/tweets/base_tweets_for_tests/base_tweets_for_tests.txt'
+        count_1 = 0
+        with open(path, 'r') as reader:
+            for _ in reader:
+                count_1 += 1
+        reader.close()
+        eternal_process.remove_first_line_from_file(path)
+        count_2 = 0
+        with open(path, 'r') as reader:
+            for _ in reader:
+                count_2 += 1
+        reader.close()
+
+        self.assertEqual(count_1-1, count_2)
+
+    def test_remove_last_line_from_file(self):
+        eternal_process = EternalProcess()
+        path = os.getcwd() + '/Twitter_Utils/data/tweets/base_tweets_for_tests/base_tweets_for_tests.txt'
+        count_1 = 0
+        with open(path, 'r') as reader:
+            for _ in reader:
+                count_1 += 1
+        reader.close()
+        eternal_process.remove_first_line_from_file(path)
+        count_2 = 0
+        with open(path, 'r') as reader:
+            for _ in reader:
+                count_2 += 1
+        reader.close()
+
+    def test_end_stream_and_clear_api(self):
+        # eternal_process = EternalProcess()
+        # self.assertEqual(expected, eternal_process.end_stream_and_clear_api(i))
+        assert True  # TODO: implement your test here
+
+    def test_get_and_disconnect_stream_at_index(self):
+        # eternal_process = EternalProcess()
+        # self.assertEqual(expected, eternal_process.get_and_disconnect_stream_at_index(idx))
+        assert True  # TODO: implement your test here
+
+    def test_get_index_and_clear_api_key_at_index(self):
+        # eternal_process = EternalProcess()
+        # self.assertEqual(expected, eternal_process.get_index_and_clear_api_key_at_index(idx))
+        assert True  # TODO: implement your test here
+
+    def test_replace_written_tweets_with_map_reduced_version(self):
+        # eternal_process = EternalProcess()
+        # self.assertEqual(expected, eternal_process.replace_written_tweets_with_map_reduced_version(index, map_reduced_tweets))
+        assert True  # TODO: implement your test here
+
+    def test_write_days_games_data(self):
+        # eternal_process = EternalProcess()
+        # self.assertEqual(expected, eternal_process.write_days_games_data())
+        assert True  # TODO: implement your test here
 
 if __name__ == '__main__':  # pragma: no cover
     unittest.main()
