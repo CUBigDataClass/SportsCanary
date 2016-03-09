@@ -1,7 +1,19 @@
 doctype html
 html
   head
+    script(type='text/javascript', src='https://code.jquery.com/jquery-2.1.1.min.js')
+    link(rel='stylesheet', href='https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.5/css/materialize.min.css')
     title= title
     link(rel='stylesheet', href='/stylesheets/style.css')
   body
+    nav
+      .nav-wrapper.light-blue.accent-3
+        a.brand-logo.center(href='#') SportsCanary
+        ul#nav-mobile.right.hide-on-med-and-down
+          li
+            a(href='/') Home
+          li
+            a(href='sports.html') Sports
+          li
+            a(href='about.html') About
     block content
