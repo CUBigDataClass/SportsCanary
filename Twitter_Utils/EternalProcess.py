@@ -131,29 +131,42 @@ class EternalProcess:
     def check_if_stream_should_end(self):
         if self.end_times_list:
             hour_min_time_now = datetime.datetime.now().strftime('%H:%M')
-            did_delete = False
             # TODO - Refactor the line below this
             for i in xrange(len(self.end_times_list) - 1, -1, -1):
                 if self.end_times_list[i] == hour_min_time_now:
-                    stream = self.stream_list[i]
-                    stream = stream[0]
-                    index = self.stream_list[i]
-                    index = index[1]
-                    print self.stream_list
-                    print 'Stopping: ' + str(stream)
-                    stream.disconnect()
-                    self.data_gatherer.key_handler.clear_api_key_at_index_for_use(index)
-                    map_reduced_tweets = self.map_reduce_tweets_after_disconnect(i)
-                    self.replace_written_tweets_with_map_reduced_version(i, map_reduced_tweets)
-                    self.remove_first_line_from_file(self.get_game_name_base_file_path(i))
-                    del self.stream_list[i]
-                    del self.end_times_list[i]
-                    del self.game_name_list[i]
-                    did_delete = True
-
-            return did_delete
+                    return self.end_stream_and_clear_api(i)
+            return False
         else:
             return False
+
+    def end_stream_and_clear_api(self, i):
+        self.get_index_and_clear_api_key_at_index(i)
+        self.get_and_disconnect_stream_at_index(i)
+        map_reduced_tweets = self.map_reduce_tweets_after_disconnect(i)
+        self.replace_written_tweets_with_map_reduced_version(i, map_reduced_tweets)
+        self.remove_first_line_from_file(self.get_game_name_base_file_path(i))
+        self.delete_stream_end_time_game_name_from_lists(i)
+        return True
+
+    def delete_stream_end_time_game_name_from_lists(self, i):
+        try:
+            del self.stream_list[i]
+            del self.end_times_list[i]
+            del self.game_name_list[i]
+        except KeyError:
+            raise KeyError
+
+    def get_index_and_clear_api_key_at_index(self, idx):
+        index_stream = self.stream_list[idx]
+        index = index_stream[1]
+        self.data_gatherer.key_handler.clear_api_key_at_index_for_use(index)
+
+    def get_and_disconnect_stream_at_index(self, idx):
+        index_stream = self.stream_list[idx]
+        stream = index_stream[0]
+        print self.stream_list
+        print 'Stopping: ' + str(stream)
+        stream.disconnect()
 
     def get_write_path_for_days_games(self):
         return self.base_path + datetime.datetime.now().strftime('%Y-%m-%d') + '.json'
@@ -166,7 +179,6 @@ class EternalProcess:
 
     def map_reduce_tweets_after_disconnect(self, index):
         # TODO - Currently breaks if list has no repeated tweets
-        self.game_name_list.append('2016-03-05-Pacers-vs-Wizards')
         try:
             game_path = self.get_game_name_directory(index)
             p1 = Popen(['cat', game_path], stdout=PIPE)
@@ -180,7 +192,6 @@ class EternalProcess:
             p3.stdout.close()
             p4.stdout.close()
             map_reduced_tweets = p5.communicate()[0]
-            print map_reduced_tweets
             return map_reduced_tweets
 
         except IndexError:

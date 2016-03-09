@@ -113,5 +113,30 @@ class TestEternalProcess(unittest.TestCase):
         self.assertEqual('Twitter_Utils/data/tweets/2016-03-05-Pacers-vs-Wizards/2016-03-05-Pacers-vs-Wizards.txt',
                          self.eternalProcess.get_game_name_directory(0))
 
+    def test_delete_stream_end_time_game_name_from_lists(self):
+        eternal_process = EternalProcess()
+        eternal_process.stream_list.append('Stream Test')
+        eternal_process.end_times_list.append('End Time Test')
+        eternal_process.game_name_list.append('Game Test')
+        self.assertIs(len(eternal_process.stream_list), 1)
+        self.assertIs(len(eternal_process.end_times_list), 1)
+        self.assertIs(len(eternal_process.game_name_list), 1)
+        eternal_process.delete_stream_end_time_game_name_from_lists(0)
+        self.assertIs(len(eternal_process.stream_list), 0)
+        self.assertIs(len(eternal_process.end_times_list), 0)
+        self.assertIs(len(eternal_process.game_name_list), 0)
+
+    def test_get_game_name_base_file_path(self):
+        eternal_process = EternalProcess()
+        eternal_process.game_name_list.append('Test_game')
+        expected = os.getcwd() + '/Twitter_Utils/data/tweets/Test_game/Test_game.txt'
+        self.assertEqual(expected, eternal_process.get_game_name_base_file_path(0))
+
+    def test_get_game_name_directory(self):
+        eternal_process = EternalProcess()
+        eternal_process.game_name_list.append('Test_game')
+        expected = 'Twitter_Utils/data/tweets/Test_game/Test_game.txt'
+        self.assertEqual(expected, eternal_process.get_game_name_directory(0))
+
 if __name__ == '__main__':  # pragma: no cover
     unittest.main()
