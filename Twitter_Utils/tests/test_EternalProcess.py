@@ -49,6 +49,13 @@ class TestEternalProcess(unittest.TestCase):
         self.eternalProcess.stream_list.append(stream)
         self.assertEqual(True, self.eternalProcess.check_if_stream_should_end())
 
+    def test_check_if_stream_should_end_should_return_false_if_none(self):
+        now = datetime.datetime.now()
+        now_plus_10 = now + datetime.timedelta(minutes=10)
+        now_plus_10 = now_plus_10.strftime('%H:%M')
+        self.eternalProcess.end_times_list.append(now_plus_10)
+        self.assertEqual(False, self.eternalProcess.check_if_stream_should_end())
+
     def test_get_time_to_end_stream(self):
         now = datetime.datetime.now()
         eternal_process = EternalProcess()
@@ -119,7 +126,7 @@ class TestEternalProcess(unittest.TestCase):
     def test_start_process(self):
         assert True  # TODO: implement your test here
 
-    def test_get_game_name_file_path(self):
+    def test_get_game_name_base_file_path(self):
         self.eternalProcess.game_name_list.append('2016-03-05-Pacers-vs-Wizards')
         self.assertEqual(os.getcwd() + '/Twitter_Utils/data/tweets/2016-03-05-Pacers-vs-Wizards/2016-03-05-Pacers-vs-Wizards.txt',
                          self.eternalProcess.get_game_name_base_file_path(0))
@@ -168,37 +175,13 @@ class TestEternalProcess(unittest.TestCase):
             for _ in reader:
                 count_1 += 1
         reader.close()
-        eternal_process.remove_first_line_from_file(path)
+        eternal_process.remove_last_line_from_file(path)
         count_2 = 0
         with open(path, 'r') as reader:
             for _ in reader:
                 count_2 += 1
         reader.close()
-
-    def test_end_stream_and_clear_api(self):
-        # eternal_process = EternalProcess()
-        # self.assertEqual(expected, eternal_process.end_stream_and_clear_api(i))
-        assert True  # TODO: implement your test here
-
-    def test_get_and_disconnect_stream_at_index(self):
-        # eternal_process = EternalProcess()
-        # self.assertEqual(expected, eternal_process.get_and_disconnect_stream_at_index(idx))
-        assert True  # TODO: implement your test here
-
-    def test_get_index_and_clear_api_key_at_index(self):
-        # eternal_process = EternalProcess()
-        # self.assertEqual(expected, eternal_process.get_index_and_clear_api_key_at_index(idx))
-        assert True  # TODO: implement your test here
-
-    def test_replace_written_tweets_with_map_reduced_version(self):
-        # eternal_process = EternalProcess()
-        # self.assertEqual(expected, eternal_process.replace_written_tweets_with_map_reduced_version(index, map_reduced_tweets))
-        assert True  # TODO: implement your test here
-
-    def test_write_days_games_data(self):
-        # eternal_process = EternalProcess()
-        # self.assertEqual(expected, eternal_process.write_days_games_data())
-        assert True  # TODO: implement your test here
+        self.assertEqual(count_1-1, count_2)
 
 if __name__ == '__main__':  # pragma: no cover
     unittest.main()
