@@ -128,37 +128,78 @@ class EternalProcess:
         now_plus_10 = time_now + datetime.timedelta(minutes=minutes)
         return now_plus_10.strftime('%H:%M')
 
+    # TODO - Fairly certain this will not end two streams that are supposed to end at the same time
     def check_if_stream_should_end(self):
+        """
+        Runs through active streams and if its time to end it, ends it and clears the api key for use
+        :return: returns True if stream has been ended, if there is no stream then it returns False
+        """
         if self.end_times_list:
             hour_min_time_now = datetime.datetime.now().strftime('%H:%M')
-            did_delete = False
             # TODO - Refactor the line below this
             for i in xrange(len(self.end_times_list) - 1, -1, -1):
                 if self.end_times_list[i] == hour_min_time_now:
-                    stream = self.stream_list[i]
-                    stream = stream[0]
-                    index = self.stream_list[i]
-                    index = index[1]
-                    print self.stream_list
-                    print 'Stopping: ' + str(stream)
-                    stream.disconnect()
-                    self.data_gatherer.key_handler.clear_api_key_at_index_for_use(index)
-                    map_reduced_tweets = self.map_reduce_tweets_after_disconnect(i)
-                    self.replace_written_tweets_with_map_reduced_version(i, map_reduced_tweets)
-                    self.remove_first_line_from_file(self.get_game_name_base_file_path(i))
-                    del self.stream_list[i]
-                    del self.end_times_list[i]
-                    del self.game_name_list[i]
-                    did_delete = True
-
-            return did_delete
+                    return self.end_stream_and_free_api(i)
+            return False
         else:
             return False
 
+    def end_stream_and_free_api(self, i):
+        """
+        Clears api key, disconnects stream, map reduces tweets, removes first line and deletes entries from lists
+        :param i: index at which to clear keys, streams and everything
+        :return: True Bool, have to catch exceptions
+        """
+        self.get_index_and_clear_api_key_at_index(i)
+        self.get_and_disconnect_stream_at_index(i)
+        map_reduced_tweets = self.map_reduce_tweets_after_disconnect(i)
+        self.replace_written_tweets_with_map_reduced_version(i, map_reduced_tweets)
+        self.remove_first_line_from_file(self.get_game_name_base_file_path(i))
+        self.delete_stream_end_time_game_name_from_lists(i)
+        return True
+
+    def delete_stream_end_time_game_name_from_lists(self, i):
+        """
+        Deletes entry for stream, end_times, and game name lists.
+        :param i: index at which to clear
+        """
+        try:
+            del self.stream_list[i]
+            del self.end_times_list[i]
+            del self.game_name_list[i]
+        except KeyError:
+            raise KeyError
+
+    def get_index_and_clear_api_key_at_index(self, idx):
+        """
+        Get index from index_stream tuple and clear the api key at index
+        :param idx: index at which to get tuple from list
+        """
+        index_stream = self.stream_list[idx]
+        index = index_stream[1]
+        self.data_gatherer.key_handler.clear_api_key_at_index_for_use(index)
+
+    def get_and_disconnect_stream_at_index(self, idx):
+        """
+        Get stream from index_stream tuple and clear stream
+        :param idx: index at which to get tuple from list
+        """
+        index_stream = self.stream_list[idx]
+        stream = index_stream[0]
+        print self.stream_list
+        print 'Stopping: ' + str(stream)
+        stream.disconnect()
+
     def get_write_path_for_days_games(self):
+        """
+        :return: base path for days games from Stattleship API
+        """
         return self.base_path + datetime.datetime.now().strftime('%Y-%m-%d') + '.json'
 
     def is_time_to_get_game_data_for_day(self):
+        """
+        :return: checks if its time to get data and returns BOOL
+        """
         if self.time_to_check_games_for_the_day == datetime.datetime.now().strftime('%H:%M'):
             return True
         else:
@@ -166,9 +207,13 @@ class EternalProcess:
 
     def map_reduce_tweets_after_disconnect(self, index):
         # TODO - Currently breaks if list has no repeated tweets
-        self.game_name_list.append('2016-03-05-Pacers-vs-Wizards')
+        """
+        Uses Popen to open and pipe 5 processes, in order to MapReduce tweets
+        :param index: index for get_game_name_directory
+        :return: returns object of newly map reduced tweets
+        """
         try:
-            game_path = self.get_game_name_directory(index)
+            game_path = self.get_game_name_base_file_path(index)
             p1 = Popen(['cat', game_path], stdout=PIPE)
             p2 = Popen(['python', 'Twitter_Utils/Mapper.py'], stdin=p1.stdout, stdout=PIPE)
             p3 = Popen(['sort'], stdin=p2.stdout, stdout=PIPE)
@@ -180,13 +225,17 @@ class EternalProcess:
             p3.stdout.close()
             p4.stdout.close()
             map_reduced_tweets = p5.communicate()[0]
-            print map_reduced_tweets
             return map_reduced_tweets
 
         except IndexError:
             print 'List out of range'
 
     def replace_written_tweets_with_map_reduced_version(self, index, map_reduced_tweets):
+        """
+        Opens tweets file and replaces it with map reduced version
+        :param index: index for get_game_name_base_file_path
+        :param map_reduced_tweets: map_reduced_tweets object to be written
+        """
         try:
             with open(self.get_game_name_base_file_path(index), 'w+') as f:
                 f.write(map_reduced_tweets)
@@ -195,10 +244,20 @@ class EternalProcess:
             print 'File not found'
 
     def get_game_name_directory(self, index):
+        """
+        Gets directory given index for game_name_list
+        :param index:
+        :return: path to game_name.txt
+        """
         game_name = self.game_name_list[index]
-        return 'Twitter_Utils/data/tweets/' + game_name + '/' + game_name + '.txt'
+        return 'Twitter_Utils/data/tweets/' + game_name + '/'
 
     def get_game_name_base_file_path(self, index):
+        """
+        Gets file given index for game_name_list
+        :param index:
+        :return: path to game_name.txt
+        """
         game_name = self.game_name_list[index]
         wd = os.getcwd()
         pos = wd.find("BigDataMonsters")
@@ -210,6 +269,9 @@ class EternalProcess:
 
     # TODO - Figure out how to test this
     def write_days_games_data(self):  # pragma: no cover
+        """
+        Writes API response containing info for days games
+        """
         write_path = self.get_write_path_for_days_games()
         data_to_write = self.sports_data.get_nba_games_for_today()
         try:
@@ -221,6 +283,10 @@ class EternalProcess:
 
     @staticmethod
     def remove_first_line_from_file(path):
+        """
+        Removes first line from file
+        :param path: path to file
+        """
         try:
             with open(path, 'r') as fin:
                 data = fin.read().splitlines(True)
@@ -232,6 +298,10 @@ class EternalProcess:
 
     @staticmethod
     def remove_last_line_from_file(path):
+        """
+        Removes last line from file
+        :param path: path to file
+        """
         with open(path, 'r') as fin:
             data = fin.read().splitlines(True)
         with open(path, 'w') as fout:
@@ -239,6 +309,10 @@ class EternalProcess:
             fout.close()
 
     @staticmethod
-    def sleep_for(tick_time):
+    def sleep_for(tick_time_in_seconds):
+        """
+        Sleeps for number of seconds given
+        :param tick_time_in_seconds: seconds to sleep for
+        """
         start_time = time.time()
-        time.sleep(tick_time - ((time.time() - start_time) % tick_time))
+        time.sleep(tick_time_in_seconds - ((time.time() - start_time) % tick_time_in_seconds))
