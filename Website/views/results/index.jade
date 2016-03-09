@@ -1,0 +1,28 @@
+extends ../layout
+
+block content
+    h1.
+        #{title}
+    ul
+        - each result, i in results
+            li
+                p
+                = "Event Name: " + result.event_name
+                p
+                = "Score Applicable: " + result.score_applicable
+                p
+                = "Score 1: " + result.score_1
+                p
+                = "Score 2: " + result.score_2
+                p
+                = "Event Date: " + result.event_date
+                p
+                = "Event id: " + result._id
+                form(action='/api/results/#{result._id}/edit',method='post',enctype='application/x-www-form-urlencoded')
+                    input(type='hidden',value='DELETE',name='_method')
+                    button(type='submit').
+                        Delete
+                p
+                    a(href='/api/results/#{result._id}/edit') Edit
+                p
+                    a(href='/api/results/#{result._id}') Show
