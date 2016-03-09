@@ -121,8 +121,8 @@ class TestEternalProcess(unittest.TestCase):
 
     def test_get_game_name_file_path(self):
         self.eternalProcess.game_name_list.append('2016-03-05-Pacers-vs-Wizards')
-        self.assertEqual('Twitter_Utils/data/tweets/2016-03-05-Pacers-vs-Wizards/2016-03-05-Pacers-vs-Wizards.txt',
-                         self.eternalProcess.get_game_name_directory(0))
+        self.assertEqual(os.getcwd() + '/Twitter_Utils/data/tweets/2016-03-05-Pacers-vs-Wizards/2016-03-05-Pacers-vs-Wizards.txt',
+                         self.eternalProcess.get_game_name_base_file_path(0))
 
     def test_delete_stream_end_time_game_name_from_lists(self):
         eternal_process = EternalProcess()
@@ -137,16 +137,10 @@ class TestEternalProcess(unittest.TestCase):
         self.assertIs(len(eternal_process.end_times_list), 0)
         self.assertIs(len(eternal_process.game_name_list), 0)
 
-    def test_get_game_name_base_file_path(self):
-        eternal_process = EternalProcess()
-        eternal_process.game_name_list.append('Test_game')
-        expected = os.getcwd() + '/Twitter_Utils/data/tweets/Test_game/Test_game.txt'
-        self.assertEqual(expected, eternal_process.get_game_name_base_file_path(0))
-
     def test_get_game_name_directory(self):
         eternal_process = EternalProcess()
         eternal_process.game_name_list.append('Test_game')
-        expected = 'Twitter_Utils/data/tweets/Test_game/Test_game.txt'
+        expected = 'Twitter_Utils/data/tweets/Test_game/'
         self.assertEqual(expected, eternal_process.get_game_name_directory(0))
 
     def test_remove_first_line_from_file(self):
