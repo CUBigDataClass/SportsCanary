@@ -151,17 +151,17 @@ router.put('/:id/edit', function(req, res) {
             score_1 : score_1,
             score_2 : score_2,
             event_date : event_date
-        }, function (err, resultID) {
+        }, function (err, new_result) {
             if (err) {
                 res.send("There was a problem updating the information to the database: " + err);
             }
             else {
                 res.format({
-                    html: function(){
-                        res.redirect("/api/results/" + result._id);
-                    },
+                    //html: function(){
+                    //    res.redirect("/api/results/" + result._id);
+                    //},
                     json: function(){
-                        res.json(result);
+                        res.json(new_result);
                     }
                 });
             }
@@ -179,9 +179,9 @@ router.delete('/:id/edit', function (req, res){
                 } else {
                     console.log('DELETE removing ID: ' + result._id);
                     res.format({
-                        html: function(){
-                            res.redirect("/api/results");
-                        },
+                        //html: function(){
+                        //    res.redirect("/api/results");
+                        //},
                         json: function(){
                             res.json({message : 'deleted',
                                 item : result

@@ -38,7 +38,7 @@ describe('Results', function() {
                 done();
             });
     });
-    it('should list a SINGLE blob on /blob/<id> GET', function(done) {
+    it('should list a SINGLE result on /api/results/<id> GET', function(done) {
         chai.request(server)
             .get('/api/results/' + id)
             .send({'event_name': 'Test Game', 'score_applicable': true,
@@ -58,6 +58,38 @@ describe('Results', function() {
                 done();
             });
     });
-    it('should update a SINGLE blob on /blob/<id> PUT');
-    it('should delete a SINGLE blob on /blob/<id> DELETE');
+    // TODO - Handle not sending every parameter in PUT
+    it('should update a SINGLE result on /api/results/<id>/edit PUT', function(done) {
+        chai.request(server)
+            .put('/api/results/' + id + '/edit')
+            .send({'event_name': 'New Name', 'score_applicable': true, 'score_1': 10, 'score_2': 90, event_date: Date.now()})
+            .end(function (error, response) {
+                response.should.have.status(200);
+                response.should.be.json;
+                response.body.should.be.a('object');
+                response.body.should.have.property('ok', 1);
+                response.body.should.have.property('nModified', 1);
+                response.body.should.have.property('n', 1);
+                done();
+            });
+    });
+    it('should delete a SINGLE result on /api/results/<id>/edit DELETE', function(done) {
+        chai.request(server)
+            .delete('/api/results/' + id + '/edit')
+            .end(function (error, response) {
+                response.should.have.status(200);
+                response.should.be.json;
+                response.body.should.be.a('object');
+                response.body.should.have.property('message', 'deleted');
+                response.body.should.have.property('item');
+                response.body.item.should.be.a('object');
+                response.body.item.should.have.property('__v');
+                response.body.item.should.have.property('event_name');
+                response.body.item.should.have.property('score_1');
+                response.body.item.should.have.property('score_2');
+                response.body.item.should.have.property('_id');
+                response.body.item.should.have.property('event_date');
+                done();
+        });
+    });
 });
