@@ -11,18 +11,10 @@ describe('Robots', function() {
 	it('should return robots.txt file in text/plain format.', function(done) {
 		chai.request(server)
 		.get('/robots.txt')
+		// TODO - Write tests to check that robots.txt have the correct body.
 		.end(function(err, res) {
 			res.should.have.status(200);
 			res.should.be.text;
-			done();
-		});
-	});
-	it('should return robots.txt file in text/plain format.', function(done) {
-		chai.request(server)
-		.get('/robots.txt')
-		.end(function(err, res) {
-			res.should.have.status(200);
-			// TODO - Write tests to check that robots.txt have the correct body.
 			done();
 		});
 	});

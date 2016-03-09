@@ -1,11 +1,11 @@
 var express = require('express'),
     router = express.Router(),
-    // MongoDB Connection
+// MongoDB Connection
     mongoose = require('mongoose'),
     result = mongoose.model('Result'),
-    // Parses Body
+// Parses Body
     bodyParser = require('body-parser'),
-    // Manipulates Post
+// Manipulates Post
     methodOverride = require('method-override');
 
 router.use(bodyParser.urlencoded({ extended: true }));
@@ -54,12 +54,13 @@ router.route('/')
             if (err) {
                 res.send("There was a problem adding the information to the database.");
             } else {
-                console.log('POST new result: ' + result);
+                //console.log('POST new result: ' + result);
                 res.format({
-                    html: function(){
-                        res.location("/api/results");
-                        res.redirect("/api/results");
-                    },
+                    //html: function(){
+                    //    //res.location("/api/results");
+                    //    //res.redirect("/api/results");
+                    //    res.json(result);
+                    //},
                     json: function(){
                         res.json(result);
                     }
@@ -101,11 +102,11 @@ router.route('/:id')
             } else {
                 //console.log('GET Retrieving ID: ' + result.event_name);
                 res.format({
-                    html: function(){
-                        res.render('results/show', {
-                            "result" : result
-                        });
-                    },
+                    //html: function(){
+                    //    res.render('results/show', {
+                    //        "result" : result
+                    //    });
+                    //},
                     json: function(){
                         res.json(result);
                     }
