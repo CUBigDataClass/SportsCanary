@@ -1,11 +1,11 @@
 var express = require('express'),
     router = express.Router(),
-    // MongoDB Connection
+// MongoDB Connection
     mongoose = require('mongoose'),
     result = mongoose.model('Result'),
-    // Parses Body
+// Parses Body
     bodyParser = require('body-parser'),
-    // Manipulates Post
+// Manipulates Post
     methodOverride = require('method-override');
 
 router.use(bodyParser.urlencoded({ extended: true }));
@@ -54,12 +54,13 @@ router.route('/')
             if (err) {
                 res.send("There was a problem adding the information to the database.");
             } else {
-                console.log('POST new result: ' + result);
+                //console.log('POST new result: ' + result);
                 res.format({
-                    html: function(){
-                        res.location("/api/results");
-                        res.redirect("/api/results");
-                    },
+                    //html: function(){
+                    //    //res.location("/api/results");
+                    //    //res.redirect("/api/results");
+                    //    res.json(result);
+                    //},
                     json: function(){
                         res.json(result);
                     }
@@ -101,11 +102,11 @@ router.route('/:id')
             } else {
                 //console.log('GET Retrieving ID: ' + result.event_name);
                 res.format({
-                    html: function(){
-                        res.render('results/show', {
-                            "result" : result
-                        });
-                    },
+                    //html: function(){
+                    //    res.render('results/show', {
+                    //        "result" : result
+                    //    });
+                    //},
                     json: function(){
                         res.json(result);
                     }
@@ -150,17 +151,17 @@ router.put('/:id/edit', function(req, res) {
             score_1 : score_1,
             score_2 : score_2,
             event_date : event_date
-        }, function (err, resultID) {
+        }, function (err, new_result) {
             if (err) {
                 res.send("There was a problem updating the information to the database: " + err);
             }
             else {
                 res.format({
-                    html: function(){
-                        res.redirect("/api/results/" + result._id);
-                    },
+                    //html: function(){
+                    //    res.redirect("/api/results/" + result._id);
+                    //},
                     json: function(){
-                        res.json(result);
+                        res.json(new_result);
                     }
                 });
             }
@@ -178,9 +179,9 @@ router.delete('/:id/edit', function (req, res){
                 } else {
                     console.log('DELETE removing ID: ' + result._id);
                     res.format({
-                        html: function(){
-                            res.redirect("/api/results");
-                        },
+                        //html: function(){
+                        //    res.redirect("/api/results");
+                        //},
                         json: function(){
                             res.json({message : 'deleted',
                                 item : result
