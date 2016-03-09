@@ -4,15 +4,16 @@
 ###Setup
 
 ```
-pip install -r requirements.txt
+sudo pip install -r requirements.txt
 ```
 
 Before running this script, you will have to establish environment variables for Twitter API keys.
 ```
-export TWITTER_APP_KEY='your key'
-export TWITTER_APP_SECRET='your key'
-export TWITTER_OAUTH_TOKEN='your key'
-export TWITTER_OAUTH_TOKEN_SECRET='your key'
+export NUMBER_OF_TWITTER_KEYS_AVAILABLE='#'
+export TWITTER_APP_KEY_0='your key'
+export TWITTER_APP_SECRET_0='your key'
+export TWITTER_OAUTH_TOKEN_0='your key'
+export TWITTER_OAUTH_TOKEN_SECRET_0='your key'
 ```
 Then, either load a new bash prompt or run
 ```
@@ -34,4 +35,9 @@ Select the 'Corpora' tab and then download 'twitter_samples'
 ```
 $ py.test
 ```
+**With Coverage**
+```
+$ py.test --cov=Twitter_Utils --cov=Gambling_Utils --cov=Eternal_Utils --cov-report=term-missing --cov-report=html
+```
+
 
