@@ -3,13 +3,13 @@ extends ../layout
 block content
     h1.
         Result ID #{result._id}
-    form(action='/api/result/#{result._id}/edit',method='post',name='updateresult',enctype='application/x-www-form-urlencoded')
+    form(action='/api/results/#{result._id}/edit',method='post',name='updateresult',enctype='application/x-www-form-urlencoded')
         p Name:
             input#inputEventName(type='text', value='#{result.event_name}', name='event_name')
         p Score 1:
             input#inputScore_1(type='number', value='#{result.score_1}', name='score_1')
         p Score 2:
-            input#inputScore_2(type='number', value='#{result.score_2}', name='score_1')
+            input#inputScore_2(type='number', value='#{result.score_2}', name='score_2')
         p Event Date:
             input#inputEventDate(type='date', value='#{result.event_date}', name='event_date')
         p Score Applicable?:
