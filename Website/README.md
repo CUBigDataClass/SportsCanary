@@ -1,10 +1,23 @@
 ###Setup
 
-Install **node**
+Install **node** and **npm**
+```
+OSX:
+$ brew install node
 
-Install **npm**
+Ubuntu:
+$ sudo apt-get install nodejs
+$ sudo apt-get install npm
+```
+
+Install **MongoDB**
+```
+OSX:
+$ brew install mongodb
+```
 
 
+Install dependencies
 ```
 $ npm install
 ```
