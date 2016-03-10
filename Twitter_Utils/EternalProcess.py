@@ -3,12 +3,13 @@ import datetime
 import dateutil.parser
 import os
 import json
+import logging
 from subprocess import Popen, PIPE
 from SportsData import SportsData
 from DataGatherer import DataGatherer
 from KeywordGenerator import KeywordGenerator
 from Eternal_Utils.CommonUtils import CommonUtils
-
+import logging
 
 class EternalProcess:
     def __init__(self):
@@ -32,6 +33,7 @@ class EternalProcess:
         self.stream_list = []
         self.end_times_list = []
         self.game_name_list = []
+        self.logger = logging.getLogger(__name__)
 
     def start_process(self):  # pragma: no cover
         """
@@ -39,6 +41,8 @@ class EternalProcess:
         It has to check if a game is starting and if that is the case, fork the process,
         And in that new process check for game data during the time period assigned to it.
         """
+        self.logger.info('Hi, bar')
+        self.logger.error('ERROR')
         print 50 * '*' + '\n' + 10 * '*' + '  STARTING SCANNING PROCESS   ' + 10 * '*' + '\n' + 50 * '*'
         while True:
             print str(self.stream_list) + str(self.end_times_list)
