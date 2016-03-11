@@ -6,6 +6,7 @@ from tweepy import Stream
 from tweepy import API
 from Eternal_Utils.CommonUtils import CommonUtils
 import os
+import logging
 
 
 class DataGatherer(StreamListener):
@@ -27,6 +28,7 @@ class DataGatherer(StreamListener):
         self.auth = OAuthHandler(self.APP_KEY, self.APP_SECRET)
         self.auth.set_access_token(self.OAUTH_TOKEN, self.OAUTH_TOKEN_SECRET)
         self.api = API(self.auth)
+        self.logger = logging.getLogger(__name__)
 
     def get_auth(self):
         index = self.key_handler.check_which_key_to_use()
@@ -39,24 +41,22 @@ class DataGatherer(StreamListener):
             raise Exception
 
     def on_error(self, status_code):
-        print 'ERROR: ' + str(status_code)
-        # if status_code == 420:
+        self.logger.error('Error: ' + str(status_code))
         # returning False in on_data disconnects the stream
         return False
 
     def on_status(self, status):  # pragma: no cover
         if status.lang == 'en':
             processed_tweet = self.processor.standardize_tweet(status.text)
-            # print processed_tweet
             self.save_tweet_to_disk(processed_tweet)
 
     def get_tweet_stream(self, track, game_id, game_name):
         index = self.get_auth()
-        print('Using auth: ' + str(self.auth.consumer_key))
+        self.logger.info('Using auth: ' + str(self.auth.consumer_key))
         stream = Stream(self.auth, self)
         self.game_id_to_store = game_id
         self.game_name_to_store = game_name
-        print 'TRACK: ' + track
+        self.logger.info('Track: ' + str(track))
         stream.filter(track=[track], async=True)
         return stream, index
 
