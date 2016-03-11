@@ -191,7 +191,7 @@ class EternalProcess:
         """
         index_stream = self.stream_list[idx]
         stream = index_stream[0]
-        self.logger.info('Stream List ' + self.stream_list)
+        self.logger.info('Stream List ' + str(self.stream_list))
         self.logger.info('Stopping ' + str(stream))
         stream.disconnect()
 
