@@ -17,7 +17,7 @@ class EternalProcess:
         self.keyword_generator = KeywordGenerator()
         self.tick_time_in_seconds = 60.0
         self.time_prior_to_game_to_start_stream = 1
-        self.time_to_check_games_for_the_day = '19:42'
+        self.time_to_check_games_for_the_day = '11:35'
         self.data_gatherer = DataGatherer()
         wd = os.getcwd()
         pos = wd.find("BigDataMonsters")
@@ -47,7 +47,7 @@ class EternalProcess:
             self.logger.info('End Times list: ' + str(self.end_times_list))
             self.check_if_stream_should_end()
             # TODO - If stream ends, map reduce tweets, then analyze them.
-            if self.is_time_to_get_game_data_for_day:
+            if self.is_time_to_get_game_data_for_day():
                 self.write_days_games_data()
 
             # Read in file to see if it is time to analyze twitter

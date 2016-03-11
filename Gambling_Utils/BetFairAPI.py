@@ -3,7 +3,6 @@ import json
 from Eternal_Utils.CommonUtils import CommonUtils
 from Gambling_Utils.Games import Games
 from Gambling_Utils.Game import Game
-
 from Proxy import ProxyHandler
 
 
@@ -145,4 +144,3 @@ class OddsGeneration:
             return game_events
         except KeyError:
             print 'Error accumulating games' + str(response['error'])
-
