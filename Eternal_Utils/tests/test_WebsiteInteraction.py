@@ -14,5 +14,5 @@ class TestWebsiteInteraction(unittest.TestCase):
         self.assertEqual(200, r)
         self.assertEqual(200, t)
 
-if __name__ == '__main__':
+if __name__ == '__main__':  # pragma: no cover
     unittest.main()

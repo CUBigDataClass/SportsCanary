@@ -4,6 +4,7 @@ import pickle
 import TweetProcessing
 import DataGatherer
 import os
+import logging
 # Data Source - Sentiment140
 
 
@@ -12,6 +13,7 @@ class FeatureExtractor:
         self.tweet_processor = TweetProcessing.TweetProcessor()
         self.data_gatherer = DataGatherer.DataGatherer()
         self.feature_list = []
+        self.logger = logging.getLogger(__name__)
 
     def create_tweets_list_with_sentiment(self):
         input_tweets = csv.reader(open(self.get_base_training_file_path(), 'rb'), delimiter=',')
@@ -67,14 +69,15 @@ class FeatureExtractor:
         return features
 
     def save_classifier(self, classifier):  # pragma: No cover
-        print 'Saving new classifier.'
+        self.logger.info('Saving new classifier.')
         try:
             f = open(self.get_base_path_to_save_classifier(), 'wb')
             pickle.dump(classifier, f, pickle.HIGHEST_PROTOCOL)
             f.close()
         except IOError:
-            print 'Error while saving classifier'
-            return IOError
+            self.logger.exception(IOError)
+            self.logger.error('File not found to save at ' + self.get_base_path_to_save_classifier())
+            raise IOError
 
     def load_classifier(self):  # pragma: No cover
         try:
@@ -83,11 +86,12 @@ class FeatureExtractor:
             f.close()
             return classifier
         except IOError:
-            print 'Error while loading classifier'
+            self.logger.exception(IOError)
+            self.logger.error('File not found to load at ' + self.get_base_path_to_save_classifier())
             return None
 
     def train_naive_bayes_classifier(self):  # pragma: No cover
-        print 'Creating new classifier.'
+        self.logger.info('Creating new classifier.')
         tweets = self.create_tweets_list_with_sentiment()
         self.remove_duplicates()
         training_set = nltk.classify.util.apply_features(self.extract_features, tweets)

@@ -1,7 +1,7 @@
 import json
 import os
 from Eternal_Utils.CommonUtils import CommonUtils
-
+import logging
 
 class TwitterAPIKeyHandler:
     def __init__(self):
@@ -14,6 +14,7 @@ class TwitterAPIKeyHandler:
         else:
             path = wd
         self.key_check_write_path = path + '/Twitter_Utils/data/Active_API_Log.json'
+        self.logger = logging.getLogger(__name__)
 
     def get_api_keys_from_environment(self):
         """
@@ -91,7 +92,8 @@ class TwitterAPIKeyHandler:
             return True
 
         except IOError:
-            print 'File not found while updating JSON file in TwitterAPIKeys'
+            self.logger.exception(IOError)
+            self.logger.error('File not found while updating JSON file in TwitterAPIKeys at ' + self.key_check_write_path)
             raise IOError
 
     # TODO - Create a makefile for clearing the keys API file for fresh installs in the future.
@@ -113,5 +115,6 @@ class TwitterAPIKeyHandler:
             print 'Key file written'
             return 0
         except IOError:
-            print 'IOError while writing initial key state to disk in TwitterAPIKeys'
+            self.logger.exception(IOError)
+            self.logger.error('IOError while writing initial key state to disk in TwitterAPIKeys at ' + self.key_check_write_path)
             return None

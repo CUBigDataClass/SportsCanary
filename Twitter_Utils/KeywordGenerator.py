@@ -1,5 +1,6 @@
 import os
 import simplejson as json
+import logging
 
 
 class KeywordGenerator:
@@ -11,6 +12,7 @@ class KeywordGenerator:
         else:
             path = wd
         self.team_data_path = path + '/Twitter_Utils/data/teams-data.json'
+        self.logger = logging.getLogger(__name__)
 
     def generate_search_terms(self, team_id):
         """
@@ -42,7 +44,8 @@ class KeywordGenerator:
             return search_terms_list
 
         except IOError:
-            print 'File directory not found.'
+            self.logger.exception(IOError)
+            self.logger.error('Search terms not found at ' + self.team_data_path)
             raise IOError
 
     @staticmethod

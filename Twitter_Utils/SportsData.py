@@ -1,3 +1,4 @@
+import logging
 import requests
 import simplejson as json
 from Eternal_Utils.CommonUtils import CommonUtils
@@ -18,9 +19,11 @@ class SportsData:
         self.STAT_CLIENT_SECRET = CommonUtils.get_environ_variable('STAT_CLIENT_SECRET')
         self.STAT_ACCESS_TOKEN = CommonUtils.get_environ_variable('STAT_ACCESS_TOKEN')
         self.base_url = 'https://www.stattleship.com/basketball/'
+        self.logger = logging.getLogger(__name__)
 
     def get_nba_games_for_today(self):
         """Gets all games for today"""
+        self.logger.info('Getting games for today.')
         url = self.base_url + '/nba/games?on=today'
         headers = {
             'Authorization': str(self.STAT_ACCESS_TOKEN),
@@ -68,7 +71,6 @@ class SportsData:
 
         res = requests.get(url, headers=headers)
         content = json.loads(res.content)
-        print content
         if len(content['game_logs']) == 0:  # pragma: no cover
             return True
         if content['players']:
