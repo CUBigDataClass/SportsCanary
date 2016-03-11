@@ -2,6 +2,7 @@ import json
 import os
 import unittest
 import datetime
+import time
 from Twitter_Utils.EternalProcess import EternalProcess
 from Twitter_Utils.DataGatherer import DataGatherer
 
@@ -85,7 +86,7 @@ class TestEternalProcess(unittest.TestCase):
     def test_sleep_for(self):
         eternal_process = EternalProcess()
         time_now = datetime.datetime.now()
-        eternal_process.sleep_for(1)
+        eternal_process.sleep_for(1, time.time())
         time_now_plus_1 = datetime.datetime.now().strftime('%H:%M:%S')
         time_now += datetime.timedelta(seconds=1)
         time_now = time_now.strftime('%H:%M:%S')

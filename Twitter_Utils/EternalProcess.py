@@ -3,12 +3,13 @@ import datetime
 import dateutil.parser
 import os
 import json
+import logging
+from pymongo import MongoClient
 from subprocess import Popen, PIPE
 from SportsData import SportsData
 from DataGatherer import DataGatherer
 from KeywordGenerator import KeywordGenerator
 from Eternal_Utils.CommonUtils import CommonUtils
-import logging
 
 
 class EternalProcess:
@@ -16,8 +17,8 @@ class EternalProcess:
         self.sports_data = SportsData()
         self.keyword_generator = KeywordGenerator()
         self.tick_time_in_seconds = 60.0
-        self.time_prior_to_game_to_start_stream = 1
-        self.time_to_check_games_for_the_day = '11:35'
+        self.time_prior_to_game_to_start_stream = 180
+        self.time_to_check_games_for_the_day = '15:45'
         self.data_gatherer = DataGatherer()
         wd = os.getcwd()
         pos = wd.find("BigDataMonsters")
@@ -41,6 +42,7 @@ class EternalProcess:
         It has to check if a game is starting and if that is the case, fork the process,
         And in that new process check for game data during the time period assigned to it.
         """
+        start_time = time.time()
         print(50 * '*' + '\n' + 10 * '*' + '  STARTING SCANNING PROCESS   ' + 10 * '*' + '\n' + 50 * '*')
         while True:
             self.logger.info('Stream list: ' + str(self.stream_list))
@@ -82,10 +84,10 @@ class EternalProcess:
             except IOError:
                 self.logger.exception(IOError)
                 self.logger.error('File not found at ' + read_path)
-                raise IOError
+                self.write_days_games_data()
+                # raise IOError
 
-            # restart loop after sleep, given by our tick_time
-            self.sleep_for(self.tick_time_in_seconds)
+            self.sleep_for(self.tick_time_in_seconds, start_time)
 
     def create_keyword_string_for_game(self, game):
         """
@@ -250,7 +252,7 @@ class EternalProcess:
         except IOError:
             self.logger.exception(IOError)
             self.logger.error('File not found at ' + self.get_game_name_base_file_path(index))
-            print 'IOERROR'
+            print 'IOError'
             # TODO - Raise IOError
             # raise IOError
 
@@ -283,12 +285,20 @@ class EternalProcess:
         """
         Writes API response containing info for days games
         """
+        uri = 'mongodb://' + CommonUtils.get_environ_variable('AWS_MONGO_USER') + ':' \
+              + CommonUtils.get_environ_variable('AWS_MONGO_PASS') + '@' \
+              + CommonUtils.get_environ_variable('AWS_ADDRESS')
+        client = MongoClient(uri)
+        db = client.eventsDB
         write_path = self.get_write_path_for_days_games()
         data_to_write = self.sports_data.get_nba_games_for_today()
         try:
             with open(write_path, 'w+') as f:
                 f.write(data_to_write)
             f.close()
+            with open(write_path) as data_file:
+                data = json.load(data_file)
+            db.nba_logs.insert(data)
         except IOError:
             self.logger.exception(IOError)
             self.logger.error('Unable to write at ' + write_path)
@@ -308,7 +318,7 @@ class EternalProcess:
         except IOError:
             self.logger.exception(IOError)
             self.logger.error('File not found at ' + path)
-            print 'IOERROR'
+            print 'IOError'
             # TODO - Raise IOError
             # raise IOError
 
@@ -325,10 +335,10 @@ class EternalProcess:
             fout.close()
 
     @staticmethod
-    def sleep_for(tick_time_in_seconds):
+    def sleep_for(tick_time_in_seconds, start_time):
         """
-        Sleeps for number of seconds given
+        Sleeps for number of seconds required to start at next minute tick.
+        :param start_time: start time
         :param tick_time_in_seconds: seconds to sleep for
         """
-        start_time = time.time()
         time.sleep(tick_time_in_seconds - ((time.time() - start_time) % tick_time_in_seconds))
