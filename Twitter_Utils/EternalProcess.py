@@ -250,7 +250,9 @@ class EternalProcess:
         except IOError:
             self.logger.exception(IOError)
             self.logger.error('File not found at ' + self.get_game_name_base_file_path(index))
-            raise IOError
+            print 'IOERROR'
+            # TODO - Raise IOError
+            # raise IOError
 
     def get_game_name_directory(self, index):
         """
@@ -306,7 +308,9 @@ class EternalProcess:
         except IOError:
             self.logger.exception(IOError)
             self.logger.error('File not found at ' + path)
-            raise IOError
+            print 'IOERROR'
+            # TODO - Raise IOError
+            # raise IOError
 
     @staticmethod
     def remove_last_line_from_file(path):
