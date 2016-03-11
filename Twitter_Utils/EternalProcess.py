@@ -3,13 +3,13 @@ import datetime
 import dateutil.parser
 import os
 import json
-import logging
 from subprocess import Popen, PIPE
 from SportsData import SportsData
 from DataGatherer import DataGatherer
 from KeywordGenerator import KeywordGenerator
 from Eternal_Utils.CommonUtils import CommonUtils
 import logging
+
 
 class EternalProcess:
     def __init__(self):
@@ -41,12 +41,10 @@ class EternalProcess:
         It has to check if a game is starting and if that is the case, fork the process,
         And in that new process check for game data during the time period assigned to it.
         """
-        self.logger.info('Hi, bar')
-        self.logger.error('ERROR')
-        print 50 * '*' + '\n' + 10 * '*' + '  STARTING SCANNING PROCESS   ' + 10 * '*' + '\n' + 50 * '*'
+        print(50 * '*' + '\n' + 10 * '*' + '  STARTING SCANNING PROCESS   ' + 10 * '*' + '\n' + 50 * '*')
         while True:
-            print str(self.stream_list) + str(self.end_times_list)
-
+            self.logger.info('Stream list: ' + str(self.stream_list))
+            self.logger.info('End Times list: ' + str(self.end_times_list))
             self.check_if_stream_should_end()
             # TODO - If stream ends, map reduce tweets, then analyze them.
             if self.is_time_to_get_game_data_for_day:
@@ -59,15 +57,15 @@ class EternalProcess:
                 with open(read_path) as f:
                     data = json.load(f)
                     current_time = datetime.datetime.now().strftime('%H:%M')
-                    print 'Current Time: ' + current_time
+                    self.logger.info('Current Time: ' + current_time)
                     for idx, game in enumerate(data):
                         game_time = dateutil.parser.parse(game['start_time']) - \
                                     datetime.timedelta(minutes=self.time_prior_to_game_to_start_stream)
                         game_time = game_time.strftime('%H:%M')
-                        print 'Game Time: ' + game_time
+                        self.logger.info('Game Time: ' + game_time)
                         if game_time == current_time and not game['being_streamed']:
                             self.update_is_streamed_json(index=idx)
-                            print 'Time to get twitter data.'
+                            self.logger.info('Acquiring twitter data for ' + game)
 
                             keyword_string = self.create_keyword_string_for_game(game)
 
@@ -82,7 +80,9 @@ class EternalProcess:
                                 self.get_time_to_end_stream(self.time_prior_to_game_to_start_stream))
 
             except IOError:
-                print 'File not found'
+                self.logger.exception(IOError)
+                self.logger.error('File not found at ' + read_path)
+                raise IOError
 
             # restart loop after sleep, given by our tick_time
             self.sleep_for(self.tick_time_in_seconds)
@@ -118,7 +118,8 @@ class EternalProcess:
             json_file.close()
 
         except IOError:
-            print 'File not found'
+            self.logger.exception(IOError)
+            self.logger.error('File not found at ' + read_path)
             raise IOError
 
     @staticmethod
@@ -190,8 +191,8 @@ class EternalProcess:
         """
         index_stream = self.stream_list[idx]
         stream = index_stream[0]
-        print self.stream_list
-        print 'Stopping: ' + str(stream)
+        self.logger.info('Stream List ' + self.stream_list)
+        self.logger.info('Stopping ' + str(stream))
         stream.disconnect()
 
     def get_write_path_for_days_games(self):
@@ -232,7 +233,9 @@ class EternalProcess:
             return map_reduced_tweets
 
         except IndexError:
-            print 'List out of range'
+            self.logger.exception(IndexError)
+            self.logger.error('Map Reduce error at index ' + index)
+            raise IOError
 
     def replace_written_tweets_with_map_reduced_version(self, index, map_reduced_tweets):
         """
@@ -245,7 +248,9 @@ class EternalProcess:
                 f.write(map_reduced_tweets)
             f.close()
         except IOError:
-            print 'File not found'
+            self.logger.exception(IOError)
+            self.logger.error('File not found at ' + self.get_game_name_base_file_path(index))
+            raise IOError
 
     def get_game_name_directory(self, index):
         """
@@ -283,10 +288,11 @@ class EternalProcess:
                 f.write(data_to_write)
             f.close()
         except IOError:
-            print 'File not found'
+            self.logger.exception(IOError)
+            self.logger.error('Unable to write at ' + write_path)
+            raise IOError
 
-    @staticmethod
-    def remove_first_line_from_file(path):
+    def remove_first_line_from_file(self, path):
         """
         Removes first line from file
         :param path: path to file
@@ -298,7 +304,9 @@ class EternalProcess:
                 fout.writelines(data[1:])
                 fout.close()
         except IOError:
-            print 'File not found'
+            self.logger.exception(IOError)
+            self.logger.error('File not found at ' + path)
+            raise IOError
 
     @staticmethod
     def remove_last_line_from_file(path):

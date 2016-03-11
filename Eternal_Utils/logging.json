@@ -26,7 +26,6 @@
             "backupCount": 20,
             "encoding": "utf8"
         },
-
         "error_file_handler": {
             "class": "logging.handlers.RotatingFileHandler",
             "level": "ERROR",
