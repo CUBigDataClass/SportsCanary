@@ -18,7 +18,7 @@ class EternalProcess:
         self.keyword_generator = KeywordGenerator()
         self.tick_time_in_seconds = 60.0
         self.time_prior_to_game_to_start_stream = 180
-        self.time_to_check_games_for_the_day = '15:45'
+        self.time_to_check_games_for_the_day = '16:34'
         self.data_gatherer = DataGatherer()
         wd = os.getcwd()
         pos = wd.find("BigDataMonsters")
@@ -55,9 +55,19 @@ class EternalProcess:
             # Read in file to see if it is time to analyze twitter
             read_path = self.get_write_path_for_days_games()
 
+            uri = 'mongodb://' + CommonUtils.get_environ_variable('AWS_MONGO_USER') + ':' \
+              + CommonUtils.get_environ_variable('AWS_MONGO_PASS') + '@' \
+              + CommonUtils.get_environ_variable('AWS_ADDRESS')
+            client = MongoClient(uri)
+            db = client.eventsDB
+            data = []
+            for post in db.nba_logs.find():
+                if post['date'] == datetime.datetime.now().strftime('%Y-%m-%d'):
+                    data.append(post)
+
             try:
                 with open(read_path) as f:
-                    data = json.load(f)
+                    # data = json.load(f)
                     current_time = datetime.datetime.now().strftime('%H:%M')
                     self.logger.info('Current Time: ' + current_time)
                     for idx, game in enumerate(data):
@@ -65,6 +75,7 @@ class EternalProcess:
                                     datetime.timedelta(minutes=self.time_prior_to_game_to_start_stream)
                         game_time = game_time.strftime('%H:%M')
                         self.logger.info('Game Time: ' + game_time)
+
                         if game_time == current_time and not game['being_streamed']:
                             self.update_is_streamed_json(index=idx)
                             self.logger.info('Acquiring twitter data for ' + game)

@@ -20,7 +20,7 @@ class TestEternalProcess(unittest.TestCase):
 
         self.time_now = datetime.datetime.now()
         path = self.eternalProcess.base_path + self.time_now.strftime('%Y-%m-%d') + '.json'
-        fo = open(path, 'w')
+        fo = open(path, 'w+')
         fo.write('[{"uuid": "4b2fb0bc-864c-4ede-be61-59ed14e1da50", "title": "Spurs vs Clippers",'
                  '"start_time": "2016-02-18T17:18:00-08:00", "being_streamed": true, "home_team_id":'
                  '"5bf2300f-777b-4caa-9ef3-3fda11f17ad1", "away_team_id": "ed803cc0-8e6e-4798-b5aa-9eecbc977801",'

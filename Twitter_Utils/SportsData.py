@@ -1,4 +1,5 @@
 import logging
+import datetime
 import requests
 import simplejson as json
 from Eternal_Utils.CommonUtils import CommonUtils
@@ -53,7 +54,8 @@ class SportsData:
             list_of_games.append(json.dumps({"uuid": game_uuid, "start_time": game_start_time,
                                              "title": game_title, "home_team_id": game_home_team_id,
                                              "away_team_id": game_away_team_id, "slug": game_slug,
-                                             "being_streamed": False}))
+                                             "being_streamed": False,
+                                             "date": datetime.datetime.now().strftime('%Y-%m-%d')}))
 
         list_of_games = str(list_of_games).replace("'", "")
         return list_of_games
