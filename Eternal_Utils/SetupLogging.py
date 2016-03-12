@@ -24,4 +24,3 @@ def setup_logging(default_path='logging.json', default_level=logging.INFO, env_k
         print 'Path doesnt exist'
         logging.basicConfig(level=default_level)
         return False
-

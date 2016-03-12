@@ -1,5 +1,6 @@
 import json
 import unittest
+import datetime
 from Twitter_Utils.SportsData import SportsData
 
 
@@ -31,6 +32,7 @@ class TestSportsData(unittest.TestCase):
                  'home_team_score': 0}]
 
         expected_response = [{"uuid": "4b2fb0bc-864c-4ede-be61-59ed14e1da50", "title": "Spurs vs Clippers",
+                              "date": datetime.datetime.now().strftime('%Y-%m-%d'),
                               "start_time": "2016-02-18T19:30:00-08:00", "slug": "nba-2015-2016-sa-lac-2016-02-18-1930",
                               "home_team_id": "5bf2300f-777b-4caa-9ef3-3fda11f17ad1",
                               "away_team_id": "ed803cc0-8e6e-4798-b5aa-9eecbc977801", "being_streamed": False}]

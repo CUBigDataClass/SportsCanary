@@ -2,6 +2,7 @@ import json
 import os
 import unittest
 import datetime
+import time
 from Twitter_Utils.EternalProcess import EternalProcess
 from Twitter_Utils.DataGatherer import DataGatherer
 
@@ -19,7 +20,7 @@ class TestEternalProcess(unittest.TestCase):
 
         self.time_now = datetime.datetime.now()
         path = self.eternalProcess.base_path + self.time_now.strftime('%Y-%m-%d') + '.json'
-        fo = open(path, 'w')
+        fo = open(path, 'w+')
         fo.write('[{"uuid": "4b2fb0bc-864c-4ede-be61-59ed14e1da50", "title": "Spurs vs Clippers",'
                  '"start_time": "2016-02-18T17:18:00-08:00", "being_streamed": true, "home_team_id":'
                  '"5bf2300f-777b-4caa-9ef3-3fda11f17ad1", "away_team_id": "ed803cc0-8e6e-4798-b5aa-9eecbc977801",'
@@ -85,26 +86,28 @@ class TestEternalProcess(unittest.TestCase):
     def test_sleep_for(self):
         eternal_process = EternalProcess()
         time_now = datetime.datetime.now()
-        eternal_process.sleep_for(1)
+        eternal_process.sleep_for(1, time.time())
         time_now_plus_1 = datetime.datetime.now().strftime('%H:%M:%S')
         time_now += datetime.timedelta(seconds=1)
         time_now = time_now.strftime('%H:%M:%S')
         self.assertEqual(time_now, time_now_plus_1)
 
-    def test_update_is_streamed_json(self):
-        eternal_process = EternalProcess()
-        eternal_process.update_is_streamed_json(0)
-        path = self.eternalProcess.base_path + self.time_now.strftime('%Y-%m-%d') + '.json'
-        json_file = open(path, 'r')
-        data = json.load(json_file)
-        self.assertEqual(True, data[0]['being_streamed'])
 
-    def test_update_is_streamed_throws_error(self):
-        eternal_process = EternalProcess()
-        eternal_process.base_path = ''
-        with self.assertRaises(IOError):
-            eternal_process.update_is_streamed_json(0)
-        assert True
+    # TODO - Update tests to use MongoDB
+    # def test_update_is_streamed_json(self):
+    #     eternal_process = EternalProcess()
+    #     eternal_process.update_is_streamed_json(0)
+    #     path = self.eternalProcess.base_path + self.time_now.strftime('%Y-%m-%d') + '.json'
+    #     json_file = open(path, 'r')
+    #     data = json.load(json_file)
+    #     self.assertEqual(True, data[0]['being_streamed'])
+    #
+    # def test_update_is_streamed_throws_error(self):
+    #     eternal_process = EternalProcess()
+    #     eternal_process.base_path = ''
+    #     with self.assertRaises(IOError):
+    #         eternal_process.update_is_streamed_json(0)
+    #     assert True
 
     def test_create_keyword_string_for_game(self):
         eternal_process = EternalProcess()
@@ -118,10 +121,10 @@ class TestEternalProcess(unittest.TestCase):
         self.eternalProcess.game_name_list.append('123')
         self.assertIsNotNone(self.eternalProcess.map_reduce_tweets_after_disconnect(0))
 
-    def test_map_reduce_tweets_after_disconnect_raises_assertion(self):
-        with self.assertRaises(IndexError):
-            self.eternalProcess.update_is_streamed_json(3)
-        assert True
+    # def test_map_reduce_tweets_after_disconnect_raises_assertion(self):
+    #     with self.assertRaises(IndexError):
+    #         self.eternalProcess.update_is_streamed_json(3)
+    #     assert True
 
     def test_start_process(self):
         assert True  # TODO: implement your test here
