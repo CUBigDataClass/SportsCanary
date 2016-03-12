@@ -30,7 +30,7 @@ class TestTwitterAPIKeyHandler(unittest.TestCase):
     def test_check_which_key_to_use(self):
         twitter_api_key_handler = TwitterAPIKeySwitcher.TwitterAPIKeyHandler()
         expected = twitter_api_key_handler.check_which_key_to_use()
-        self.assertEqual(expected, 0)
+        self.assertEqual(expected, 1)
 
     def test_check_which_key_to_use_creates_keys(self):
         twitter_api_key = TwitterAPIKeySwitcher.TwitterAPIKeyHandler()
