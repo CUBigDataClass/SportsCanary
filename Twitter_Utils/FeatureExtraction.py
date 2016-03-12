@@ -16,7 +16,7 @@ class FeatureExtractor:
         self.feature_list = []
         self.logger = logging.getLogger(__name__)
 
-    @profile
+    # @profile
     def create_tweets_list_with_sentiment(self):
         input_tweets = csv.reader(open(self.get_base_training_file_path(), 'rb'), delimiter=',')
         tweets = []
@@ -92,7 +92,7 @@ class FeatureExtractor:
             self.logger.error('File not found to load at ' + self.get_base_path_to_save_classifier())
             return None
 
-    @profile
+    # @profile
     def train_naive_bayes_classifier(self):  # pragma: No cover
         with Timer() as t:
             self.logger.info('Creating new classifier.')
@@ -127,6 +127,3 @@ class FeatureExtractor:
         with open(path + '/Twitter_Utils/data/tweets/2016-03-01-Trail-Blazers-vs-Knicks/2016-03-01-Trail-Blazers-vs-Knicks.txt') as f:
             for line in f:
                 print naive_bayes_classifier.classify(self.extract_features(self.create_feature_vector(line)))
-
-t = FeatureExtractor()
-t.analyze_tweets()
