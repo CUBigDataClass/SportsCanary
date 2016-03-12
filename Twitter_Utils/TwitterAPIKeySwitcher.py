@@ -104,7 +104,10 @@ class TwitterAPIKeyHandler:
         key_array = []
         for key in range(0, self.number_of_keys):
             key_name = 'Key_' + str(key)
-            key_entry = {'key_name': key_name, 'in_use': False}
+            if key != 0:
+                key_entry = {'key_name': key_name, 'in_use': False}
+            else:
+                key_entry = {'key_name': key_name, 'in_use': True}
             key_array.append(key_entry)
 
         content = json.dumps(key_array)

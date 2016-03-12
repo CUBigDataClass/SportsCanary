@@ -17,7 +17,7 @@ class EternalProcess:
         self.sports_data = SportsData()
         self.keyword_generator = KeywordGenerator()
         self.tick_time_in_seconds = 60.0
-        self.time_prior_to_game_to_start_stream = 180
+        self.time_prior_to_game_to_start_stream = 125
         self.time_to_check_games_for_the_day = '16:34'
         self.data_gatherer = DataGatherer()
         wd = os.getcwd()
@@ -77,8 +77,8 @@ class EternalProcess:
                         self.logger.info('Game Time: ' + game_time)
 
                         if game_time == current_time and not game['being_streamed']:
-                            self.update_is_streamed_json(index=idx)
-                            self.logger.info('Acquiring twitter data for ' + game)
+                            self.update_is_streamed_json(index=idx, game=game)
+                            self.logger.info('Acquiring twitter data for ' + str(game["title"]))
 
                             keyword_string = self.create_keyword_string_for_game(game)
 
@@ -112,19 +112,30 @@ class EternalProcess:
         keyword_string_away = ','.join(search_terms_away)
         return keyword_string_home + ',' + keyword_string_away
 
-    def update_is_streamed_json(self, index):
+    def update_is_streamed_json(self, index, game):
         """
         Replaces json file to reflect that game is being streamed
         :param index: index within JSON object
         """
+        game_id = game["_id"]
+        uri = 'mongodb://' + CommonUtils.get_environ_variable('AWS_MONGO_USER') + ':' \
+              + CommonUtils.get_environ_variable('AWS_MONGO_PASS') + '@' \
+              + CommonUtils.get_environ_variable('AWS_ADDRESS')
+        client = MongoClient(uri)
+        db = client.eventsDB
+
         time_now = datetime.datetime.now()
         read_path = self.base_path + time_now.strftime('%Y-%m-%d') + '.json'
         try:
             json_file = open(read_path, 'r')
             data = json.load(json_file)
             json_file.close()
-
-            data[index]['being_streamed'] = True
+            if not game['being_streamed']:
+                # data[index]['being_streamed'] = True
+                db.nba_logs.update({'_id':game_id}, {"$set": {"being_streamed": True}}, upsert=False)
+            else:
+                # data[index]['being_streamed'] = False
+                db.nba_logs.update({'_id':game_id}, {"$set": {"being_streamed": False}}, upsert=False)
 
             json_file = open(read_path, 'w+')
             json_file.write(json.dumps(data))
