@@ -1,6 +1,6 @@
 ###Setup
 
-Website: [Sports Canary](www.sportscanary.com)
+Website: [Sports Canary](http://sportscanary.com/)
 
 Install **node** and **npm**
 ```
