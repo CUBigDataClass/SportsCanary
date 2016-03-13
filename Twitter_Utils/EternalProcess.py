@@ -162,8 +162,8 @@ class EternalProcess:
         :return: Time object
         """
         time_now = datetime.datetime.now()
-        # now_plus_10 = time_now + datetime.timedelta(minutes=minutes)
-        now_plus_10 = time_now + datetime.timedelta(minutes=5)
+        now_plus_10 = time_now + datetime.timedelta(minutes=minutes)
+        # now_plus_10 = time_now + datetime.timedelta(minutes=5)
         return now_plus_10.strftime('%H:%M')
 
     # TODO - Fairly certain this will not end two streams that are supposed to end at the same time
