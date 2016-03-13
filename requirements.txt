@@ -17,3 +17,5 @@ boto3
 awscli
 line_profiler
 networkx
+elastic2-doc-manager
+mongo-connector
