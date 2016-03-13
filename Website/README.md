@@ -1,5 +1,7 @@
 ###Setup
 
+Website: [Sports Canary](www.sportscanary.com)
+
 Install **node** and **npm**
 ```
 OSX:
