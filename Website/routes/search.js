@@ -28,11 +28,10 @@ router.get('/', function(req, res, next) {
             }
         }).then(function (resp) {
             var hits = resp.hits.hits;
-            console.log(hits);
-            console.log(cat);
             res.json(hits)
         }, function (err) {
             console.trace(err.message);
+            res.render('search/search', { title: 'SportsCanary - Search'});
         });
     }
 });
