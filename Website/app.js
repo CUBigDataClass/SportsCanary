@@ -12,7 +12,7 @@ var robots = require('robots.txt');
 var routes = require('./routes/index');
 var users = require('./routes/users');
 var results = require('./routes/results');
-
+var search = require('./routes/search');
 var app = express();
 
 // view engine setup
@@ -29,6 +29,7 @@ app.use(robots(__dirname + '/robots.txt'));
 app.use('/', routes);
 app.use('/users', users);
 app.use('/api/results', results);
+app.use('/search', search);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

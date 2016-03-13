@@ -1,0 +1,16 @@
+extends ../layout
+
+block content
+    br
+    h1.center Search
+    div
+        div
+            input#search-bar(type='text', name='searchbar' placeholder='Search Terms')
+        div
+            button(onclick='myFunction()') Try it
+                script.
+                    function myFunction() {
+                        var value = document.getElementById("search-bar").value
+                        window.location = "http://localhost/search?category=" + value;
+                    }
+    br
