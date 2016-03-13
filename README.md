@@ -2,6 +2,7 @@
 
 Uses data from Twitter to generate "crowd-sourced" gambling odds for major sporting events.
 
+Website: [Sports Canary](www.sportscanary.com)
 
 ##Getting Started
 There are two parts to this repo.  In **Website** you can find our MEN stack (Mongo, Express, Node) website.  In **Eternal_Utils**, **Gambling_Utils** and **Twitter_Utils** you can find our python backend for our data gathering, processing and result creation.
