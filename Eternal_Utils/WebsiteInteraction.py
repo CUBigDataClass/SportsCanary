@@ -14,7 +14,7 @@ class WebsiteInteraction:
         data = {'event_name': event_name, 'score_1': score_1,
                 'score_2': score_2, 'event_date': datetime.datetime.now(),
                 'score_applicable': score_applicable, 'encrypted': str(enc)}
-        r = requests.post('http://localhost/api/results', data=data)
+        r = requests.post('http://sportscanary.com/api/results', data=data)
         json_response = r.text
         json_response = json.loads(json_response)
         self.id = json_response['_id']
@@ -24,6 +24,6 @@ class WebsiteInteraction:
         r = requests.delete('http://sportscanary.com/api/results/' + str(self.id) + '/edit')
         return r.status_code
 #
-# web = WebsiteInteraction()
-# web.post_request_to_sports_canary('Cavaliers vs Rockets', 92, 100, score_applicable=True)
-# web.delete_request_to_sports_canary()
+web = WebsiteInteraction()
+web.post_request_to_sports_canary('Cavaliers vs Rockets', 92, 100, score_applicable=True)
+web.delete_request_to_sports_canary()
