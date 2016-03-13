@@ -46,7 +46,8 @@ $ pip install -r requirements.txt
 $ mongod --replSet "rs0"
 $ mongo
 $ rs.initiate()
-$ mongo-connector -m localhost:27017 -t localhost:9200 -d elastic_doc_manager
+In: elastic2-doc-manager
+$ mongo-connector -m localhost:27017 -t localhost:9200 -d elastic2_doc_manager
 To Test:
 $ curl -XPOST http://localhost:9200/sportscanary/_search -d '{"query": {"match": {"_all": "vs"}}}'
 ```
