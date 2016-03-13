@@ -5,8 +5,12 @@ block content
     h1.center Search
     div
         div
-            input#search-bar(type='text', name='searchbar' placeholder="Search Terms")
+            input#search-bar(type='text', name='searchbar' placeholder='Search Terms')
         div
-            button#search-button(class="btn", data-action="bea").
-                Search
+            button(onclick='myFunction()') Try it
+                script.
+                    function myFunction() {
+                        var value = document.getElementById("search-bar").value
+                        window.location = "http://localhost/search?category=" + value;
+                    }
     br
