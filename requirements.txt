@@ -1,3 +1,5 @@
+Crypto
+pycrypto
 pymongo
 urllib3
 tweepy
