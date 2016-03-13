@@ -5,8 +5,44 @@ var express = require('express'),
     result = mongoose.model('Result'),
 // Parses Body
     bodyParser = require('body-parser'),
+    crypto = require('crypto'),
+    assert = require('assert'),
 // Manipulates Post
     methodOverride = require('method-override');
+
+function getDateTime() {
+    var date = new Date();
+
+    var hour = date.getHours();
+    hour = (hour < 10 ? "0" : "") + hour;
+
+    var min  = date.getMinutes();
+    min = (min < 10 ? "0" : "") + min;
+
+    var sec  = date.getSeconds();
+    sec = (sec < 10 ? "0" : "") + sec;
+
+    var year = date.getFullYear();
+
+    var month = date.getMonth() + 1;
+    month = (month < 10 ? "0" : "") + month;
+
+    var day  = date.getDate();
+    day = (day < 10 ? "0" : "") + day;
+
+    return year + "-" + month + "-" + day + "-" + hour + ":" + min;
+}
+
+function crypt() {
+    var algorithm = 'aes256'; // or any other algorithm supported by OpenSSL
+    var key = getDateTime() + getDateTime();
+    var iv   = process.env.NODE_API_IV;
+    var text = 'this-needs-to-be-encrypted';
+
+    var cipher = crypto.createCipheriv(algorithm, key, iv);
+    var encrypted = cipher.update(text, 'utf8', 'hex') + cipher.final('hex');
+    console.log(encrypted)
+}
 
 router.use(bodyParser.urlencoded({ extended: true }));
 router.use(methodOverride(function(req, res){
@@ -39,11 +75,15 @@ router.route('/')
         });
     })
     .post(function(req, res) {
+        //crypt(function() {
+        //});
         var event_name = req.body.event_name;
         var score_applicable = req.body.score_applicable;
         var score_1 = req.body.score_1;
         var score_2 = req.body.score_2;
         var event_date = req.body.event_date;
+        var encrypted = req.body.encrypted;
+        console.log(encrypted);
         mongoose.model('Result').create({
             event_name : event_name,
             score_applicable : score_applicable,
