@@ -108,3 +108,20 @@ class TweetProcessor:
     def remove_appended_url_or_user(self, tweet):
         tweet = tweet.replace('URL','')
         return tweet.replace('USER','')
+
+class Filter:
+    def __init__(self):
+        pass
+
+    def check_words_in_tweet(self, tweet):
+    	tweet = tweet + self.add_key_words_to_tweet()
+    	long_word_set = set(tweet.split())
+        if set(tweet.split()) & long_word_set:
+        	print "True"
+
+    def add_key_words_to_tweet(self):
+    	word_list = ['nba','basketball', 'ball']
+    	return ' '.join(word[0] for word in word_list)
+
+f = Filter()
+f.check_words_in_tweet('ball is life')

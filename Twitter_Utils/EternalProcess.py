@@ -19,7 +19,7 @@ class EternalProcess:
         self.sports_data = SportsData()
         self.keyword_generator = KeywordGenerator()
         self.tick_time_in_seconds = 60.0
-        self.time_prior_to_game_to_start_stream = 125
+        self.time_prior_to_game_to_start_stream = 180
         self.time_to_check_games_for_the_day = '16:34'
         self.data_gatherer = DataGatherer()
         wd = os.getcwd()
@@ -40,7 +40,7 @@ class EternalProcess:
         if _platform == "linux" or _platform == "linux2":
             handler = logging.handlers.SysLogHandler('/dev/log')
             # add formatter to the handler
-            formatter = logging.Formatter('Python: { "loggerName":"%(name)s", "asciTime":"%(asctime)s", "pathName":"%(pathname)s", "logRecordCreationTime":"%(created)f", "functionName":"%(funcName)s", "levelNo":"%(levelno)s", "lineNo":"%(lineno)d", "time":"%(msecs)d", "levelName":"%(levelname)s", "message":"%(message)s"}')
+            formatter = logging.Formatter('Python: { "loggerName":"%(name)s", "asciTime":"%(asctime)s","pathName":"%(pathname)s", "logRecordCreationTime":"%(created)f", "functionName":"%(funcName)s", "levelNo":"%(levelno)s", "lineNo":"%(lineno)d", "time":"%(msecs)d", "levelName":"%(levelname)s", "message":"%(message)s"}')
             handler.formatter = formatter
             self.logger.addHandler(handler)
 
@@ -162,10 +162,12 @@ class EternalProcess:
         :return: Time object
         """
         time_now = datetime.datetime.now()
-        now_plus_10 = time_now + datetime.timedelta(minutes=minutes)
+        # now_plus_10 = time_now + datetime.timedelta(minutes=minutes)
+        now_plus_10 = time_now + datetime.timedelta(minutes=5)
         return now_plus_10.strftime('%H:%M')
 
     # TODO - Fairly certain this will not end two streams that are supposed to end at the same time
+    # Just confirmed this, we need to figure out a way to have it end more than one stream.
     def check_if_stream_should_end(self):
         """
         Runs through active streams and if its time to end it, ends it and clears the api key for use
