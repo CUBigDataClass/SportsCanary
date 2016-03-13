@@ -37,7 +37,7 @@ class EternalProcess:
         self.end_times_list = []
         self.game_name_list = []
         self.logger = logging.getLogger(__name__)
-        if _platform == "linux":
+        if _platform == "linux" or _platform == "linux2":
             handler = logging.handlers.SysLogHandler('/dev/log')
             # add formatter to the handler
             formatter = logging.Formatter('Python: { "loggerName":"%(name)s", "asciTime":"%(asctime)s", "pathName":"%(pathname)s", "logRecordCreationTime":"%(created)f", "functionName":"%(funcName)s", "levelNo":"%(levelno)s", "lineNo":"%(lineno)d", "time":"%(msecs)d", "levelName":"%(levelname)s", "message":"%(message)s"}')
