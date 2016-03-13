@@ -33,3 +33,20 @@ Suggested
 $ nodemon npm start
 ```
 Go to localhost
+
+
+###Elastic Search Installation
+```
+Download Elastic Search from https://www.elastic.co/downloads/elasticsearch
+Unzip
+cd into directory
+$ bin/elasticsearch
+$ curl -X GET http://localhost:9200/
+$ pip install -r requirements.txt
+$ mongod --replSet "rs0"
+$ mongo
+$ rs.initiate()
+$ mongo-connector -m localhost:27017 -t localhost:9200 -d elastic_doc_manager
+To Test:
+$ curl -XPOST http://localhost:9200/sportscanary/_search -d '{"query": {"match": {"_all": "vs"}}}'
+```
