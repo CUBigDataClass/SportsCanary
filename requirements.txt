@@ -13,3 +13,7 @@ ndg-httpsclient
 pyasn1
 requests_oauthlib
 requests
+boto3
+awscli
+line_profiler
+networkx

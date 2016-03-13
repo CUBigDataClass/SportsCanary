@@ -4,12 +4,14 @@ import dateutil.parser
 import os
 import json
 import logging
+import logging.handlers
 from pymongo import MongoClient
 from subprocess import Popen, PIPE
 from SportsData import SportsData
 from DataGatherer import DataGatherer
 from KeywordGenerator import KeywordGenerator
 from Eternal_Utils.CommonUtils import CommonUtils
+from sys import platform as _platform
 
 
 class EternalProcess:
@@ -35,6 +37,12 @@ class EternalProcess:
         self.end_times_list = []
         self.game_name_list = []
         self.logger = logging.getLogger(__name__)
+        if _platform == "linux" or _platform == "linux2":
+            handler = logging.handlers.SysLogHandler('/dev/log')
+            # add formatter to the handler
+            formatter = logging.Formatter('Python: { "loggerName":"%(name)s", "asciTime":"%(asctime)s", "pathName":"%(pathname)s", "logRecordCreationTime":"%(created)f", "functionName":"%(funcName)s", "levelNo":"%(levelno)s", "lineNo":"%(lineno)d", "time":"%(msecs)d", "levelName":"%(levelname)s", "message":"%(message)s"}')
+            handler.formatter = formatter
+            self.logger.addHandler(handler)
 
     def start_process(self):  # pragma: no cover
         """
