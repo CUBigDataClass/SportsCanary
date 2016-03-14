@@ -8,6 +8,7 @@ var bodyParser = require('body-parser');
 var db = require('./model/db');
 var result = require('./model/results');
 var mm_team = require('./model/mm_teams');
+var mm_game = require('./model/mm_games');
 var robots = require('robots.txt');
 var routes = require('./routes/index');
 var results = require('./routes/results');
