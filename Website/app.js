@@ -7,12 +7,12 @@ var bodyParser = require('body-parser');
 
 var db = require('./model/db');
 var result = require('./model/results');
-
+var mm_team = require('./model/mm_teams');
 var robots = require('robots.txt');
 var routes = require('./routes/index');
-var users = require('./routes/users');
 var results = require('./routes/results');
 var search = require('./routes/search');
+var march_madness = require('./routes/march_madness');
 var app = express();
 
 // view engine setup
@@ -27,9 +27,9 @@ app.use(express.static(path.join(__dirname, 'public')));
 // Pass in the absolute path to your robots.txt file
 app.use(robots(__dirname + '/robots.txt'));
 app.use('/', routes);
-app.use('/users', users);
 app.use('/api/results', results);
 app.use('/search', search);
+app.use('/api/march_madness', march_madness);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -42,15 +42,15 @@ app.use(function(req, res, next) {
 
 // development error handler
 // will print stacktrace
-if (app.get('env') === 'development') {
-  app.use(function(err, req, res, next) {
-    res.status(err.status || 500);
-    res.render('error', {
-      message: err.message,
-      error: err
-    });
-  });
-}
+//if (app.get('env') === 'development') {
+//  app.use(function(err, req, res, next) {
+//    res.status(err.status || 500);
+//    res.render('error', {
+//      message: err.message,
+//      error: err
+//    });
+//  });
+//}
 
 // production error handler
 // no stacktraces leaked to user
