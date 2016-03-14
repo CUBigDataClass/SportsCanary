@@ -1,6 +1,6 @@
+
 function getlogo(team) {
     switch(team) {
-    case '123':
     case '321':
     case 'larry': 
        alert('Hey');
