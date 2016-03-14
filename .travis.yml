@@ -25,8 +25,8 @@ before_script:
 script:
     - py.test --cov=Twitter_Utils --cov=Gambling_Utils --cov=Eternal_Utils --cov-report=term-missing --cov-report=html
     - coveralls
-    - cd Website && npm install && mocha
+    - cd Website && npm install && npm run coverage
 after_success:
-#    - coveralls
+    - coveralls
 notifications:
   slack: teambigdatamonsters:SZBACvYDgtzhNyZlchGPkvdK
