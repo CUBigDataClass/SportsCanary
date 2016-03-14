@@ -13,6 +13,7 @@ var robots = require('robots.txt');
 var routes = require('./routes/index');
 var results = require('./routes/results');
 var search = require('./routes/search');
+var sports = require('./routes/sports');
 var march_madness = require('./routes/march_madness');
 var app = express();
 
@@ -30,6 +31,7 @@ app.use(robots(__dirname + '/robots.txt'));
 app.use('/', routes);
 app.use('/api/results', results);
 app.use('/search', search);
+app.use('/sports', sports);
 app.use('/api/march_madness', march_madness);
 
 // catch 404 and forward to error handler
