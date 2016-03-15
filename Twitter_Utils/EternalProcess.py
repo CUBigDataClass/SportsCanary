@@ -31,10 +31,6 @@ class EternalProcess:
         else:
             path = wd
         self.base_path = path + '/Twitter_Utils/data/daily-logs/'
-        self.APP_KEY = CommonUtils.get_environ_variable('TWITTER_APP_KEY_0')
-        self.APP_SECRET = CommonUtils.get_environ_variable('TWITTER_APP_SECRET_0')
-        self.OAUTH_TOKEN = CommonUtils.get_environ_variable('TWITTER_OAUTH_TOKEN_0')
-        self.OAUTH_TOKEN_SECRET = CommonUtils.get_environ_variable('TWITTER_OAUTH_TOKEN_SECRET_0')
         self.stream_list = []
         self.end_times_list = []
         self.game_name_list = []
@@ -42,28 +38,28 @@ class EternalProcess:
         if _platform == "linux" or _platform == "linux2":
             handler = logging.handlers.SysLogHandler('/dev/log')
             # add formatter to the handler
-            formatter = logging.Formatter('Python: { "loggerName":"%(name)s", "asciTime":"%(asctime)s","pathName":"%(pathname)s", "logRecordCreationTime":"%(created)f", "functionName":"%(funcName)s", "levelNo":"%(levelno)s", "lineNo":"%(lineno)d", "time":"%(msecs)d", "levelName":"%(levelname)s", "message":"%(message)s"}')
+            formatter = logging.Formatter('Python: { "loggerName":"%(name)s", "asciTime":"%(asctime)s",'
+                                          '"pathName":"%(pathname)s", "logRecordCreationTime":"%(created)f",'
+                                          '"functionName":"%(funcName)s", "levelNo":"%(levelno)s",'
+                                          '"lineNo":"%(lineno)d", "time":"%(msecs)d", "levelName":"%(levelname)s",'
+                                          '"message":"%(message)s"}')
             handler.formatter = formatter
             self.logger.addHandler(handler)
 
-    def start_process(self):  # pragma: no cover
+    def start_process(self):
         """
         This process is our workhorse, it has to check if it should log games.
         It has to check if a game is starting and if that is the case, fork the process,
         And in that new process check for game data during the time period assigned to it.
         """
-        start = False
-        while not start:
-            current_time = datetime.datetime.now().strftime('%S')
-            if current_time == '05':
-                start = True
+        self.wait_till_five_seconds_into_minute()
         start_time = time.time()
         print(50 * '*' + '\n' + 10 * '*' + '  STARTING SCANNING PROCESS   ' + 10 * '*' + '\n' + 50 * '*')
         while True:
             self.logger.info('Stream list: ' + str(self.stream_list))
             self.logger.info('End Times list: ' + str(self.end_times_list))
             self.check_if_stream_should_end()
-            # TODO - If stream ends, map reduce tweets, then analyze them.
+
             if self.is_time_to_get_game_data_for_day():
                 self.write_days_games_data()
                 self.march_madness.write_days_games_data()
@@ -71,11 +67,7 @@ class EternalProcess:
             # Read in file to see if it is time to analyze twitter
             read_path = self.get_write_path_for_days_games()
 
-            uri = 'mongodb://' + CommonUtils.get_environ_variable('AWS_MONGO_USER') + ':' \
-              + CommonUtils.get_environ_variable('AWS_MONGO_PASS') + '@' \
-              + CommonUtils.get_environ_variable('AWS_ADDRESS')
-            client = MongoClient(uri)
-            db = client.eventsDB
+            db = self.get_aws_mongo_db()
             data_nba = []
             for post in db.nba_logs.find():
                 if post['date'] == datetime.datetime.now().strftime('%Y-%m-%d'):
@@ -84,61 +76,73 @@ class EternalProcess:
             data_mm = self.march_madness.return_games_for_the_day()
 
             try:
-                with open(read_path) as f:
-                    # data = json.load(f)
-                    current_time = datetime.datetime.now().strftime('%H:%M')
+                with open(read_path):
+                    current_time = self.get_time_as_hour_minute()
                     self.logger.info('Current Time: ' + current_time)
-                    for idx, game in enumerate(data_nba):
-                        game_time = dateutil.parser.parse(game['start_time']) - \
-                                    datetime.timedelta(minutes=self.time_prior_to_game_to_start_stream)
-                        game_time = game_time.strftime('%H:%M')
-                        self.logger.info('NBA Game Time: ' + game_time)
-
-                        if game_time == current_time and not game['being_streamed']:
-                            self.update_is_streamed_json(index=idx, game=game)
-                            self.logger.info('Acquiring twitter data for ' + str(game["title"]))
-
-                            keyword_string = self.create_keyword_string_for_game(game)
-
-                            game_name = datetime.datetime.now().strftime('%Y-%m-%d') + '-' + game['title'].replace(' ',
-                                                                                                                   '-')
-                            self.game_name_list.append(game_name)
-
-                            data_gatherer = DataGatherer()
-                            stream = data_gatherer.get_tweet_stream(keyword_string, game['uuid'], game_name)
-                            self.stream_list.append(stream)
-                            self.end_times_list.append(
-                                self.get_time_to_end_stream(self.time_prior_to_game_to_start_stream))
-
-                    for idx, game in enumerate(data_mm):
-                        game_time = dateutil.parser.parse(game['time']) - \
-                                    datetime.timedelta(minutes=self.time_prior_to_game_to_start_stream)
-                        game_time = game_time.strftime('%H:%M')
-                        self.logger.info('March Madness Game Time: ' + game_time)
-                        if game_time == current_time and not game['being_streamed']:
-                            self.march_madness.update_is_streamed_json(game)
-                            self.logger.info('Acquiring twitter data for ' + str(game["title"]))
-                            # TODO - Create this
-                            keyword_string = self.march_madness.create_keyword_stream()
-                            game_name = datetime.datetime.now().strftime('%Y-%m-%d') + '-' + game['title'].replace(' ',
-                                                                                                                  '-')
-                            self.game_name_list.append(game_name)
-                            data_gatherer = DataGatherer()
-                            stream = data_gatherer.get_tweet_stream(keyword_string, game['uuid'], game_name)
-
-                            self.stream_list.append(stream)
-                            self.end_times_list.append(
-                                self.get_time_to_end_stream(self.time_prior_to_game_to_start_stream))
+                    self.iterate_through_nba_games_and_start_stream(data_nba=data_nba, current_time=current_time)
+                    self.iterate_through_march_madness_games_and_start_stream(data_mm=data_mm,
+                                                                              current_time=current_time)
 
             except IOError:
-                self.logger.exception(IOError)
                 self.logger.error('File not found at ' + read_path)
                 self.write_days_games_data()
                 continue
 
-                # raise IOError
-
             self.sleep_for(self.tick_time_in_seconds, start_time)
+
+    @staticmethod
+    def get_time_as_hour_minute():
+        return datetime.datetime.now().strftime('%H:%M')
+
+    def generate_game_time(self, game):
+        game_time = dateutil.parser.parse(game['start_time']) - \
+                        datetime.timedelta(minutes=self.time_prior_to_game_to_start_stream)
+        return game_time.strftime('%H:%M')
+
+    def iterate_through_march_madness_games_and_start_stream(self, data_mm, current_time):
+        for idx, game in enumerate(data_mm):
+            game_time = self.generate_game_time(game)
+            self.logger.info('March Madness Game Time: ' + game_time)
+            if game_time == current_time and not game['being_streamed']:
+                self.march_madness.update_is_streamed_json(game)
+                self.logger.info('Acquiring twitter data for ' + str(game["title"]))
+
+                # TODO - Create this
+                keyword_string = self.march_madness.create_keyword_stream()
+                self.start_stream_with_keywords(keyword_string, game)
+
+    def iterate_through_nba_games_and_start_stream(self, data_nba, current_time):
+        for idx, game in enumerate(data_nba):
+            game_time = self.generate_game_time(game)
+            self.logger.info('NBA Game Time: ' + game_time)
+
+            if game_time == current_time and not game['being_streamed']:
+                self.update_is_streamed_json(game)
+                self.logger.info('Acquiring twitter data for ' + str(game["title"]))
+
+                keyword_string = self.create_keyword_string_for_game(game)
+                self.start_stream_with_keywords(keyword_string, game)
+
+    def start_stream_with_keywords(self, keyword_string, game):
+        game_name = self.create_game_name_from_title(game)
+        self.game_name_list.append(game_name)
+        data_gatherer = DataGatherer()
+        stream = data_gatherer.get_tweet_stream(keyword_string, game['_id'], game_name)
+        self.stream_list.append(stream)
+        self.end_times_list.append(
+            self.get_time_to_end_stream(self.time_prior_to_game_to_start_stream))
+
+    @staticmethod
+    def create_game_name_from_title(game):
+        return datetime.datetime.now().strftime('%Y-%m-%d') + '-' + game['title'].replace(' ', '-')
+
+    @staticmethod
+    def wait_till_five_seconds_into_minute():
+        start = False
+        while not start:
+            current_time = datetime.datetime.now().strftime('%S')
+            if current_time == '05':
+                start = True
 
     def create_keyword_string_for_game(self, game):
         """
@@ -155,35 +159,23 @@ class EternalProcess:
     def update_is_streamed_json(self, game):
         """
         Replaces json file to reflect that game is being streamed
+        :param game: game data, containing _id of game to be updated
         """
         game_id = game["_id"]
+        db = self.get_aws_mongo_db()
+
+        if not game['being_streamed']:
+            db.nba_logs.update({'_id': game_id}, {"$set": {"being_streamed": True}}, upsert=False)
+        else:
+            db.nba_logs.update({'_id': game_id}, {"$set": {"being_streamed": False}}, upsert=False)
+
+    @staticmethod
+    def get_aws_mongo_db():
         uri = 'mongodb://' + CommonUtils.get_environ_variable('AWS_MONGO_USER') + ':' \
               + CommonUtils.get_environ_variable('AWS_MONGO_PASS') + '@' \
               + CommonUtils.get_environ_variable('AWS_ADDRESS')
         client = MongoClient(uri)
-        db = client.eventsDB
-
-        time_now = datetime.datetime.now()
-        read_path = self.base_path + time_now.strftime('%Y-%m-%d') + '.json'
-        try:
-            json_file = open(read_path, 'r')
-            data = json.load(json_file)
-            json_file.close()
-            if not game['being_streamed']:
-                # data[index]['being_streamed'] = True
-                db.nba_logs.update({'_id': game_id}, {"$set": {"being_streamed": True}}, upsert=False)
-            else:
-                # data[index]['being_streamed'] = False
-                db.nba_logs.update({'_id': game_id}, {"$set": {"being_streamed": False}}, upsert=False)
-
-            json_file = open(read_path, 'w+')
-            json_file.write(json.dumps(data))
-            json_file.close()
-
-        except IOError:
-            self.logger.exception(IOError)
-            self.logger.error('File not found at ' + read_path)
-            raise IOError
+        return client.eventsDB
 
     @staticmethod
     def get_time_to_end_stream(minutes):
@@ -197,8 +189,6 @@ class EternalProcess:
         # now_plus_10 = time_now + datetime.timedelta(minutes=5)
         return now_plus_10.strftime('%H:%M')
 
-    # TODO - Fairly certain this will not end two streams that are supposed to end at the same time
-    # Just confirmed this, we need to figure out a way to have it end more than one stream.
     def check_if_stream_should_end(self):
         """
         Runs through active streams and if its time to end it, ends it and clears the api key for use
@@ -226,7 +216,8 @@ class EternalProcess:
         self.replace_written_tweets_with_map_reduced_version(i, map_reduced_tweets)
         self.remove_first_line_from_file(self.get_game_name_base_file_path(i))
         self.delete_stream_end_time_game_name_from_lists(i)
-        return True
+        if not self.check_if_stream_should_end():
+            return True
 
     def delete_stream_end_time_game_name_from_lists(self, i):
         """
@@ -344,15 +335,11 @@ class EternalProcess:
         return path + '/Twitter_Utils/data/tweets/' + game_name + '/' + game_name + '.txt'
 
     # TODO - Figure out how to test this
-    def write_days_games_data(self):  # pragma: no cover
+    def write_days_games_data(self):
         """
         Writes API response containing info for days games
         """
-        uri = 'mongodb://' + CommonUtils.get_environ_variable('AWS_MONGO_USER') + ':' \
-              + CommonUtils.get_environ_variable('AWS_MONGO_PASS') + '@' \
-              + CommonUtils.get_environ_variable('AWS_ADDRESS')
-        client = MongoClient(uri)
-        db = client.eventsDB
+        db = self.get_aws_mongo_db()
         write_path = self.get_write_path_for_days_games()
         data_to_write = self.sports_data.get_nba_games_for_today()
         try:
