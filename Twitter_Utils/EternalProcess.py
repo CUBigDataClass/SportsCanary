@@ -31,10 +31,6 @@ class EternalProcess:
         else:
             path = wd
         self.base_path = path + '/Twitter_Utils/data/daily-logs/'
-        self.APP_KEY = CommonUtils.get_environ_variable('TWITTER_APP_KEY_0')
-        self.APP_SECRET = CommonUtils.get_environ_variable('TWITTER_APP_SECRET_0')
-        self.OAUTH_TOKEN = CommonUtils.get_environ_variable('TWITTER_OAUTH_TOKEN_0')
-        self.OAUTH_TOKEN_SECRET = CommonUtils.get_environ_variable('TWITTER_OAUTH_TOKEN_SECRET_0')
         self.stream_list = []
         self.end_times_list = []
         self.game_name_list = []
@@ -63,7 +59,7 @@ class EternalProcess:
             self.logger.info('Stream list: ' + str(self.stream_list))
             self.logger.info('End Times list: ' + str(self.end_times_list))
             self.check_if_stream_should_end()
-            # TODO - If stream ends, map reduce tweets, then analyze them.
+
             if self.is_time_to_get_game_data_for_day():
                 self.write_days_games_data()
                 self.march_madness.write_days_games_data()
@@ -83,8 +79,9 @@ class EternalProcess:
                 with open(read_path):
                     current_time = self.get_time_as_hour_minute()
                     self.logger.info('Current Time: ' + current_time)
-                    self.iterate_through_nba_games_and_start_stream(data_nba=data_nba, current_time= current_time)
-                    self.iterate_through_march_madness_games_and_start_stream(data_mm=data_mm, current_time=current_time)
+                    self.iterate_through_nba_games_and_start_stream(data_nba=data_nba, current_time=current_time)
+                    self.iterate_through_march_madness_games_and_start_stream(data_mm=data_mm,
+                                                                              current_time=current_time)
 
             except IOError:
                 self.logger.error('File not found at ' + read_path)
@@ -109,17 +106,10 @@ class EternalProcess:
             if game_time == current_time and not game['being_streamed']:
                 self.march_madness.update_is_streamed_json(game)
                 self.logger.info('Acquiring twitter data for ' + str(game["title"]))
+
                 # TODO - Create this
                 keyword_string = self.march_madness.create_keyword_stream()
-                game_name = datetime.datetime.now().strftime('%Y-%m-%d') + '-' + game['title'].replace(' ',
-                                                                                                       '-')
-                self.game_name_list.append(game_name)
-                data_gatherer = DataGatherer()
-                stream = data_gatherer.get_tweet_stream(keyword_string, game['uuid'], game_name)
-
-                self.stream_list.append(stream)
-                self.end_times_list.append(
-                    self.get_time_to_end_stream(self.time_prior_to_game_to_start_stream))
+                self.start_stream_with_keywords(keyword_string, game)
 
     def iterate_through_nba_games_and_start_stream(self, data_nba, current_time):
         for idx, game in enumerate(data_nba):
@@ -131,16 +121,20 @@ class EternalProcess:
                 self.logger.info('Acquiring twitter data for ' + str(game["title"]))
 
                 keyword_string = self.create_keyword_string_for_game(game)
+                self.start_stream_with_keywords(keyword_string, game)
 
-                game_name = datetime.datetime.now().strftime('%Y-%m-%d') + '-' + game['title'].replace(' ',
-                                                                                                       '-')
-                self.game_name_list.append(game_name)
+    def start_stream_with_keywords(self, keyword_string, game):
+        game_name = self.create_game_name_from_title(game)
+        self.game_name_list.append(game_name)
+        data_gatherer = DataGatherer()
+        stream = data_gatherer.get_tweet_stream(keyword_string, game['uuid'], game_name)
+        self.stream_list.append(stream)
+        self.end_times_list.append(
+            self.get_time_to_end_stream(self.time_prior_to_game_to_start_stream))
 
-                data_gatherer = DataGatherer()
-                stream = data_gatherer.get_tweet_stream(keyword_string, game['uuid'], game_name)
-                self.stream_list.append(stream)
-                self.end_times_list.append(
-                    self.get_time_to_end_stream(self.time_prior_to_game_to_start_stream))
+    @staticmethod
+    def create_game_name_from_title(game):
+        return datetime.datetime.now().strftime('%Y-%m-%d') + '-' + game['title'].replace(' ', '-')
 
     @staticmethod
     def wait_till_five_seconds_into_minute():
@@ -165,6 +159,7 @@ class EternalProcess:
     def update_is_streamed_json(self, game):
         """
         Replaces json file to reflect that game is being streamed
+        :param game: game data, containing _id of game to be updated
         """
         game_id = game["_id"]
         db = self.get_aws_mongo_db()
@@ -199,7 +194,6 @@ class EternalProcess:
         client = MongoClient(uri)
         return client.eventsDB
 
-
     @staticmethod
     def get_time_to_end_stream(minutes):
         """
@@ -212,8 +206,6 @@ class EternalProcess:
         # now_plus_10 = time_now + datetime.timedelta(minutes=5)
         return now_plus_10.strftime('%H:%M')
 
-    # TODO - Fairly certain this will not end two streams that are supposed to end at the same time
-    # Just confirmed this, we need to figure out a way to have it end more than one stream.
     def check_if_stream_should_end(self):
         """
         Runs through active streams and if its time to end it, ends it and clears the api key for use
@@ -241,7 +233,8 @@ class EternalProcess:
         self.replace_written_tweets_with_map_reduced_version(i, map_reduced_tweets)
         self.remove_first_line_from_file(self.get_game_name_base_file_path(i))
         self.delete_stream_end_time_game_name_from_lists(i)
-        return True
+        if not self.check_if_stream_should_end():
+            return True
 
     def delete_stream_end_time_game_name_from_lists(self, i):
         """
