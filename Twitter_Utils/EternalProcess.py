@@ -52,6 +52,11 @@ class EternalProcess:
         It has to check if a game is starting and if that is the case, fork the process,
         And in that new process check for game data during the time period assigned to it.
         """
+        start = False
+        while not start:
+            current_time = datetime.datetime.now().strftime('%S')
+            if current_time == '05':
+                start = True
         start_time = time.time()
         print(50 * '*' + '\n' + 10 * '*' + '  STARTING SCANNING PROCESS   ' + 10 * '*' + '\n' + 50 * '*')
         while True:
@@ -106,17 +111,31 @@ class EternalProcess:
                                 self.get_time_to_end_stream(self.time_prior_to_game_to_start_stream))
 
                     for idx, game in enumerate(data_mm):
-                        game_time = dateutil.parser.parse(game['date']) - \
+                        game_time = dateutil.parser.parse(game['time']) - \
                                     datetime.timedelta(minutes=self.time_prior_to_game_to_start_stream)
                         game_time = game_time.strftime('%H:%M')
                         self.logger.info('March Madness Game Time: ' + game_time)
                         if game_time == current_time and not game['being_streamed']:
                             self.march_madness.update_is_streamed_json(game)
+                            self.logger.info('Acquiring twitter data for ' + str(game["title"]))
+                            # TODO - Create this
+                            keyword_string = self.march_madness.create_keyword_stream()
+                            game_name = datetime.datetime.now().strftime('%Y-%m-%d') + '-' + game['title'].replace(' ',
+                                                                                                                  '-')
+                            self.game_name_list.append(game_name)
+                            data_gatherer = DataGatherer()
+                            stream = data_gatherer.get_tweet_stream(keyword_string, game['uuid'], game_name)
+
+                            self.stream_list.append(stream)
+                            self.end_times_list.append(
+                                self.get_time_to_end_stream(self.time_prior_to_game_to_start_stream))
 
             except IOError:
                 self.logger.exception(IOError)
                 self.logger.error('File not found at ' + read_path)
                 self.write_days_games_data()
+                continue
+
                 # raise IOError
 
             self.sleep_for(self.tick_time_in_seconds, start_time)
@@ -133,10 +152,9 @@ class EternalProcess:
         keyword_string_away = ','.join(search_terms_away)
         return keyword_string_home + ',' + keyword_string_away
 
-    def update_is_streamed_json(self, index, game):
+    def update_is_streamed_json(self, game):
         """
         Replaces json file to reflect that game is being streamed
-        :param index: index within JSON object
         """
         game_id = game["_id"]
         uri = 'mongodb://' + CommonUtils.get_environ_variable('AWS_MONGO_USER') + ':' \

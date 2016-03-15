@@ -56,4 +56,7 @@ class MarchMadness:
         if game["being_streamed"]:
             db.mm_games.update({'_id': game_id}, {"$set": {"being_streamed": False}}, upsert=False)
         else:
-            db.mm_games.update({'_id': game_id}, {"$set": {"being_streamed": False}}, upsert=False)
+            db.mm_games.update({'_id': game_id}, {"$set": {"being_streamed": True}}, upsert=False)
+
+    def create_keyword_stream(self):
+        return 'none'
