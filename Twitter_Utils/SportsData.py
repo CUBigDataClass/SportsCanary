@@ -51,7 +51,7 @@ class SportsData:
             game_home_team_id = game['home_team_id']
             game_away_team_id = game['away_team_id']
             game_slug = game['slug']
-            list_of_games.append(json.dumps({"uuid": game_uuid, "start_time": game_start_time,
+            list_of_games.append(json.dumps({"_id": game_uuid, "start_time": game_start_time,
                                              "title": game_title, "home_team_id": game_home_team_id,
                                              "away_team_id": game_away_team_id, "slug": game_slug,
                                              "being_streamed": False,

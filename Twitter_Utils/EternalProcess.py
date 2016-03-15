@@ -117,7 +117,7 @@ class EternalProcess:
             self.logger.info('NBA Game Time: ' + game_time)
 
             if game_time == current_time and not game['being_streamed']:
-                self.update_is_streamed_json(game=game)
+                self.update_is_streamed_json(game)
                 self.logger.info('Acquiring twitter data for ' + str(game["title"]))
 
                 keyword_string = self.create_keyword_string_for_game(game)
@@ -127,7 +127,7 @@ class EternalProcess:
         game_name = self.create_game_name_from_title(game)
         self.game_name_list.append(game_name)
         data_gatherer = DataGatherer()
-        stream = data_gatherer.get_tweet_stream(keyword_string, game['uuid'], game_name)
+        stream = data_gatherer.get_tweet_stream(keyword_string, game['_id'], game_name)
         self.stream_list.append(stream)
         self.end_times_list.append(
             self.get_time_to_end_stream(self.time_prior_to_game_to_start_stream))
@@ -164,27 +164,10 @@ class EternalProcess:
         game_id = game["_id"]
         db = self.get_aws_mongo_db()
 
-        time_now = datetime.datetime.now()
-        read_path = self.base_path + time_now.strftime('%Y-%m-%d') + '.json'
-        try:
-            json_file = open(read_path, 'r')
-            data = json.load(json_file)
-            json_file.close()
-            if not game['being_streamed']:
-                # data[index]['being_streamed'] = True
-                db.nba_logs.update({'_id': game_id}, {"$set": {"being_streamed": True}}, upsert=False)
-            else:
-                # data[index]['being_streamed'] = False
-                db.nba_logs.update({'_id': game_id}, {"$set": {"being_streamed": False}}, upsert=False)
-
-            json_file = open(read_path, 'w+')
-            json_file.write(json.dumps(data))
-            json_file.close()
-
-        except IOError:
-            self.logger.exception(IOError)
-            self.logger.error('File not found at ' + read_path)
-            raise IOError
+        if not game['being_streamed']:
+            db.nba_logs.update({'_id': game_id}, {"$set": {"being_streamed": True}}, upsert=False)
+        else:
+            db.nba_logs.update({'_id': game_id}, {"$set": {"being_streamed": False}}, upsert=False)
 
     @staticmethod
     def get_aws_mongo_db():
@@ -352,15 +335,11 @@ class EternalProcess:
         return path + '/Twitter_Utils/data/tweets/' + game_name + '/' + game_name + '.txt'
 
     # TODO - Figure out how to test this
-    def write_days_games_data(self):  # pragma: no cover
+    def write_days_games_data(self):
         """
         Writes API response containing info for days games
         """
-        uri = 'mongodb://' + CommonUtils.get_environ_variable('AWS_MONGO_USER') + ':' \
-              + CommonUtils.get_environ_variable('AWS_MONGO_PASS') + '@' \
-              + CommonUtils.get_environ_variable('AWS_ADDRESS')
-        client = MongoClient(uri)
-        db = client.eventsDB
+        db = self.get_aws_mongo_db()
         write_path = self.get_write_path_for_days_games()
         data_to_write = self.sports_data.get_nba_games_for_today()
         try:
