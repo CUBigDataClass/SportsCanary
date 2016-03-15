@@ -7,13 +7,12 @@ chai.use(chaiHttp);
 
 
 describe('contacts', function() {
-	it('should return contacts page.', function(done) {
+	it('Should return contacts page.', function(done) {
 		chai.request(server)
-		.get('/contacts/index.html')
-		//Add 
+		.get('/contact')
 		.end(function(err, res) {
 			res.should.have.status(200);
-			res.should.be.text;
+			res.should.be.html;
 			done();
 		});
 	});
