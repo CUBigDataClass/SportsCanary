@@ -15,6 +15,8 @@ var results = require('./routes/results');
 var search = require('./routes/search');
 var sports = require('./routes/sports');
 var march_madness = require('./routes/march_madness');
+var about = require('./routes/about');
+var contact = require('./routes/contact');
 var app = express();
 
 // view engine setup
@@ -33,6 +35,8 @@ app.use('/api/results', results);
 app.use('/search', search);
 app.use('/sports', sports);
 app.use('/api/march_madness', march_madness);
+app.use('/about', about);
+app.use('/contact', contact);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
