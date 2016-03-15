@@ -92,23 +92,6 @@ class TestEternalProcess(unittest.TestCase):
         time_now = time_now.strftime('%H:%M:%S')
         self.assertEqual(time_now, time_now_plus_1)
 
-
-    # TODO - Update tests to use MongoDB
-    # def test_update_is_streamed_json(self):
-    #     eternal_process = EternalProcess()
-    #     eternal_process.update_is_streamed_json(0)
-    #     path = self.eternalProcess.base_path + self.time_now.strftime('%Y-%m-%d') + '.json'
-    #     json_file = open(path, 'r')
-    #     data = json.load(json_file)
-    #     self.assertEqual(True, data[0]['being_streamed'])
-    #
-    # def test_update_is_streamed_throws_error(self):
-    #     eternal_process = EternalProcess()
-    #     eternal_process.base_path = ''
-    #     with self.assertRaises(IOError):
-    #         eternal_process.update_is_streamed_json(0)
-    #     assert True
-
     def test_create_keyword_string_for_game(self):
         eternal_process = EternalProcess()
         game = {'home_team_id': '20901970-53a0-417c-b5b4-832a74148af6',
@@ -120,11 +103,6 @@ class TestEternalProcess(unittest.TestCase):
     def test_map_reduce_tweets_after_disconnect(self):
         self.eternalProcess.game_name_list.append('123')
         self.assertIsNotNone(self.eternalProcess.map_reduce_tweets_after_disconnect(0))
-
-    # def test_map_reduce_tweets_after_disconnect_raises_assertion(self):
-    #     with self.assertRaises(IndexError):
-    #         self.eternalProcess.update_is_streamed_json(3)
-    #     assert True
 
     def test_start_process(self):
         assert True  # TODO: implement your test here
