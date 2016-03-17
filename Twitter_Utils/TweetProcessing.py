@@ -2,6 +2,7 @@
 import re
 import nltk
 from nltk.corpus import stopwords
+from nltk.stem import WordNetLemmatizer
 
 """
 NLTK Guide
@@ -109,6 +110,15 @@ class TweetProcessor:
         tweet = tweet.replace('URL','')
         return tweet.replace('USER','')
 
+    def lemmatize_tweet(self, tweet):
+        wordnet_lemmatizer = WordNetLemmatizer()
+        new_tweet = ''
+        for word in tweet:
+            stemmed_word = wordnet_lemmatizer.lemmatize(word)
+            new_tweet = new_tweet + stemmed_word
+        print new_tweet
+
+
 class Filter:
     def __init__(self):
         pass
@@ -123,5 +133,5 @@ class Filter:
     	word_list = ['nba','basketball', 'ball']
     	return ' '.join(word[0] for word in word_list)
 
-f = Filter()
-f.check_words_in_tweet('ball is life')
+f = TweetProcessor()
+f.lemmatize_tweet('what does this do I am wondering if future parts of speech make a difference in this at all')
