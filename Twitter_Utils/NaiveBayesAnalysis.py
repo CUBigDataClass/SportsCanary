@@ -130,6 +130,3 @@ class NaiveBayesAnalysis:
                 print naive_bayes_classifier.classify(self.extract_features(self.create_feature_vector(line)))
 
         print naive_bayes_classifier.show_most_informative_features(10)
-
-t = NaiveBayesAnalysis()
-t.analyze_tweets()
