@@ -129,7 +129,7 @@ class EternalProcess:
                 self.update_is_streamed_json(game)
                 self.logger.info('Acquiring twitter data for ' + str(game["title"]))
 
-                keyword_string = self.create_keyword_string_for_game(game)
+                keyword_string = self.create_keyword_string_for_game(game, "nba")
                 self.start_stream_with_keywords(keyword_string, game)
 
     def iterate_through_nhl_games_and_start_stream(self, data_nhl, current_time):
@@ -141,7 +141,7 @@ class EternalProcess:
                 self.update_is_streamed_json(game)
                 self.logger.info('Acquiring twitter data for ' + str(game["title"]))
 
-                keyword_string = self.create_keyword_string_for_game(game)
+                keyword_string = self.create_keyword_string_for_game(game, "nhl")
                 self.start_stream_with_keywords(keyword_string, game)
 
     def start_stream_with_keywords(self, keyword_string, game):
@@ -165,14 +165,15 @@ class EternalProcess:
             if current_time == '05':
                 start = True
 
-    def create_keyword_string_for_game(self, game):
+    def create_keyword_string_for_game(self, game, sport):
         """
         create string of keywords to pass into twitter filter.
+        :param sport: currently "nba" or "nhl"
         :param game: game data, contains home and away team id
         :return: string of keywords
         """
-        search_terms_home = self.keyword_generator.generate_search_terms(game['home_team_id'])
-        search_terms_away = self.keyword_generator.generate_search_terms(game['away_team_id'])
+        search_terms_home = self.keyword_generator.generate_search_terms(game['home_team_id'], sport)
+        search_terms_away = self.keyword_generator.generate_search_terms(game['away_team_id'], sport)
         keyword_string_home = ','.join(search_terms_home)
         keyword_string_away = ','.join(search_terms_away)
         return keyword_string_home + ',' + keyword_string_away
