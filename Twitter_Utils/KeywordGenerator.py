@@ -16,7 +16,6 @@ class KeywordGenerator:
             path = wd[0:pos+15]
         else:
             path = wd
-
         add = ''
         if sport == "nhl":
             add = 'nhl-teams-data.json'
@@ -50,8 +49,6 @@ class KeywordGenerator:
 
                     if team['nickname']:
                         search_terms_list.append(team['nickname'])
-                    # if team['name']:
-                    #     search_terms_list.append(team['name'])
 
             search_terms_list = self.append_word_with_go_to_list(search_terms_list)
             return search_terms_list
@@ -64,6 +61,11 @@ class KeywordGenerator:
     @staticmethod
     def append_word_with_go_to_list(word_list):
         # TODO - Refactor this
+        """
+        Appends go to word, ex Bulldogs - goBulldogs
+        :param word_list: words to append go to
+        :return: returns new list of words, with new go words
+        """
         search_terms_list_with_go = []
         for word in word_list:
             search_terms_list_with_go.append('go' + word)

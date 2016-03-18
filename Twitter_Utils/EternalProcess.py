@@ -52,7 +52,7 @@ class EternalProcess:
         It has to check if a game is starting and if that is the case, fork the process,
         And in that new process check for game data during the time period assigned to it.
         """
-        # self.wait_till_five_seconds_into_minute()
+        self.wait_till_five_seconds_into_minute()
         start_time = time.time()
         print(50 * '*' + '\n' + 10 * '*' + '  STARTING SCANNING PROCESS   ' + 10 * '*' + '\n' + 50 * '*')
         while True:
@@ -63,7 +63,6 @@ class EternalProcess:
             if self.is_time_to_get_game_data_for_day():
                 self.write_days_games_data_for_nba()
                 self.write_days_games_data_for_nhl()
-                # self.march_madness.write_days_games_data()
 
             # Read in file to see if it is time to analyze twitter
             read_path = self.get_write_path_for_days_games()
@@ -85,8 +84,13 @@ class EternalProcess:
                 with open(read_path):
                     current_time = self.get_time_as_hour_minute()
                     self.logger.info('Current Time: ' + current_time)
-                    self.iterate_through_nba_games_and_start_stream(data_nba=data_nba, current_time=current_time)
-                    self.iterate_through_nhl_games_and_start_stream(data_nhl=data_nhl, current_time=current_time)
+                    self.logger.info('--------------------')
+                    self.iterate_through_daily_games_and_start_stream(data=data_nba, current_time=current_time,
+                                                                      sport="nba")
+                    self.logger.info('--------------------')
+                    self.iterate_through_daily_games_and_start_stream(data=data_nhl, current_time=current_time,
+                                                                      sport="nhl")
+                    self.logger.info('--------------------')
                     self.iterate_through_march_madness_games_and_start_stream(data_mm=data_mm,
                                                                               current_time=current_time)
 
@@ -94,7 +98,6 @@ class EternalProcess:
                 self.logger.error('File not found at ' + read_path)
                 self.write_days_games_data_for_nba()
                 self.write_days_games_data_for_nhl()
-                # self.march_madness.write_days_games_data()
                 continue
 
             self.sleep_for(self.tick_time_in_seconds, start_time)
@@ -103,14 +106,19 @@ class EternalProcess:
     def get_time_as_hour_minute():
         return datetime.datetime.now().strftime('%H:%M')
 
-    def generate_game_time(self, game):
+    def generate_stream_start_time(self, game):
+        """
+        Given a game returns time to start stream prior to game
+        :param game: Game object form Stattleship API
+        :return: returns game time as Hour:Minute
+        """
         game_time = dateutil.parser.parse(game['start_time']) - \
-                        datetime.timedelta(minutes=self.time_prior_to_game_to_start_stream)
+            datetime.timedelta(minutes=self.time_prior_to_game_to_start_stream)
         return game_time.strftime('%H:%M')
 
     def iterate_through_march_madness_games_and_start_stream(self, data_mm, current_time):
         for idx, game in enumerate(data_mm):
-            game_time = self.generate_game_time(game)
+            game_time = self.generate_stream_start_time(game)
             self.logger.info('March Madness Game Time: ' + game_time)
             if game_time == current_time and not game['being_streamed']:
                 self.march_madness.update_is_streamed_json(game)
@@ -120,28 +128,16 @@ class EternalProcess:
                 keyword_string = self.march_madness.create_keyword_stream()
                 self.start_stream_with_keywords(keyword_string, game)
 
-    def iterate_through_nba_games_and_start_stream(self, data_nba, current_time):
-        for idx, game in enumerate(data_nba):
-            game_time = self.generate_game_time(game)
-            self.logger.info('NBA Game Time: ' + game_time)
+    def iterate_through_daily_games_and_start_stream(self, data, current_time, sport):
+        for idx, game in enumerate(data):
+            game_time = self.generate_stream_start_time(game)
+            self.logger.info(sport.upper() + ' Game Time: ' + game_time)
 
             if game_time == current_time and not game['being_streamed']:
-                self.update_is_streamed_json(game)
+                self.update_is_streamed_json(game, sport)
                 self.logger.info('Acquiring twitter data for ' + str(game["title"]))
 
-                keyword_string = self.create_keyword_string_for_game(game, "nba")
-                self.start_stream_with_keywords(keyword_string, game)
-
-    def iterate_through_nhl_games_and_start_stream(self, data_nhl, current_time):
-        for idx, game in enumerate(data_nhl):
-            game_time = self.generate_game_time(game)
-            self.logger.info('NHL Game Time: ' + game_time)
-
-            if game_time == current_time and not game['being_streamed']:
-                self.update_is_streamed_json(game)
-                self.logger.info('Acquiring twitter data for ' + str(game["title"]))
-
-                keyword_string = self.create_keyword_string_for_game(game, "nhl")
+                keyword_string = self.create_keyword_string_for_game(game, sport)
                 self.start_stream_with_keywords(keyword_string, game)
 
     def start_stream_with_keywords(self, keyword_string, game):
@@ -157,8 +153,8 @@ class EternalProcess:
     def create_game_name_from_title(game):
         return datetime.datetime.now().strftime('%Y-%m-%d') + '-' + game['title'].replace(' ', '-')
 
-    @staticmethod
-    def wait_till_five_seconds_into_minute():
+    def wait_till_five_seconds_into_minute(self):
+        self.logger.info('Waiting till five seconds into minute to start.')
         start = False
         while not start:
             current_time = datetime.datetime.now().strftime('%S')
@@ -178,18 +174,25 @@ class EternalProcess:
         keyword_string_away = ','.join(search_terms_away)
         return keyword_string_home + ',' + keyword_string_away
 
-    def update_is_streamed_json(self, game):
+    def update_is_streamed_json(self, game, sport):
         """
         Replaces json file to reflect that game is being streamed
+        :param sport: Sport in short hand, currently "nba" or "nhl"
         :param game: game data, containing _id of game to be updated
         """
         game_id = game["_id"]
         db = self.get_aws_mongo_db()
 
         if not game['being_streamed']:
-            db.nba_logs.update({'_id': game_id}, {"$set": {"being_streamed": True}}, upsert=False)
+            if sport == "nba":
+                db.nba_logs.update({'_id': game_id}, {"$set": {"being_streamed": True}}, upsert=False)
+            elif sport == "nhl":
+                db.nhl_logs.update({'_id': game_id}, {"$set": {"being_streamed": True}}, upsert=False)
         else:
-            db.nba_logs.update({'_id': game_id}, {"$set": {"being_streamed": False}}, upsert=False)
+            if sport == "nba":
+                db.nba_logs.update({'_id': game_id}, {"$set": {"being_streamed": False}}, upsert=False)
+            elif sport == "nhl":
+                db.nhl_logs.update({'_id': game_id}, {"$set": {"being_streamed": False}}, upsert=False)
 
     @staticmethod
     def get_aws_mongo_db():
@@ -202,7 +205,7 @@ class EternalProcess:
     @staticmethod
     def get_time_to_end_stream(minutes):
         """
-        Function creates a time to end stream, currently in minutes
+        Creates a time to end stream, currently in minutes
         :param minutes:
         :return: Time object
         """
@@ -315,6 +318,10 @@ class EternalProcess:
             self.logger.error('Map Reduce error at index ' + index)
             raise IOError
 
+        except ValueError:
+            self.logger.exception(ValueError)
+            self.logger.error('Map Reduce Value Error')
+
     def replace_written_tweets_with_map_reduced_version(self, index, map_reduced_tweets):
         """
         Opens tweets file and replaces it with map reduced version
@@ -409,9 +416,6 @@ class EternalProcess:
         except IOError:
             self.logger.exception(IOError)
             self.logger.error('File not found at ' + path)
-            print 'IOError'
-            # TODO - Raise IOError
-            # raise IOError
 
     @staticmethod
     def remove_last_line_from_file(path):
