@@ -74,7 +74,7 @@ class TestEternalProcess(unittest.TestCase):
             path = wd
         base = path + '/Twitter_Utils/data/daily-logs/'
         end = datetime.datetime.now().strftime('%Y-%m-%d') + '.json'
-        self.assertEqual(base + end, eternal_process.get_write_path_for_days_games())
+        self.assertEqual(base + end, eternal_process.get_write_path_for_days_games_nba())
 
     def test_is_time_to_get_game_data_for_day(self):
         eternal_process = EternalProcess()

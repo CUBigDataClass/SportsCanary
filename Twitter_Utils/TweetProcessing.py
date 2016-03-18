@@ -19,7 +19,6 @@ http://www.ranks.nl/stopwords for source
 """
 
 class TweetProcessor:
-
     def __init__(self):
         pass
 
@@ -59,6 +58,8 @@ class TweetProcessor:
         tweet = self.remove_stop_words(tweet)
 
         tweet = self.remove_appended_url_or_user(tweet)
+
+        tweet = self.lemmatize_tweet(tweet)
 
         return tweet
 
@@ -116,7 +117,7 @@ class TweetProcessor:
         for word in tweet:
             stemmed_word = wordnet_lemmatizer.lemmatize(word)
             new_tweet = new_tweet + stemmed_word
-        print new_tweet
+        return new_tweet
 
 
 class Filter:
@@ -132,6 +133,3 @@ class Filter:
     def add_key_words_to_tweet(self):
     	word_list = ['nba','basketball', 'ball']
     	return ' '.join(word[0] for word in word_list)
-
-f = TweetProcessor()
-f.lemmatize_tweet('what does this do I am wondering if future parts of speech make a difference in this at all')
