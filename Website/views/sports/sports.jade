@@ -1,0 +1,25 @@
+extends ../layout
+
+block content
+  script(src='../js/logos.js')
+  br
+  h1.center Welcome to Sports Canary!
+  br
+  ul
+      - each result, i in results
+          li.results-card-outer
+            div.results-card-inner
+                div.col-md-4.team-1-card
+                    img.team-icon(src='/images/nba_logos/Atlanta_Hawks.jpg', alt='Mountain View')
+                    b.team-name
+                    = result.event_name
+                    b.team-score
+                    = result.score_1
+                div.col-md-3.middle-card
+
+                div.col-md-4.team-2-card
+                    img.team-icon(src='/images/nba_logos/Boston_Celtics.jpg', alt='Mountain View')
+                    b.team-name
+                    = result.event_name
+                    b.team-score
+                    = result.score_2
