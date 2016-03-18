@@ -39,11 +39,6 @@ class TestSportsData(unittest.TestCase):
         expected_response = json.dumps(expected_response)
         self.assertEqual(expected_response, sports_data.create_game_log_object(data))
 
-    # def test_create_players_log_object(self):
-    #     sports_data = SportsData()
-    #     # expected = sports_data.create_players_log_object()
-    #     self.assertEqual('', sports_data.create_players_log_object())
-
     def test_get_nba_players_for_today(self):
         sports_data = SportsData()
         result = sports_data.get_nba_players_for_today()

@@ -9,7 +9,7 @@ from Eternal_Utils.Timer import Timer
 # Data Source - Sentiment140
 
 
-class FeatureExtractor:
+class NaiveBayesAnalysis:
     def __init__(self):
         self.tweet_processor = TweetProcessing.TweetProcessor()
         self.data_gatherer = DataGatherer.DataGatherer()
@@ -124,6 +124,9 @@ class FeatureExtractor:
             path = wd[0:pos+15]
         else:
             path = wd
-        with open(path + '/Twitter_Utils/data/tweets/2016-03-01-Trail-Blazers-vs-Knicks/2016-03-01-Trail-Blazers-vs-Knicks.txt') as f:
+        with open(path + '/Twitter_Utils/data/tweets/2016-03-01-Trail-Blazers-vs-Knicks/'
+                         '2016-03-01-Trail-Blazers-vs-Knicks.txt') as f:
             for line in f:
                 print naive_bayes_classifier.classify(self.extract_features(self.create_feature_vector(line)))
+
+        print naive_bayes_classifier.show_most_informative_features(10)

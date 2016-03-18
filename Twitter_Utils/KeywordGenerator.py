@@ -5,21 +5,34 @@ import logging
 
 class KeywordGenerator:
     def __init__(self):
+        self.logger = logging.getLogger(__name__)
+        self.team_data_path = ''
+
+    @staticmethod
+    def get_team_data_path(sport):
         wd = os.getcwd()
         pos = wd.find("BigDataMonsters")
         if pos > 0:  # pragma: no cover
             path = wd[0:pos+15]
         else:
             path = wd
-        self.team_data_path = path + '/Twitter_Utils/data/teams-data.json'
-        self.logger = logging.getLogger(__name__)
 
-    def generate_search_terms(self, team_id):
+        add = ''
+        if sport == "nhl":
+            add = 'nhl-teams-data.json'
+        elif sport == "nba":
+            add = 'nba-teams-data.json'
+        return path + '/Twitter_Utils/data/' + add
+
+    def generate_search_terms(self, team_id, sport):
         """
         Creates list of key words to search for.
+        :param sport: currently "nba" or "nhl"
         :param team_id: id of team, given by Stattleship API
         :return: returns list of key words
         """
+        self.team_data_path = self.get_team_data_path(sport)
+        print self.team_data_path
         try:
             with open(self.team_data_path, 'r') as f:
                 data = json.loads(f.read())

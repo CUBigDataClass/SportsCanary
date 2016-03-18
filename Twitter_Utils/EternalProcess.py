@@ -52,7 +52,7 @@ class EternalProcess:
         It has to check if a game is starting and if that is the case, fork the process,
         And in that new process check for game data during the time period assigned to it.
         """
-        self.wait_till_five_seconds_into_minute()
+        # self.wait_till_five_seconds_into_minute()
         start_time = time.time()
         print(50 * '*' + '\n' + 10 * '*' + '  STARTING SCANNING PROCESS   ' + 10 * '*' + '\n' + 50 * '*')
         while True:
@@ -61,17 +61,23 @@ class EternalProcess:
             self.check_if_stream_should_end()
 
             if self.is_time_to_get_game_data_for_day():
-                self.write_days_games_data()
-                self.march_madness.write_days_games_data()
+                self.write_days_games_data_for_nba()
+                self.write_days_games_data_for_nhl()
+                # self.march_madness.write_days_games_data()
 
             # Read in file to see if it is time to analyze twitter
             read_path = self.get_write_path_for_days_games()
 
             db = self.get_aws_mongo_db()
             data_nba = []
+            data_nhl = []
             for post in db.nba_logs.find():
                 if post['date'] == datetime.datetime.now().strftime('%Y-%m-%d'):
                     data_nba.append(post)
+
+            for post in db.nhl_logs.find():
+                if post['date'] == datetime.datetime.now().strftime('%Y-%m-%d'):
+                    data_nhl.append(post)
 
             data_mm = self.march_madness.return_games_for_the_day()
 
@@ -80,12 +86,15 @@ class EternalProcess:
                     current_time = self.get_time_as_hour_minute()
                     self.logger.info('Current Time: ' + current_time)
                     self.iterate_through_nba_games_and_start_stream(data_nba=data_nba, current_time=current_time)
+                    self.iterate_through_nhl_games_and_start_stream(data_nhl=data_nhl, current_time=current_time)
                     self.iterate_through_march_madness_games_and_start_stream(data_mm=data_mm,
                                                                               current_time=current_time)
 
             except IOError:
                 self.logger.error('File not found at ' + read_path)
-                self.write_days_games_data()
+                self.write_days_games_data_for_nba()
+                self.write_days_games_data_for_nhl()
+                # self.march_madness.write_days_games_data()
                 continue
 
             self.sleep_for(self.tick_time_in_seconds, start_time)
@@ -120,7 +129,19 @@ class EternalProcess:
                 self.update_is_streamed_json(game)
                 self.logger.info('Acquiring twitter data for ' + str(game["title"]))
 
-                keyword_string = self.create_keyword_string_for_game(game)
+                keyword_string = self.create_keyword_string_for_game(game, "nba")
+                self.start_stream_with_keywords(keyword_string, game)
+
+    def iterate_through_nhl_games_and_start_stream(self, data_nhl, current_time):
+        for idx, game in enumerate(data_nhl):
+            game_time = self.generate_game_time(game)
+            self.logger.info('NHL Game Time: ' + game_time)
+
+            if game_time == current_time and not game['being_streamed']:
+                self.update_is_streamed_json(game)
+                self.logger.info('Acquiring twitter data for ' + str(game["title"]))
+
+                keyword_string = self.create_keyword_string_for_game(game, "nhl")
                 self.start_stream_with_keywords(keyword_string, game)
 
     def start_stream_with_keywords(self, keyword_string, game):
@@ -144,14 +165,15 @@ class EternalProcess:
             if current_time == '05':
                 start = True
 
-    def create_keyword_string_for_game(self, game):
+    def create_keyword_string_for_game(self, game, sport):
         """
         create string of keywords to pass into twitter filter.
+        :param sport: currently "nba" or "nhl"
         :param game: game data, contains home and away team id
         :return: string of keywords
         """
-        search_terms_home = self.keyword_generator.generate_search_terms(game['home_team_id'])
-        search_terms_away = self.keyword_generator.generate_search_terms(game['away_team_id'])
+        search_terms_home = self.keyword_generator.generate_search_terms(game['home_team_id'], sport)
+        search_terms_away = self.keyword_generator.generate_search_terms(game['away_team_id'], sport)
         keyword_string_home = ','.join(search_terms_home)
         keyword_string_away = ','.join(search_terms_away)
         return keyword_string_home + ',' + keyword_string_away
@@ -335,9 +357,9 @@ class EternalProcess:
         return path + '/Twitter_Utils/data/tweets/' + game_name + '/' + game_name + '.txt'
 
     # TODO - Figure out how to test this
-    def write_days_games_data(self):
+    def write_days_games_data_for_nba(self):
         """
-        Writes API response containing info for days games
+        Writes API response containing info for days games in the NBA
         """
         db = self.get_aws_mongo_db()
         write_path = self.get_write_path_for_days_games()
@@ -349,6 +371,25 @@ class EternalProcess:
             with open(write_path) as data_file:
                 data = json.load(data_file)
             db.nba_logs.insert(data)
+        except IOError:
+            self.logger.exception(IOError)
+            self.logger.error('Unable to write at ' + write_path)
+            raise IOError
+
+    def write_days_games_data_for_nhl(self):
+        """
+        Writes API response containing info for days games in the NHL
+        """
+        db = self.get_aws_mongo_db()
+        write_path = self.get_write_path_for_days_games()
+        data_to_write = self.sports_data.get_nhl_games_for_today()
+        try:
+            with open(write_path, 'w+') as f:
+                f.write(data_to_write)
+            f.close()
+            with open(write_path) as data_file:
+                data = json.load(data_file)
+            db.nhl_logs.insert(data)
         except IOError:
             self.logger.exception(IOError)
             self.logger.error('Unable to write at ' + write_path)

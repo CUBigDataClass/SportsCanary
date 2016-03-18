@@ -9,17 +9,18 @@ class TestKeywordGenerator(unittest.TestCase):
     def test_generate_search_terms(self):
         keyword_generator = KeywordGenerator()
         # Fake ID
-        self.assertEqual([], keyword_generator.generate_search_terms('FAKE TEAM ID'))
+        self.assertEqual([], keyword_generator.generate_search_terms('FAKE TEAM ID', "nba"))
         # Actual ID
         expected_list = ['TrueToAtlanta', 'TrueToAtlanta', 'ATL', 'Hawks',
                          'goTrueToAtlanta', 'goTrueToAtlanta', 'goATL', 'goHawks']
-        self.assertEqual(expected_list, keyword_generator.generate_search_terms('20901970-53a0-417c-b5b4-832a74148af6'))
+        self.assertEqual(expected_list, keyword_generator.generate_search_terms('20901970-53a0-417c-b5b4-832a74148af6',
+                                                                                "nba"))
 
     def test_generate_search_terms_should_throw_exception(self):
         keyword_generator = KeywordGenerator()
         keyword_generator.team_data_path = ''
         with self.assertRaises(IOError) as context:
-            keyword_generator.generate_search_terms('20901970-53a0-417c-b5b4-832a74148af6')
+            keyword_generator.generate_search_terms('20901970-53a0-417c-b5b4-832a74148af6', "notARealSport")
         assert True
 
     def test_append_word_with_go_to_list(self):

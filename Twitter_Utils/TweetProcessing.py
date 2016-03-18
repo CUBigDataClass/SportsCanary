@@ -2,6 +2,7 @@
 import re
 import nltk
 from nltk.corpus import stopwords
+from nltk.stem import WordNetLemmatizer
 
 """
 NLTK Guide
@@ -18,7 +19,6 @@ http://www.ranks.nl/stopwords for source
 """
 
 class TweetProcessor:
-
     def __init__(self):
         pass
 
@@ -58,6 +58,8 @@ class TweetProcessor:
         tweet = self.remove_stop_words(tweet)
 
         tweet = self.remove_appended_url_or_user(tweet)
+
+        tweet = self.lemmatize_tweet(tweet)
 
         return tweet
 
@@ -109,6 +111,15 @@ class TweetProcessor:
         tweet = tweet.replace('URL','')
         return tweet.replace('USER','')
 
+    def lemmatize_tweet(self, tweet):
+        wordnet_lemmatizer = WordNetLemmatizer()
+        new_tweet = ''
+        for word in tweet:
+            stemmed_word = wordnet_lemmatizer.lemmatize(word)
+            new_tweet = new_tweet + stemmed_word
+        return new_tweet
+
+
 class Filter:
     def __init__(self):
         pass
@@ -122,6 +133,3 @@ class Filter:
     def add_key_words_to_tweet(self):
     	word_list = ['nba','basketball', 'ball']
     	return ' '.join(word[0] for word in word_list)
-
-f = Filter()
-f.check_words_in_tweet('ball is life')

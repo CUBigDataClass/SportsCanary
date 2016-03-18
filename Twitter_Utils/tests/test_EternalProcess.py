@@ -96,7 +96,7 @@ class TestEternalProcess(unittest.TestCase):
         eternal_process = EternalProcess()
         game = {'home_team_id': '20901970-53a0-417c-b5b4-832a74148af6',
                 'away_team_id': '1c65bbb6-bd10-4ef6-831a-89050d57fe16'}
-        expected = eternal_process.create_keyword_string_for_game(game)
+        expected = eternal_process.create_keyword_string_for_game(game, "nba")
         self.assertEqual(expected, 'TrueToAtlanta,TrueToAtlanta,ATL,Hawks,goTrueToAtlanta,goTrueToAtlanta,goATL'
                                    ',goHawks,Celtics,Celtics,Celtics,goCeltics,goCeltics,goCeltics')
 

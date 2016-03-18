@@ -19,13 +19,28 @@ class SportsData:
         self.CLIENT_ID = CommonUtils.get_environ_variable('STAT_CLIENT_ID')
         self.STAT_CLIENT_SECRET = CommonUtils.get_environ_variable('STAT_CLIENT_SECRET')
         self.STAT_ACCESS_TOKEN = CommonUtils.get_environ_variable('STAT_ACCESS_TOKEN')
-        self.base_url = 'https://www.stattleship.com/basketball/'
+        self.base_url_basketball = 'https://www.stattleship.com/basketball/'
+        self.base_url_hockey = 'https://www.stattleship.com/hockey/'
         self.logger = logging.getLogger(__name__)
 
     def get_nba_games_for_today(self):
         """Gets all games for today"""
         self.logger.info('Getting games for today.')
-        url = self.base_url + '/nba/games?on=today'
+        url = self.base_url_basketball + '/nba/games?on=today'
+        headers = {
+            'Authorization': str(self.STAT_ACCESS_TOKEN),
+            'Accept': 'application/vnd.stattleship.com; version=1',
+            'Content-Type': 'application/json'
+        }
+
+        res = requests.get(url, headers=headers)
+        content = json.loads(res.content)
+        return self.create_game_log_object(content['games'])
+
+    def get_nhl_games_for_today(self):
+        """Gets all games for today"""
+        self.logger.info('Getting games for today.')
+        url = self.base_url_hockey + '/nhl/games?on=today'
         headers = {
             'Authorization': str(self.STAT_ACCESS_TOKEN),
             'Accept': 'application/vnd.stattleship.com; version=1',
@@ -64,7 +79,7 @@ class SportsData:
         """ Gets results for games played already for the day, if no games
             have been played then no results appear"""
         # TODO - Change back to today rather than date with games
-        url = self.base_url + '/nba/game_logs?on=March-5'
+        url = self.base_url_basketball + '/nba/game_logs?on=March-5'
         headers = {
             'Authorization': str(self.STAT_ACCESS_TOKEN),
             'Accept': 'application/vnd.stattleship.com; version=1',
