@@ -39,6 +39,7 @@ class KeywordGenerator:
 
             search_terms_list = []
             team_data = data['teams']
+            players_list = []
             for team in team_data:
                 if team['id'] == team_id:
                     if team['hashtag']:
@@ -50,7 +51,14 @@ class KeywordGenerator:
                     if team['nickname']:
                         search_terms_list.append(team['nickname'])
 
+                    if team['slug']:
+                        players_list = self.append_players_name(team['slug'], team_id)
+                        for name in players_list:
+                            search_terms_list.append(name.replace(" ",""))
+
             search_terms_list = self.append_word_with_go_to_list(search_terms_list)
+            for name in players_list:
+                search_terms_list.append(name)
             return search_terms_list
 
         except IOError:
@@ -72,3 +80,6 @@ class KeywordGenerator:
 
         word_list += search_terms_list_with_go
         return word_list
+
+    def append_players_name(self, team_slug_name, team_id):
+        return self.sports_data.get_nba_players_for_today(team_slug_name, team_id)

@@ -172,7 +172,7 @@ class EternalProcess:
         search_terms_away = self.keyword_generator.generate_search_terms(game['away_team_id'], sport)
         keyword_string_home = ','.join(search_terms_home)
         keyword_string_away = ','.join(search_terms_away)
-        return keyword_string_home + ',' + keyword_string_away
+        return keyword_string_home + '---' + keyword_string_away
 
     def update_is_streamed_json(self, game, sport):
         """
