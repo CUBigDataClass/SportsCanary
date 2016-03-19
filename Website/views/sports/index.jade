@@ -1,0 +1,42 @@
+extends ../layout
+
+block content
+  script(src='../js/logos.js')
+  br
+  .container
+      .row
+        .col.s12
+          .card-panel
+            span.black-text
+              | NBA
+            .row
+              .col.s6
+                  .col
+                    img.circle.responsive-img(src='images/nba_logos/Denver_Nuggets.jpg', alt='Denver Nuggets')
+                  .col
+                    span.black-text
+                      | 
+                      br
+                      br
+                      | Score:
+                      br
+                      | Spread:
+                      br
+                      | Chart
+                .col.s6
+              .col
+                img.circle.responsive-img(src='images/nba_logos/Goldenstate_Warriors.jpg', alt='Golden State Warriors')
+              .col
+                span.black-text
+                      | 
+                      br
+                      br
+                      | Score:
+                      br
+                      | Spread:
+                      br
+                      | Chart
+            span.black-text.right
+              | Last updated: 
+
+  br
