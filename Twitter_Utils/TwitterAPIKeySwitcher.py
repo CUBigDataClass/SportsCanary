@@ -3,6 +3,7 @@ import os
 from Eternal_Utils.CommonUtils import CommonUtils
 import logging
 
+
 class TwitterAPIKeyHandler:
     def __init__(self):
         self.api_key_array = []
@@ -93,7 +94,8 @@ class TwitterAPIKeyHandler:
 
         except IOError:
             self.logger.exception(IOError)
-            self.logger.error('File not found while updating JSON file in TwitterAPIKeys at ' + self.key_check_write_path)
+            self.logger.error('File not found while updating JSON file in TwitterAPIKeys at ' +
+                              self.key_check_write_path)
             raise IOError
 
     # TODO - Create a makefile for clearing the keys API file for fresh installs in the future.

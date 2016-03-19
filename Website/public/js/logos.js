@@ -1,8 +1,7 @@
-
-function getlogo(team) {
+function getLogoForTeam(team) {
     switch(team) {
     case '321':
-    case 'larry': 
+    case 1:
        alert('Hey');
        break;
     default:

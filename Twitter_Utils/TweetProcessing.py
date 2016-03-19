@@ -4,19 +4,6 @@ import nltk
 from nltk.corpus import stopwords
 from nltk.stem import WordNetLemmatizer
 
-"""
-NLTK Guide
-After importing text
-
-text1.similar("WORD") returns words with similar meaning to what we are searching for.
-
-After doing some NLP research it seems that there is a thing called a stop word list,
-that essentially means a list of words that add nothing of value to NLP, so we strip these
-from the tweets.
-
-http://www.ranks.nl/stopwords for source
-
-"""
 
 class TweetProcessor:
     def __init__(self):

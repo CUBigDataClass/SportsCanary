@@ -4,6 +4,9 @@ import tweepy
 
 class TwitterClient:
     def __init__(self):
+        """
+        Initializes API keys and sets up Auth with Twitter API
+        """
         self.APP_KEY = CommonUtils.get_environ_variable('SPORTS_CANARY_APP_KEY')
         self.APP_SECRET = CommonUtils.get_environ_variable('SPORTS_CANARY_APP_KEY_SECRET')
         self.OAUTH_TOKEN = CommonUtils.get_environ_variable('SPORTS_CANARY_OAUTH_TOKEN')
@@ -13,5 +16,9 @@ class TwitterClient:
         self.api = tweepy.API(self.auth)
 
     def tweet(self, tweet):
+        """
+        Tweets out content
+        :param tweet: message to be tweeted
+        """
         self.api.update_status(tweet)
 

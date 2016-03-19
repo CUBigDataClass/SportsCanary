@@ -1,9 +1,23 @@
-var express = require('express');
-var router = express.Router();
+var express = require('express'),
+    router = express.Router(),
+    mongoose = require('mongoose'),
+    result = mongoose.model('Result');
 
-/* GET home page. */
-router.get('/', function(req, res, next) {
-    res.render('sports', { title: 'SportsCanary - Predicting the future of Sports with Big Data.' });
+router.route('/')
+.get(function(req, res, next) {
+    mongoose.model('Result').find({}, function (err, results) {
+        if (err) {
+            return console.error(err);
+        } else {
+            res.format({
+                html: function() {
+                    res.render('sports/sports', {
+                        title: 'All my Results',
+                        "results" : results
+                    });
+                }
+            });
+        }
+    });
 });
-
 module.exports = router;

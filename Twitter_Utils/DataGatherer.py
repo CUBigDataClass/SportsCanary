@@ -10,10 +10,10 @@ import logging
 
 
 class DataGatherer(StreamListener):
-    """ Class to gather data from Twitter
-        Twitter Streaming API: https://dev.twitter.com/streaming/overview/request-parameters#track
     """
-
+    Class responsible for spawning twitter streams and storing tweets.
+    Twitter Streaming API: https://dev.twitter.com/streaming/overview/request-parameters#track
+    """
     def __init__(self):
         super(DataGatherer, self).__init__()
         self.APP_KEY = CommonUtils.get_environ_variable('TWITTER_APP_KEY')
