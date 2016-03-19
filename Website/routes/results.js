@@ -63,7 +63,7 @@ router.route('/')
                 res.format({
                     html: function(){
                         res.render('results/index', {
-                            title: 'All my Results',
+                            title: 'Results',
                             "results" : results
                         });
                     },
