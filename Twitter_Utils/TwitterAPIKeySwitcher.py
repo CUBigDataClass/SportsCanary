@@ -28,10 +28,10 @@ class TwitterAPIKeyHandler:
             oauth_token = 'TWITTER_OAUTH_TOKEN_' + str(key)
             oauth_token_secret = 'TWITTER_OAUTH_TOKEN_SECRET_' + str(key)
 
-            app_key = os.environ[app_key]
-            app_secret = os.environ[app_secret]
-            oauth_token = os.environ[oauth_token]
-            oauth_token_secret = os.environ[oauth_token_secret]
+            app_key = CommonUtils.get_environ_variable(app_key)
+            app_secret = CommonUtils.get_environ_variable(app_secret)
+            oauth_token = CommonUtils.get_environ_variable(oauth_token)
+            oauth_token_secret = CommonUtils.get_environ_variable(oauth_token_secret)
 
             individual_key = dict(app_key=app_key,
                                   app_secret=app_secret,
