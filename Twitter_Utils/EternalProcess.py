@@ -46,7 +46,7 @@ class EternalProcess:
             handler.formatter = formatter
             self.logger.addHandler(handler)
 
-    def start_process(self):
+    def start_process(self):  #pragma: no cover
         """
         This process is our workhorse, it has to check if it should log games.
         It has to check if a game is starting and if that is the case, fork the process,
@@ -155,11 +155,10 @@ class EternalProcess:
 
     def wait_till_five_seconds_into_minute(self):
         self.logger.info('Waiting till five seconds into minute to start.')
-        start = False
-        while not start:
+        while True:
             current_time = datetime.datetime.now().strftime('%S')
             if current_time == '05':
-                start = True
+                return True
 
     def create_keyword_string_for_game(self, game, sport):
         """
@@ -421,10 +420,14 @@ class EternalProcess:
             with open(write_path) as data_file:
                 data = json.load(data_file)
             db.nba_logs.insert(data)
+            return True
         except IOError:
             self.logger.exception(IOError)
             self.logger.error('Unable to write at ' + write_path)
             raise IOError
+        except:
+            self.logger.error('Unable to write days data for nba, due to data existing already.')
+            return False
 
     def write_days_games_data_for_nhl(self):
         """
@@ -440,10 +443,14 @@ class EternalProcess:
             with open(write_path) as data_file:
                 data = json.load(data_file)
             db.nhl_logs.insert(data)
+            return True
         except IOError:
             self.logger.exception(IOError)
             self.logger.error('Unable to write at ' + write_path)
             raise IOError
+        except:
+            self.logger.error('Unable to write days data for nhl, due to data existing already.')
+            return False
 
     def remove_first_line_from_file(self, path):
         """

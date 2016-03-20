@@ -13,7 +13,6 @@ class MarchMadness:
     def get_march_madness_games_for_the_day():
         r = requests.get('http://sportscanary.com/api/march_madness/games?date=today')
         json_response = json.loads(r.text)
-        print json_response
         return json_response
 
     def write_days_games_data(self):  # pragma: no cover
@@ -26,7 +25,11 @@ class MarchMadness:
         client = MongoClient(uri)
         db = client.eventsDB
         data_to_write = self.get_march_madness_games_for_the_day()
-        db.mm_games.insert(data_to_write)
+        try:
+            db.mm_games.insert(data_to_write)
+        except:
+            print 'Error'
+        return True
 
     @staticmethod
     def return_games_for_the_day():
@@ -42,7 +45,7 @@ class MarchMadness:
         return data
 
     @staticmethod
-    def update_is_streamed_json(game):
+    def update_is_streamed_json(game):  # pragma: no cover
         """
         Replaces json file to reflect that game is being streamed
         :param game: game object similar to stattleship api
@@ -58,5 +61,6 @@ class MarchMadness:
         else:
             db.mm_games.update({'_id': game_id}, {"$set": {"being_streamed": True}}, upsert=False)
 
-    def create_keyword_stream(self):
+    @staticmethod
+    def create_keyword_stream():
         return 'none'

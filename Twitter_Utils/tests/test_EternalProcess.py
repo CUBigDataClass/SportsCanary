@@ -5,7 +5,8 @@ import datetime
 import time
 from Twitter_Utils.EternalProcess import EternalProcess
 from Twitter_Utils.DataGatherer import DataGatherer
-
+from Eternal_Utils.CommonUtils import CommonUtils
+from pymongo import MongoClient
 
 class TestEternalProcess(unittest.TestCase):
     def test___init__(self):
@@ -113,9 +114,6 @@ class TestEternalProcess(unittest.TestCase):
         path = self.eternalProcess.get_game_name_base_file_path(0)
         self.assertIsNotNone(self.eternalProcess.map_reduce_tweets_after_disconnect(path, 0))
 
-    def test_start_process(self):
-        assert True  # TODO: implement your test here
-
     def test_get_game_name_base_file_path(self):
         self.eternalProcess.game_name_list.append('2016-03-05-Pacers-vs-Wizards')
         self.assertEqual(os.getcwd() + '/Twitter_Utils/data/tweets/2016-03-05-Pacers-vs-Wizards/'
@@ -173,6 +171,40 @@ class TestEternalProcess(unittest.TestCase):
                 count_2 += 1
         reader.close()
         self.assertEqual(count_1-1, count_2)
+
+    def test_create_game_name_from_title(self):
+        eternal_process = EternalProcess()
+        game = {'title': 'Test vs Cases'}
+        date = datetime.datetime.now().strftime('%Y-%m-%d')
+        expected = date + '-Test-vs-Cases'
+        self.assertEqual(expected, eternal_process.create_game_name_from_title(game))
+
+    def test_get_aws_mongo_db(self):
+        eternal_process = EternalProcess()
+        uri = 'mongodb://' + CommonUtils.get_environ_variable('AWS_MONGO_USER') + ':' \
+              + CommonUtils.get_environ_variable('AWS_MONGO_PASS') + '@' \
+              + CommonUtils.get_environ_variable('AWS_ADDRESS')
+        client = MongoClient(uri)
+        expected = client.eventsDB
+        self.assertEqual(expected, eternal_process.get_aws_mongo_db())
+
+    def test_get_time_as_hour_minute(self):
+        eternal_process = EternalProcess()
+        self.assertEqual(datetime.datetime.now().strftime('%H:%M'), eternal_process.get_time_as_hour_minute())
+
+    def test_wait_till_five_seconds_into_minute(self):
+        eternal_process = EternalProcess()
+        self.assertEqual(True, eternal_process.wait_till_five_seconds_into_minute())
+        current_time = datetime.datetime.now().strftime('%S')
+        self.assertEqual(current_time, '05')
+
+    def test_write_days_games_data_for_nba(self):
+        eternal_process = EternalProcess()
+        self.assertIsNotNone(eternal_process.write_days_games_data_for_nba())
+
+    def test_write_days_games_data_for_nhl(self):
+        eternal_process = EternalProcess()
+        self.assertIsNotNone(eternal_process.write_days_games_data_for_nhl())
 
 if __name__ == '__main__':  # pragma: no cover
     unittest.main()
