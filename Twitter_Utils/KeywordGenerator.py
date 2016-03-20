@@ -1,12 +1,14 @@
 import os
 import simplejson as json
 import logging
+from SportsData import SportsData
 
 
 class KeywordGenerator:
     def __init__(self):
         self.logger = logging.getLogger(__name__)
         self.team_data_path = ''
+        self.sports_data = SportsData()
 
     @staticmethod
     def get_team_data_path(sport):
@@ -54,7 +56,7 @@ class KeywordGenerator:
                     if team['slug']:
                         players_list = self.append_players_name(team['slug'], team_id)
                         for name in players_list:
-                            search_terms_list.append(name.replace(" ",""))
+                            search_terms_list.append(name.replace(" ", ""))
 
             search_terms_list = self.append_word_with_go_to_list(search_terms_list)
             for name in players_list:
@@ -68,7 +70,6 @@ class KeywordGenerator:
 
     @staticmethod
     def append_word_with_go_to_list(word_list):
-        # TODO - Refactor this
         """
         Appends go to word, ex Bulldogs - goBulldogs
         :param word_list: words to append go to

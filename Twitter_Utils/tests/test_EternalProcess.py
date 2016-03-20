@@ -46,7 +46,23 @@ class TestEternalProcess(unittest.TestCase):
         # Should end if there is a stream
         self.eternalProcess.end_times_list.append(datetime.datetime.now().strftime('%H:%M'))
         self.eternalProcess.game_name_list.append('2016-03-05-Pacers-vs-Wizards')
-        stream = self.data_gatherer.get_tweet_stream('ok', '123', '123')
+        keywords = 'TrueToAtlanta,TrueToAtlanta,ATL,Hawks,DennisSchroder,ThaboSefolosha,' \
+                   'TimHardawayJr.,PaulMillsap,MikeScott,JeffTeague,MikeMuscala,KyleKorver,' \
+                   'AlHorford,KentBazemore,goTrueToAtlanta,goTrueToAtlanta,goATL,goHawks,' \
+                   'goDennisSchroder,goThaboSefolosha,goTimHardawayJr.,goPaulMillsap,goMikeScott,' \
+                   'goJeffTeague,goMikeMuscala,goKyleKorver,goAlHorford,goKentBazemore,' \
+                   'Dennis Schroder,Thabo Sefolosha,Tim Hardaway Jr.,Paul Millsap,Mike Scott,' \
+                   'Jeff Teague,Mike Muscala,Kyle Korver,Al Horford,Kent Bazemore' \
+                   '---Celtics,Celtics,Celtics,CotyClarke,IsaiahThomas,JamesYoung,AveryBradley,' \
+                   'TerryRozier,EvanTurner,JordanMickey,MarcusSmart,JaredSullinger,KellyOlynyk,' \
+                   'TylerZeller,R.J.Hunter,AmirJohnson,JonasJerebko,goCeltics,goCeltics,goCeltics,' \
+                   'goCotyClarke,goIsaiahThomas,goJamesYoung,goAveryBradley,goTerryRozier,goEvanTurner,' \
+                   'goJordanMickey,goMarcusSmart,goJaredSullinger,goKellyOlynyk,goTylerZeller,' \
+                   'goR.J.Hunter,goAmirJohnson,goJonasJerebko,Coty Clarke,Isaiah Thomas,James Young,' \
+                   'Avery Bradley,Terry Rozier,Evan Turner,Jordan Mickey,Marcus Smart,Jared Sullinger,' \
+                   'Kelly Olynyk,Tyler Zeller,R.J. Hunter,Amir Johnson,Jonas Jerebko'
+
+        stream = self.data_gatherer.get_tweet_stream(keywords, '123', '2016-03-05-Pacers-vs-Wizards')
         self.eternalProcess.stream_list.append(stream)
         self.assertEqual(True, self.eternalProcess.check_if_stream_should_end())
 
@@ -97,8 +113,21 @@ class TestEternalProcess(unittest.TestCase):
         game = {'home_team_id': '20901970-53a0-417c-b5b4-832a74148af6',
                 'away_team_id': '1c65bbb6-bd10-4ef6-831a-89050d57fe16'}
         expected = eternal_process.create_keyword_string_for_game(game, "nba")
-        self.assertEqual(expected, 'TrueToAtlanta,TrueToAtlanta,ATL,Hawks,goTrueToAtlanta,goTrueToAtlanta,goATL'
-                                   ',goHawks,Celtics,Celtics,Celtics,goCeltics,goCeltics,goCeltics')
+        self.assertEqual(expected, 'TrueToAtlanta,TrueToAtlanta,ATL,Hawks,DennisSchroder,ThaboSefolosha,'
+                                   'TimHardawayJr.,PaulMillsap,MikeScott,JeffTeague,MikeMuscala,KyleKorver,'
+                                   'AlHorford,KentBazemore,goTrueToAtlanta,goTrueToAtlanta,goATL,goHawks,'
+                                   'goDennisSchroder,goThaboSefolosha,goTimHardawayJr.,goPaulMillsap,goMikeScott,'
+                                   'goJeffTeague,goMikeMuscala,goKyleKorver,goAlHorford,goKentBazemore,'
+                                   'Dennis Schroder,Thabo Sefolosha,Tim Hardaway Jr.,Paul Millsap,Mike Scott,'
+                                   'Jeff Teague,Mike Muscala,Kyle Korver,Al Horford,Kent Bazemore'
+                                   '---Celtics,Celtics,Celtics,CotyClarke,IsaiahThomas,JamesYoung,AveryBradley,'
+                                   'TerryRozier,EvanTurner,JordanMickey,MarcusSmart,JaredSullinger,KellyOlynyk,'
+                                   'TylerZeller,R.J.Hunter,AmirJohnson,JonasJerebko,goCeltics,goCeltics,goCeltics,'
+                                   'goCotyClarke,goIsaiahThomas,goJamesYoung,goAveryBradley,goTerryRozier,goEvanTurner,'
+                                   'goJordanMickey,goMarcusSmart,goJaredSullinger,goKellyOlynyk,goTylerZeller,'
+                                   'goR.J.Hunter,goAmirJohnson,goJonasJerebko,Coty Clarke,Isaiah Thomas,James Young,'
+                                   'Avery Bradley,Terry Rozier,Evan Turner,Jordan Mickey,Marcus Smart,Jared Sullinger,'
+                                   'Kelly Olynyk,Tyler Zeller,R.J. Hunter,Amir Johnson,Jonas Jerebko')
 
     def test_map_reduce_tweets_after_disconnect(self):
         self.eternalProcess.game_name_list.append('123')

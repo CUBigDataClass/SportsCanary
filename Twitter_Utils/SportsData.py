@@ -19,8 +19,8 @@ class SportsData:
         self.CLIENT_ID = CommonUtils.get_environ_variable('STAT_CLIENT_ID')
         self.STAT_CLIENT_SECRET = CommonUtils.get_environ_variable('STAT_CLIENT_SECRET')
         self.STAT_ACCESS_TOKEN = CommonUtils.get_environ_variable('STAT_ACCESS_TOKEN')
-        self.base_url_basketball = 'https://www.stattleship.com/basketball/'
-        self.base_url_hockey = 'https://www.stattleship.com/hockey/'
+        self.base_url_basketball = 'https://www.stattleship.com/basketball'
+        self.base_url_hockey = 'https://www.stattleship.com/hockey'
         self.logger = logging.getLogger(__name__)
 
     def get_nba_games_for_today(self):
@@ -76,10 +76,13 @@ class SportsData:
         return list_of_games
 
     def get_nba_players_for_today(self, slug_name, team_id):
-        """ Gets results for games played already for the day, if no games
-            have been played then no results appear"""
-        # TODO - Change back to today rather than date with games
-        url = self.base_url_basketball+ '/nba/game_logs?team_id='+slug_name
+        """
+        Gets results for games played already for the day, if no games
+        have been played then no results appear
+        :param team_id:
+        :param slug_name:
+        """
+        url = self.base_url_basketball + '/nba/game_logs?team_id='+slug_name
         headers = {
             'Authorization': str(self.STAT_ACCESS_TOKEN),
             'Accept': 'application/vnd.stattleship.com; version=1',
@@ -99,6 +102,7 @@ class SportsData:
     def create_players_log_object(data, team_id):
         """
         Creates a json object from API call to Stattleship
+        :param team_id:
         :param data: input of data object from Stattleship
         :return: returns JSON object with all players name & team_id for each game
         """
