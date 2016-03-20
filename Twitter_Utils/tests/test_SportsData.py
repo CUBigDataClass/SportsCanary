@@ -44,5 +44,9 @@ class TestSportsData(unittest.TestCase):
         result = sports_data.get_nba_players_for_today('nba-dal','35ded680-b7b1-4cd9-a223-7bc4ab0b77ed')
         self.assertIsNot(False, result)
 
+    def test_get_nhl_games_for_today(self):
+        sports_data = SportsData()
+        self.assertIsNotNone(sports_data.get_nhl_games_for_today())
+
 if __name__ == '__main__':  # pragma: no cover
     unittest.main()

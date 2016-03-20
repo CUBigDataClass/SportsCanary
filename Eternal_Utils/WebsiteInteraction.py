@@ -23,7 +23,3 @@ class WebsiteInteraction:
     def delete_request_to_sports_canary(self):
         r = requests.delete('http://sportscanary.com/api/results/' + str(self.id) + '/edit')
         return r.status_code
-#
-web = WebsiteInteraction()
-web.post_request_to_sports_canary('Cavaliers vs Rockets', 92, 100, score_applicable=True)
-web.delete_request_to_sports_canary()

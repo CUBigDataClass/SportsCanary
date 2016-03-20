@@ -45,7 +45,7 @@ class MarchMadness:
     def update_is_streamed_json(game):
         """
         Replaces json file to reflect that game is being streamed
-        :param game:
+        :param game: game object similar to stattleship api
         """
         game_id = game["_id"]
         uri = 'mongodb://' + CommonUtils.get_environ_variable('AWS_MONGO_USER') + ':' \
