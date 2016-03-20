@@ -29,6 +29,12 @@ class DataGatherer(StreamListener):
         self.auth.set_access_token(self.OAUTH_TOKEN, self.OAUTH_TOKEN_SECRET)
         self.api = API(self.auth)
         self.logger = logging.getLogger(__name__)
+        self.home_team_file_path = ''
+        self.away_team_file_path = ''
+        self.common_file_path = ''
+        self.dir_path = ''
+        self.home_team_track_words = ''
+        self.away_team_track_words = ''
 
     def get_auth(self):
         index = self.key_handler.check_which_key_to_use()
@@ -48,17 +54,60 @@ class DataGatherer(StreamListener):
     def on_status(self, status):  # pragma: no cover
         if status.lang == 'en':
             processed_tweet = self.processor.standardize_tweet(status.text)
-            self.save_tweet_to_disk(processed_tweet)
+            if any(word in status.text.lower() for word in self.home_team_track_words.lower().split(',')):
+                self.save_tweet_to_disk(processed_tweet, self.home_team_file_path)
+            elif any(word in status.text.lower() for word in self.away_team_track_words.lower().split(',')):
+                self.save_tweet_to_disk(processed_tweet, self.away_team_file_path)
+            else:
+                self.save_tweet_to_disk(processed_tweet, self.common_file_path)
 
     def get_tweet_stream(self, track, game_id, game_name):
         index = self.get_auth()
         self.logger.info('Using auth: ' + str(self.auth.consumer_key))
+        self.set_paths(track, game_id, game_name)
         stream = Stream(self.auth, self)
+        stream.filter(track=[track], async=True)
+        return stream, index
+
+    def set_paths(self, track, game_id, game_name):
         self.game_id_to_store = game_id
         self.game_name_to_store = game_name
         self.logger.info('Track: ' + str(track))
-        stream.filter(track=[track], async=True)
-        return stream, index
+        self.home_team_track_words, self.away_team_track_words = track.split('---')
+        self.set_base_directory_path()
+        split_str = game_name.split('-')
+        vs_index = split_str.index('vs')
+        team1_name, team2_name = split_str[vs_index-1], split_str[vs_index+1]
+        if team1_name in self.home_team_track_words:
+            self.set_base_file_path(team1_name, team2_name, game_name)
+        elif team1_name in self.away_team_track_words:
+            self.set_base_file_path(team2_name, team1_name, game_name)
+        else:
+            self.logger.error("Error: Team name not matching keywords")
+        #self.save_tweet_to_disk(self.home_team_track_words, self.home_team_file_path)
+        #self.save_tweet_to_disk(self.away_team_track_words, self.away_team_file_path)
+
+    def set_base_directory_path(self):
+        wd = os.getcwd()
+        pos = wd.find("BigDataMonsters")
+        if pos > 0:  # pragma: no cover
+            path = wd[0:pos + 15]
+        else:
+            path = wd
+        self.dir_path = path + '/Twitter_Utils/data/tweets/' + self.game_name_to_store
+        if not os.path.exists(self.dir_path):
+            os.makedirs(self.dir_path)
+
+    def set_base_file_path(self, home_file_name, away_file_name, game_name):
+        wd = os.getcwd()
+        pos = wd.find("BigDataMonsters")
+        if pos > 0:  # pragma: no cover
+            path = wd[0:pos + 15]
+        else:
+            path = wd
+        self.home_team_file_path = self.dir_path + '/' + home_file_name + '.txt'
+        self.away_team_file_path = self.dir_path + '/' + away_file_name + '.txt'
+        self.common_file_path = self.dir_path + '/' + game_name + '.txt'
 
     def get_base_directory_path(self):
         wd = os.getcwd()
@@ -79,11 +128,12 @@ class DataGatherer(StreamListener):
         return path + '/Twitter_Utils/data/tweets/' + self.game_name_to_store + '/' + self.game_name_to_store + '.txt'
 
     # TODO - Figure out how to test
-    def save_tweet_to_disk(self, tweet):  # pragma: no cover
-        if not os.path.exists(self.get_base_directory_path()):
-            os.makedirs(self.get_base_directory_path())
+    def save_tweet_to_disk(self, tweet, file_path):  # pragma: no cover
+        # commented below lines as directory check needs only once
+	#if not os.path.exists(self.get_base_directory_path()):
+        #    os.makedirs(self.get_base_directory_path())
 
-        with open(self.get_base_file_path(), 'a+b') as f:
+        with open(file_path, 'a+b') as f:
             f.write(tweet)
             f.write('\n')
         f.close()
