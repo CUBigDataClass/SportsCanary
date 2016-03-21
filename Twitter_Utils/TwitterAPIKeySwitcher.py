@@ -86,7 +86,7 @@ class TwitterAPIKeyHandler:
             else:
                 data[index]['in_use'] = True
 
-            json_file = open(self.key_check_write_path, 'w+')
+            json_file = open(self.key_check_write_path, 'w')
             json_file.write(json.dumps(data))
             print json_file
             json_file.close()
