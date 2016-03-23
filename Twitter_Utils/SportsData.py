@@ -77,12 +77,33 @@ class SportsData:
 
     def get_nba_players_for_today(self, slug_name, team_id):
         """
-        Gets results for games played already for the day, if no games
-        have been played then no results appear
-        :param team_id:
-        :param slug_name:
+        Given a slug returns all team members for a given NBA team
+        :param team_id: UUID of team given by stattleship
+        :param slug_name: slug name for team given by stattleship
         """
         url = self.base_url_basketball + '/nba/game_logs?team_id='+slug_name
+        headers = {
+            'Authorization': str(self.STAT_ACCESS_TOKEN),
+            'Accept': 'application/vnd.stattleship.com; version=1',
+            'Content-Type': 'application/json'
+        }
+
+        res = requests.get(url, headers=headers)
+        content = json.loads(res.content)
+        if len(content['game_logs']) == 0:  # pragma: no cover
+            return True
+        if content['players']:
+            return self.create_players_log_object(content['players'], team_id)
+        else:  # pragma: no cover
+            return False
+
+    def get_nhl_players_for_today(self, slug_name, team_id):
+        """
+        Given a slug returns all team members for a given NHL team
+        :param team_id: UUID of team given by stattleship
+        :param slug_name: slug name for team given by stattleship
+        """
+        url = self.base_url_basketball + '/nhl/game_logs?team_id='+slug_name
         headers = {
             'Authorization': str(self.STAT_ACCESS_TOKEN),
             'Accept': 'application/vnd.stattleship.com; version=1',

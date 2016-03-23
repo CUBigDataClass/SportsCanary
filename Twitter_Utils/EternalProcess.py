@@ -127,12 +127,12 @@ class EternalProcess:
                 # TODO - Create this
                 keyword_string = self.march_madness.create_keyword_stream()
                 self.start_stream_with_keywords(keyword_string, game)
+                return True
 
     def iterate_through_daily_games_and_start_stream(self, data, current_time, sport):
         for idx, game in enumerate(data):
             game_time = self.generate_stream_start_time(game)
             self.logger.info(sport.upper() + ' Game Time: ' + game_time)
-
             if game_time == current_time and not game['being_streamed']:
                 self.update_is_streamed_json(game, sport)
                 self.logger.info('Acquiring twitter data for ' + str(game["title"]))
@@ -179,19 +179,22 @@ class EternalProcess:
         :param sport: Sport in short hand, currently "nba" or "nhl"
         :param game: game data, containing _id of game to be updated
         """
-        game_id = game["_id"]
-        db = self.get_aws_mongo_db()
+        try:
+            game_id = game["_id"]
+            db = self.get_aws_mongo_db()
 
-        if not game['being_streamed']:
-            if sport == "nba":
-                db.nba_logs.update({'_id': game_id}, {"$set": {"being_streamed": True}}, upsert=False)
-            elif sport == "nhl":
-                db.nhl_logs.update({'_id': game_id}, {"$set": {"being_streamed": True}}, upsert=False)
-        else:
-            if sport == "nba":
-                db.nba_logs.update({'_id': game_id}, {"$set": {"being_streamed": False}}, upsert=False)
-            elif sport == "nhl":
-                db.nhl_logs.update({'_id': game_id}, {"$set": {"being_streamed": False}}, upsert=False)
+            if not game['being_streamed']:
+                if sport == "nba":
+                    db.nba_logs.update({'_id': game_id}, {"$set": {"being_streamed": True}}, upsert=False)
+                elif sport == "nhl":
+                    db.nhl_logs.update({'_id': game_id}, {"$set": {"being_streamed": True}}, upsert=False)
+            else:
+                if sport == "nba":
+                    db.nba_logs.update({'_id': game_id}, {"$set": {"being_streamed": False}}, upsert=False)
+                elif sport == "nhl":
+                    db.nhl_logs.update({'_id': game_id}, {"$set": {"being_streamed": False}}, upsert=False)
+        except:
+            print 'error'
 
     @staticmethod
     def get_aws_mongo_db():

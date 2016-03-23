@@ -37,11 +37,11 @@ class TestEternalProcess(unittest.TestCase):
             os.makedirs(dir_path)
 
         self.addCleanup(os.rmdir, dir_path)
-        path_2 = os.getcwd() + '/Twitter_Utils/data/tweets/base_tweets_for_tests/base_tweets_for_tests.txt'
-        fo = open(path_2, 'w+')
+        self.path_2 = os.getcwd() + '/Twitter_Utils/data/tweets/base_tweets_for_tests/base_tweets_for_tests.txt'
+        fo = open(self.path_2, 'w+')
         fo.write('test tweet 1\ntest tweet 1\ntest tweet 1\ntest tweet 1\ntest tweet 2\ntest tweet 2\ntest tweet 2\n')
         fo.close()
-        self.addCleanup(os.remove, path_2)
+        self.addCleanup(os.remove, self.path_2)
 
     def test_check_if_stream_should_end(self):
         # Shouldn't end if there is no stream
@@ -229,21 +229,12 @@ class TestEternalProcess(unittest.TestCase):
                    'Courtney Lee'
         self.assertEqual(expected, eternal_process.create_keyword_string_for_game(game, sport))
 
-    # def test_end_stream_and_free_api(self):
-    #     # eternal_process = EternalProcess()
-    #     # self.assertEqual(expected, eternal_process.end_stream_and_free_api(i))
-    #     assert False # TODO: implement your test here
-    #
-    # def test_generate_stream_start_time(self):
-    #     # eternal_process = EternalProcess()
-    #     # self.assertEqual(expected, eternal_process.generate_stream_start_time(game))
-    #     assert False # TODO: implement your test here
-    #
-    # def test_get_and_disconnect_stream_at_index(self):
-    #     # eternal_process = EternalProcess()
-    #     # self.assertEqual(expected, eternal_process.get_and_disconnect_stream_at_index(idx))
-    #     assert False # TODO: implement your test here
-    #
+    def test_generate_stream_start_time(self):
+        eternal_process = EternalProcess()
+        game = {'start_time': '2016-03-17T19:00:00-06:00'}
+        expected = '16:00'
+        self.assertEqual(expected, eternal_process.generate_stream_start_time(game))
+
     def test_get_index_and_clear_api_key_at_index(self):
         eternal_process = EternalProcess()
         twitter_keyhandler = TwitterAPIKeyHandler()
@@ -257,7 +248,6 @@ class TestEternalProcess(unittest.TestCase):
         eternal_process.stream_list.append(test_stream)
         self.assertEqual(True, eternal_process.get_index_and_clear_api_key_at_index(0))
 
-
     def test_get_team_name_base_file_path(self):
         eternal_process = EternalProcess()
         # ExpectedNone
@@ -267,24 +257,30 @@ class TestEternalProcess(unittest.TestCase):
         expected = os.getcwd() + '/Twitter_Utils/data/tweets/Cavaliers-vs-Bronx/Cavaliers-vs-Bronx.txt'
         self.assertEqual(expected, eternal_process.get_game_name_base_file_path(0))
 
-    # def test_iterate_through_daily_games_and_start_stream(self):
-    #     # eternal_process = EternalProcess()
-    #     # self.assertEqual(expected, eternal_process.iterate_through_daily_games_and_start_stream(data, current_time, sport))
-    #     assert False # TODO: implement your test here
-    #
+    def test_iterate_through_daily_games_and_start_stream(self):
+        eternal_process = EternalProcess()
+        start_time = datetime.datetime.now() + datetime.timedelta(minutes=180)
+        data = [{'start_time': str(start_time), 'being_streamed': False, '_id': 'fak31D',
+                 'title': 'Cavaliers vs Mavericks',
+                 'home_team_id': 'a9abb922-3a47-4d37-9250-2e5224a2b58a',
+                 'away_team_id': '35ded680-b7b1-4cd9-a223-7bc4ab0b77ed'}]
+        current_time = eternal_process.get_time_as_hour_minute()
+        eternal_process.iterate_through_daily_games_and_start_stream(data, current_time, "nba")
+        self.assertEqual(1, len(eternal_process.game_name_list))
+
     # def test_iterate_through_march_madness_games_and_start_stream(self):
     #     # eternal_process = EternalProcess()
     #     # self.assertEqual(expected, eternal_process.iterate_through_march_madness_games_and_start_stream(data_mm, current_time))
     #     assert False # TODO: implement your test here
     #
     # def test_replace_written_tweets_with_map_reduced_version_for_teams(self):
-    #     # eternal_process = EternalProcess()
-    #     # self.assertEqual(expected, eternal_process.replace_written_tweets_with_map_reduced_version_for_teams(file_path, map_reduced_tweets))
+    #     eternal_process = EternalProcess()
+    #     self.assertEqual(expected, eternal_process.replace_written_tweets_with_map_reduced_version_for_teams(file_path, map_reduced_tweets))
     #     assert False # TODO: implement your test here
     #
     # def test_replace_written_tweets_with_map_reduced_version_for_uncategorized_tweets(self):
-    #     # eternal_process = EternalProcess()
-    #     # self.assertEqual(expected, eternal_process.replace_written_tweets_with_map_reduced_version_for_uncategorized_tweets(index, map_reduced_tweets))
+    #     eternal_process = EternalProcess()
+    #     self.assertEqual(expected, eternal_process.replace_written_tweets_with_map_reduced_version_for_uncategorized_tweets(index, map_reduced_tweets))
     #     assert False # TODO: implement your test here
     #
     # def test_start_process(self):
@@ -301,6 +297,16 @@ class TestEternalProcess(unittest.TestCase):
     #     # eternal_process = EternalProcess()
     #     # self.assertEqual(expected, eternal_process.update_is_streamed_json(game, sport))
     #     assert False # TODO: implement your test here
-
+    #
+    # def test_get_and_disconnect_stream_at_index(self):
+    #     # eternal_process = EternalProcess()
+    #     # self.assertEqual(expected, eternal_process.get_and_disconnect_stream_at_index(idx))
+    #     assert False # TODO: implement your test here
+    #
+    # def test_end_stream_and_free_api(self):
+    #     # eternal_process = EternalProcess()
+    #     # self.assertEqual(expected, eternal_process.end_stream_and_free_api(i))
+    #     assert False # TODO: implement your test here
+    #
 if __name__ == '__main__':  # pragma: no cover
     unittest.main()
