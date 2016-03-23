@@ -274,7 +274,7 @@ class EternalProcess:
         """
         index_stream = self.stream_list[idx]
         index = index_stream[1]
-        self.data_gatherer.key_handler.clear_api_key_at_index_for_use(index)
+        return self.data_gatherer.key_handler.clear_api_key_at_index_for_use(index)
 
     def get_and_disconnect_stream_at_index(self, idx):
         """

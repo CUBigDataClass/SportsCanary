@@ -6,6 +6,7 @@ import time
 from Twitter_Utils.EternalProcess import EternalProcess
 from Twitter_Utils.DataGatherer import DataGatherer
 from Eternal_Utils.CommonUtils import CommonUtils
+from Twitter_Utils.TwitterAPIKeySwitcher import TwitterAPIKeyHandler
 from pymongo import MongoClient
 
 
@@ -243,18 +244,27 @@ class TestEternalProcess(unittest.TestCase):
     #     # self.assertEqual(expected, eternal_process.get_and_disconnect_stream_at_index(idx))
     #     assert False # TODO: implement your test here
     #
-    # def test_get_index_and_clear_api_key_at_index(self):
-    #     # eternal_process = EternalProcess()
-    #     # self.assertEqual(expected, eternal_process.get_index_and_clear_api_key_at_index(idx))
-    #     assert False # TODO: implement your test here
-    #
+    def test_get_index_and_clear_api_key_at_index(self):
+        eternal_process = EternalProcess()
+        twitter_keyhandler = TwitterAPIKeyHandler()
+        test_stream = 'test stream', 0
+        eternal_process.stream_list.append(test_stream)
+        self.assertEqual(False, eternal_process.get_index_and_clear_api_key_at_index(0))
+        with open(twitter_keyhandler.key_check_write_path) as f:
+            data = json.load(f)
+        twitter_keyhandler.update_json_file(data, 0)
+        test_stream = 'test stream', 0
+        eternal_process.stream_list.append(test_stream)
+        self.assertEqual(True, eternal_process.get_index_and_clear_api_key_at_index(0))
+
+
     def test_get_team_name_base_file_path(self):
         eternal_process = EternalProcess()
         # ExpectedNone
         self.assertIsNone(eternal_process.get_team_name_base_file_path(0))
         eternal_process.game_name_list.append('Cavaliers-vs-Bronx')
-        expected = '/Users/FredLoh/Dropbox/CU Boulder 2016 Spring/Big Data/SportsCanary/Twitter_Utils/data/tweets/' \
-                   'Cavaliers-vs-Bronx/Cavaliers-vs-Bronx.txt'
+
+        expected = os.getcwd() + '/Twitter_Utils/data/tweets/Cavaliers-vs-Bronx/Cavaliers-vs-Bronx.txt'
         self.assertEqual(expected, eternal_process.get_game_name_base_file_path(0))
 
     # def test_iterate_through_daily_games_and_start_stream(self):

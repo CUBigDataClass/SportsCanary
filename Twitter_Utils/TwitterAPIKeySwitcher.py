@@ -69,6 +69,8 @@ class TwitterAPIKeyHandler:
                 if data[index]['in_use']:
                     self.update_json_file(data, index)
                     return True
+                else:
+                    return False
         except IOError:
             print 'File not found while clearing key for use in TwitterAPIKeys'
             raise IOError
