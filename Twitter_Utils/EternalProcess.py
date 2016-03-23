@@ -211,7 +211,7 @@ class EternalProcess:
         """
         time_now = datetime.datetime.now()
         # now_plus_10 = time_now + datetime.timedelta(minutes=minutes)
-        now_plus_10 = time_now + datetime.timedelta(minutes=5)
+        now_plus_10 = time_now + datetime.timedelta(minutes=minutes)
         return now_plus_10.strftime('%H:%M')
 
     def check_if_stream_should_end(self):
@@ -307,6 +307,7 @@ class EternalProcess:
         # TODO - Currently breaks if list has no repeated tweets
         """
         Uses Popen to open and pipe 5 processes, in order to MapReduce tweets
+        :param index:
         :param game_path:
         :return: returns object of newly map reduced tweets
         """

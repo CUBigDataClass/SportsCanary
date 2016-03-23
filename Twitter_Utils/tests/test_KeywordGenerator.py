@@ -11,7 +11,14 @@ class TestKeywordGenerator(unittest.TestCase):
         # Fake ID
         self.assertEqual([], keyword_generator.generate_search_terms('FAKE TEAM ID', "nba"))
         # Actual ID
-        expected_list = ['TrueToAtlanta', 'TrueToAtlanta', 'ATL', 'Hawks', 'DennisSchroder', 'ThaboSefolosha', 'TimHardawayJr.', 'PaulMillsap', 'MikeScott', 'JeffTeague', 'MikeMuscala', 'KyleKorver', 'AlHorford', 'KentBazemore', 'goTrueToAtlanta', 'goTrueToAtlanta', 'goATL', 'goHawks', 'goDennisSchroder', 'goThaboSefolosha', 'goTimHardawayJr.', 'goPaulMillsap', 'goMikeScott', 'goJeffTeague', 'goMikeMuscala', 'goKyleKorver', 'goAlHorford', 'goKentBazemore', 'Dennis Schroder', 'Thabo Sefolosha', 'Tim Hardaway Jr.', 'Paul Millsap', 'Mike Scott', 'Jeff Teague', 'Mike Muscala', 'Kyle Korver', 'Al Horford', 'Kent Bazemore']
+        expected_list = ['TrueToAtlanta', 'TrueToAtlanta', 'ATL', 'Hawks', 'PaulMillsap',
+                         'MikeMuscala', 'KentBazemore', 'MikeScott', 'TimHardawayJr.', 'ThaboSefolosha',
+                         'AlHorford', 'KyleKorver', 'DennisSchroder', 'JeffTeague', 'goTrueToAtlanta',
+                         'goTrueToAtlanta', 'goATL', 'goHawks', 'goPaulMillsap', 'goMikeMuscala', 'goKentBazemore',
+                         'goMikeScott', 'goTimHardawayJr.', 'goThaboSefolosha', 'goAlHorford', 'goKyleKorver',
+                         'goDennisSchroder', 'goJeffTeague', 'Paul Millsap', 'Mike Muscala', 'Kent Bazemore',
+                         'Mike Scott', 'Tim Hardaway Jr.', 'Thabo Sefolosha', 'Al Horford', 'Kyle Korver',
+                         'Dennis Schroder', 'Jeff Teague']
         self.assertEqual(expected_list, keyword_generator.generate_search_terms('20901970-53a0-417c-b5b4-832a74148af6',
                                                                                 "nba"))
 
