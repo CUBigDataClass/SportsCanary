@@ -52,7 +52,7 @@ class EternalProcess:
         It has to check if a game is starting and if that is the case, fork the process,
         And in that new process check for game data during the time period assigned to it.
         """
-        self.wait_till_five_seconds_into_minute()
+        # self.wait_till_five_seconds_into_minute()
         start_time = time.time()
         print(50 * '*' + '\n' + 10 * '*' + '  STARTING SCANNING PROCESS   ' + 10 * '*' + '\n' + 50 * '*')
         while True:
@@ -210,8 +210,8 @@ class EternalProcess:
         :return: Time object
         """
         time_now = datetime.datetime.now()
+        # now_plus_10 = time_now + datetime.timedelta(minutes=minutes)
         now_plus_10 = time_now + datetime.timedelta(minutes=minutes)
-        # now_plus_10 = time_now + datetime.timedelta(minutes=5)
         return now_plus_10.strftime('%H:%M')
 
     def check_if_stream_should_end(self):
@@ -237,9 +237,21 @@ class EternalProcess:
         """
         self.get_index_and_clear_api_key_at_index(i)
         self.get_and_disconnect_stream_at_index(i)
-        map_reduced_tweets = self.map_reduce_tweets_after_disconnect(i)
-        self.replace_written_tweets_with_map_reduced_version(i, map_reduced_tweets)
+        game_path = self.get_game_name_base_file_path(i)
+        team_path_tuple = self.get_team_name_base_file_path(i)
+
+        map_reduced_tweets_game = self.map_reduce_tweets_after_disconnect(game_path, i)
+        map_reduced_tweets_team1 = self.map_reduce_tweets_after_disconnect(team_path_tuple[0], i)
+        map_reduced_tweets_team2 = self.map_reduce_tweets_after_disconnect(team_path_tuple[1], i)
+
+        self.replace_written_tweets_with_map_reduced_version_for_uncategorized_tweets(i, map_reduced_tweets_game)
+        self.replace_written_tweets_with_map_reduced_version_for_teams(team_path_tuple[0], map_reduced_tweets_team1)
+        self.replace_written_tweets_with_map_reduced_version_for_teams(team_path_tuple[1], map_reduced_tweets_team2)
+
         self.remove_first_line_from_file(self.get_game_name_base_file_path(i))
+        self.remove_first_line_from_file(team_path_tuple[0])
+        self.remove_first_line_from_file(team_path_tuple[1])
+
         self.delete_stream_end_time_game_name_from_lists(i)
         if not self.check_if_stream_should_end():
             return True
@@ -291,15 +303,15 @@ class EternalProcess:
         else:
             return False
 
-    def map_reduce_tweets_after_disconnect(self, index):
+    def map_reduce_tweets_after_disconnect(self, game_path, index):
         # TODO - Currently breaks if list has no repeated tweets
         """
         Uses Popen to open and pipe 5 processes, in order to MapReduce tweets
-        :param index: index for get_game_name_directory
+        :param index:
+        :param game_path:
         :return: returns object of newly map reduced tweets
         """
         try:
-            game_path = self.get_game_name_base_file_path(index)
             p1 = Popen(['cat', game_path], stdout=PIPE)
             p2 = Popen(['python', 'Twitter_Utils/Mapper.py'], stdin=p1.stdout, stdout=PIPE)
             p3 = Popen(['sort'], stdin=p2.stdout, stdout=PIPE)
@@ -322,7 +334,7 @@ class EternalProcess:
             self.logger.exception(ValueError)
             self.logger.error('Map Reduce Value Error')
 
-    def replace_written_tweets_with_map_reduced_version(self, index, map_reduced_tweets):
+    def replace_written_tweets_with_map_reduced_version_for_uncategorized_tweets(self, index, map_reduced_tweets):
         """
         Opens tweets file and replaces it with map reduced version
         :param index: index for get_game_name_base_file_path
@@ -335,6 +347,23 @@ class EternalProcess:
         except IOError:
             self.logger.exception(IOError)
             self.logger.error('File not found at ' + self.get_game_name_base_file_path(index))
+            print 'IOError'
+            # TODO - Raise IOError
+            # raise IOError
+
+    def replace_written_tweets_with_map_reduced_version_for_teams(self, file_path, map_reduced_tweets):
+        """
+        Opens tweets file and replaces it with map reduced version
+        :param file_path:
+        :param map_reduced_tweets: map_reduced_tweets object to be written
+        """
+        try:
+            with open(file_path, 'w+') as f:
+                f.write(map_reduced_tweets)
+            f.close()
+        except IOError:
+            self.logger.exception(IOError)
+            self.logger.error('File not found to map reduce for team 1.')
             print 'IOError'
             # TODO - Raise IOError
             # raise IOError
@@ -362,6 +391,20 @@ class EternalProcess:
         else:
             path = wd
         return path + '/Twitter_Utils/data/tweets/' + game_name + '/' + game_name + '.txt'
+
+    def get_team_name_base_file_path(self, index):
+        game_name = self.game_name_list[index]
+        split_str = game_name.split('-')
+        vs_index = split_str.index('vs')
+        team1_name, team2_name = split_str[vs_index-1], split_str[vs_index+1]
+        wd = os.getcwd()
+        pos = wd.find("BigDataMonsters")
+        if pos > 0:  # pragma: no cover
+            path = wd[0:pos + 15]
+        else:
+            path = wd
+        return path + '/Twitter_Utils/data/tweets/' + game_name + '/' + team1_name + '.txt',\
+            path + '/Twitter_Utils/data/tweets/' + game_name + '/' + team2_name + '.txt'
 
     # TODO - Figure out how to test this
     def write_days_games_data_for_nba(self):

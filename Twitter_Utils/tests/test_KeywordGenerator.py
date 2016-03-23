@@ -6,14 +6,6 @@ class TestKeywordGenerator(unittest.TestCase):
     def test___init__(self):
         assert True
 
-    def test_generate_search_terms(self):
-        keyword_generator = KeywordGenerator()
-        # Fake ID
-        self.assertEqual([], keyword_generator.generate_search_terms('FAKE TEAM ID', "nba"))
-        # Actual ID
-        expected_list = ['TrueToAtlanta', 'TrueToAtlanta', 'ATL', 'Hawks', 'DennisSchroder', 'ThaboSefolosha', 'TimHardawayJr.', 'PaulMillsap', 'MikeScott', 'JeffTeague', 'MikeMuscala', 'KyleKorver', 'AlHorford', 'KentBazemore', 'goTrueToAtlanta', 'goTrueToAtlanta', 'goATL', 'goHawks', 'goDennisSchroder', 'goThaboSefolosha', 'goTimHardawayJr.', 'goPaulMillsap', 'goMikeScott', 'goJeffTeague', 'goMikeMuscala', 'goKyleKorver', 'goAlHorford', 'goKentBazemore', 'Dennis Schroder', 'Thabo Sefolosha', 'Tim Hardaway Jr.', 'Paul Millsap', 'Mike Scott', 'Jeff Teague', 'Mike Muscala', 'Kyle Korver', 'Al Horford', 'Kent Bazemore']
-        self.assertEqual(expected_list, keyword_generator.generate_search_terms('20901970-53a0-417c-b5b4-832a74148af6',
-                                                                                "nba"))
 
     def test_generate_search_terms_should_throw_exception(self):
         keyword_generator = KeywordGenerator()
