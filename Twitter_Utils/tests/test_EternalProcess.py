@@ -8,6 +8,7 @@ from Twitter_Utils.DataGatherer import DataGatherer
 from Eternal_Utils.CommonUtils import CommonUtils
 from pymongo import MongoClient
 
+
 class TestEternalProcess(unittest.TestCase):
     def test___init__(self):
         assert True
@@ -205,6 +206,91 @@ class TestEternalProcess(unittest.TestCase):
     def test_write_days_games_data_for_nhl(self):
         eternal_process = EternalProcess()
         self.assertIsNotNone(eternal_process.write_days_games_data_for_nhl())
+
+    def test_create_keyword_string_for_game(self):
+        eternal_process = EternalProcess()
+        game = {'home_team_id': '84eb19ca-1e66-416f-9e00-90b20fe4bb5e',
+                'away_team_id': '68b04d26-12c3-4e06-8ae0-5bab39686213'}
+        sport = 'nba'
+        expected = 'Nets,Nets,Nets,RondaeHollis-Jefferson,BojanBogdanovic,ThaddeusYoung,BrookLopez,WayneEllington,' \
+                   'ChrisMcCullough,MarkelBrown,DonaldSloan,WillieReed,ShaneLarkin,HenrySims,ThomasRobinson,' \
+                   'SergeyKarasev,goNets,goNets,goNets,goRondaeHollis-Jefferson,goBojanBogdanovic,goThaddeusYoung,' \
+                   'goBrookLopez,goWayneEllington,goChrisMcCullough,goMarkelBrown,goDonaldSloan,goWillieReed,' \
+                   'goShaneLarkin,goHenrySims,goThomasRobinson,goSergeyKarasev,Rondae Hollis-Jefferson,' \
+                   'Bojan Bogdanovic,Thaddeus Young,Brook Lopez,Wayne Ellington,Chris McCullough,Markel Brown,' \
+                   'Donald Sloan,Willie Reed,Shane Larkin,Henry Sims,Thomas Robinson,Sergey Karasev---Hornets,Hornets,' \
+                   'Hornets,JeremyLamb,MarvinWilliams,AlJefferson,TylerHansbrough,JorgeGutierrez,TroyDaniels,JeremyLin,' \
+                   'NicolasBatum,FrankKaminsky,KembaWalker,CodyZeller,SpencerHawes,CourtneyLee,goHornets,goHornets,' \
+                   'goHornets,goJeremyLamb,goMarvinWilliams,goAlJefferson,goTylerHansbrough,goJorgeGutierrez,' \
+                   'goTroyDaniels,goJeremyLin,goNicolasBatum,goFrankKaminsky,goKembaWalker,goCodyZeller,goSpencerHawes,' \
+                   'goCourtneyLee,Jeremy Lamb,Marvin Williams,Al Jefferson,Tyler Hansbrough,Jorge Gutierrez,' \
+                   'Troy Daniels,Jeremy Lin,Nicolas Batum,Frank Kaminsky,Kemba Walker,Cody Zeller,Spencer Hawes,' \
+                   'Courtney Lee'
+        self.assertEqual(expected, eternal_process.create_keyword_string_for_game(game, sport))
+
+    # def test_end_stream_and_free_api(self):
+    #     # eternal_process = EternalProcess()
+    #     # self.assertEqual(expected, eternal_process.end_stream_and_free_api(i))
+    #     assert False # TODO: implement your test here
+    #
+    # def test_generate_stream_start_time(self):
+    #     # eternal_process = EternalProcess()
+    #     # self.assertEqual(expected, eternal_process.generate_stream_start_time(game))
+    #     assert False # TODO: implement your test here
+    #
+    # def test_get_and_disconnect_stream_at_index(self):
+    #     # eternal_process = EternalProcess()
+    #     # self.assertEqual(expected, eternal_process.get_and_disconnect_stream_at_index(idx))
+    #     assert False # TODO: implement your test here
+    #
+    # def test_get_index_and_clear_api_key_at_index(self):
+    #     # eternal_process = EternalProcess()
+    #     # self.assertEqual(expected, eternal_process.get_index_and_clear_api_key_at_index(idx))
+    #     assert False # TODO: implement your test here
+    #
+    def test_get_team_name_base_file_path(self):
+        eternal_process = EternalProcess()
+        # ExpectedNone
+        self.assertIsNone(eternal_process.get_team_name_base_file_path(0))
+        eternal_process.game_name_list.append('Cavaliers-vs-Bronx')
+        expected = '/Users/FredLoh/Dropbox/CU Boulder 2016 Spring/Big Data/SportsCanary/Twitter_Utils/data/tweets/' \
+                   'Cavaliers-vs-Bronx/Cavaliers-vs-Bronx.txt'
+        self.assertEqual(expected, eternal_process.get_game_name_base_file_path(0))
+
+    # def test_iterate_through_daily_games_and_start_stream(self):
+    #     # eternal_process = EternalProcess()
+    #     # self.assertEqual(expected, eternal_process.iterate_through_daily_games_and_start_stream(data, current_time, sport))
+    #     assert False # TODO: implement your test here
+    #
+    # def test_iterate_through_march_madness_games_and_start_stream(self):
+    #     # eternal_process = EternalProcess()
+    #     # self.assertEqual(expected, eternal_process.iterate_through_march_madness_games_and_start_stream(data_mm, current_time))
+    #     assert False # TODO: implement your test here
+    #
+    # def test_replace_written_tweets_with_map_reduced_version_for_teams(self):
+    #     # eternal_process = EternalProcess()
+    #     # self.assertEqual(expected, eternal_process.replace_written_tweets_with_map_reduced_version_for_teams(file_path, map_reduced_tweets))
+    #     assert False # TODO: implement your test here
+    #
+    # def test_replace_written_tweets_with_map_reduced_version_for_uncategorized_tweets(self):
+    #     # eternal_process = EternalProcess()
+    #     # self.assertEqual(expected, eternal_process.replace_written_tweets_with_map_reduced_version_for_uncategorized_tweets(index, map_reduced_tweets))
+    #     assert False # TODO: implement your test here
+    #
+    # def test_start_process(self):
+    #     # eternal_process = EternalProcess()
+    #     # self.assertEqual(expected, eternal_process.start_process())
+    #     assert False # TODO: implement your test here
+    #
+    # def test_start_stream_with_keywords(self):
+    #     # eternal_process = EternalProcess()
+    #     # self.assertEqual(expected, eternal_process.start_stream_with_keywords(keyword_string, game))
+    #     assert False # TODO: implement your test here
+    #
+    # def test_update_is_streamed_json(self):
+    #     # eternal_process = EternalProcess()
+    #     # self.assertEqual(expected, eternal_process.update_is_streamed_json(game, sport))
+    #     assert False # TODO: implement your test here
 
 if __name__ == '__main__':  # pragma: no cover
     unittest.main()

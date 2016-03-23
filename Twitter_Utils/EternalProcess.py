@@ -392,18 +392,23 @@ class EternalProcess:
         return path + '/Twitter_Utils/data/tweets/' + game_name + '/' + game_name + '.txt'
 
     def get_team_name_base_file_path(self, index):
-        game_name = self.game_name_list[index]
-        split_str = game_name.split('-')
-        vs_index = split_str.index('vs')
-        team1_name, team2_name = split_str[vs_index-1], split_str[vs_index+1]
-        wd = os.getcwd()
-        pos = wd.find("BigDataMonsters")
-        if pos > 0:  # pragma: no cover
-            path = wd[0:pos + 15]
-        else:
-            path = wd
-        return path + '/Twitter_Utils/data/tweets/' + game_name + '/' + team1_name + '.txt',\
-            path + '/Twitter_Utils/data/tweets/' + game_name + '/' + team2_name + '.txt'
+        try:
+            game_name = self.game_name_list[index]
+            split_str = game_name.split('-')
+            vs_index = split_str.index('vs')
+            team1_name, team2_name = split_str[vs_index-1], split_str[vs_index+1]
+            wd = os.getcwd()
+            pos = wd.find("BigDataMonsters")
+            if pos > 0:  # pragma: no cover
+                path = wd[0:pos + 15]
+            else:
+                path = wd
+            return path + '/Twitter_Utils/data/tweets/' + game_name + '/' + team1_name + '.txt',\
+                path + '/Twitter_Utils/data/tweets/' + game_name + '/' + team2_name + '.txt'
+        except IndexError:
+            print 'IndexError while getting team name base file path.'
+        except IOError:
+            print 'IOError while getting team name base file path.'
 
     # TODO - Figure out how to test this
     def write_days_games_data_for_nba(self):

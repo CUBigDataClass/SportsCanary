@@ -33,7 +33,6 @@ class KeywordGenerator:
         :return: returns list of key words
         """
         self.team_data_path = self.get_team_data_path(sport)
-        print self.team_data_path
         try:
             with open(self.team_data_path, 'r') as f:
                 data = json.loads(f.read())
