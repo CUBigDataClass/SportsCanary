@@ -108,27 +108,6 @@ class TestEternalProcess(unittest.TestCase):
         time_now = time_now.strftime('%H:%M:%S')
         self.assertEqual(time_now, time_now_plus_1)
 
-    def test_create_keyword_string_for_game(self):
-        eternal_process = EternalProcess()
-        game = {'home_team_id': '20901970-53a0-417c-b5b4-832a74148af6',
-                'away_team_id': '1c65bbb6-bd10-4ef6-831a-89050d57fe16'}
-        expected = eternal_process.create_keyword_string_for_game(game, "nba")
-        self.assertEqual(expected, 'TrueToAtlanta,TrueToAtlanta,ATL,Hawks,PaulMillsap,MikeMuscala,KentBazemore,'
-                                   'MikeScott,TimHardawayJr.,ThaboSefolosha,AlHorford,KyleKorver,DennisSchroder,'
-                                   'JeffTeague,goTrueToAtlanta,goTrueToAtlanta,goATL,goHawks,goPaulMillsap,'
-                                   'goMikeMuscala,goKentBazemore,goMikeScott,goTimHardawayJr.,goThaboSefolosha,'
-                                   'goAlHorford,goKyleKorver,goDennisSchroder,goJeffTeague,Paul Millsap,Mike Muscala,'
-                                   'Kent Bazemore,Mike Scott,Tim Hardaway Jr.,Thabo Sefolosha,Al Horford,Kyle Korver,'
-                                   'Dennis Schroder,Jeff Teague---Celtics,Celtics,Celtics,EvanTurner,R.J.Hunter,'
-                                   'MarcusSmart,JaredSullinger,AmirJohnson,TylerZeller,AveryBradley,JordanMickey,'
-                                   'TerryRozier,KellyOlynyk,JonasJerebko,IsaiahThomas,JamesYoung,CotyClarke,goCeltics,'
-                                   'goCeltics,goCeltics,goEvanTurner,goR.J.Hunter,goMarcusSmart,goJaredSullinger,'
-                                   'goAmirJohnson,goTylerZeller,goAveryBradley,goJordanMickey,goTerryRozier,'
-                                   'goKellyOlynyk,goJonasJerebko,goIsaiahThomas,goJamesYoung,goCotyClarke,'
-                                   'Evan Turner,R.J. Hunter,Marcus Smart,Jared Sullinger,Amir Johnson,Tyler Zeller,'
-                                   'Avery Bradley,Jordan Mickey,Terry Rozier,Kelly Olynyk,Jonas Jerebko,Isaiah Thomas,'
-                                   'James Young,Coty Clarke')
-
     def test_map_reduce_tweets_after_disconnect(self):
         self.eternalProcess.game_name_list.append('123')
         path = self.eternalProcess.get_game_name_base_file_path(0)
