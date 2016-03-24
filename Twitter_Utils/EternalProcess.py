@@ -186,13 +186,17 @@ class EternalProcess:
             if not game['being_streamed']:
                 if sport == "nba":
                     db.nba_logs.update({'_id': game_id}, {"$set": {"being_streamed": True}}, upsert=False)
+                    return True
                 elif sport == "nhl":
                     db.nhl_logs.update({'_id': game_id}, {"$set": {"being_streamed": True}}, upsert=False)
+                    return True
             else:
                 if sport == "nba":
                     db.nba_logs.update({'_id': game_id}, {"$set": {"being_streamed": False}}, upsert=False)
+                    return False
                 elif sport == "nhl":
                     db.nhl_logs.update({'_id': game_id}, {"$set": {"being_streamed": False}}, upsert=False)
+                    return False
         except:
             print 'error'
 
@@ -420,7 +424,7 @@ class EternalProcess:
         """
         db = self.get_aws_mongo_db()
         write_path = self.get_write_path_for_days_games()
-        data_to_write = self.sports_data.get_nba_games_for_today()
+        data_to_write = self.sports_data.get_games_for_today_for_sport("nba")
         try:
             with open(write_path, 'w+') as f:
                 f.write(data_to_write)
@@ -443,7 +447,7 @@ class EternalProcess:
         """
         db = self.get_aws_mongo_db()
         write_path = self.get_write_path_for_days_games()
-        data_to_write = self.sports_data.get_nhl_games_for_today()
+        data_to_write = self.sports_data.get_games_for_today_for_sport("nhl")
         try:
             with open(write_path, 'w+') as f:
                 f.write(data_to_write)
@@ -471,21 +475,28 @@ class EternalProcess:
             with open(path, 'w') as fout:
                 fout.writelines(data[1:])
                 fout.close()
+            return True
         except IOError:
             self.logger.exception(IOError)
             self.logger.error('File not found at ' + path)
+            return False
 
-    @staticmethod
-    def remove_last_line_from_file(path):
+    def remove_last_line_from_file(self, path):
         """
         Removes last line from file
         :param path: path to file
         """
-        with open(path, 'r') as fin:
-            data = fin.read().splitlines(True)
-        with open(path, 'w') as fout:
-            fout.writelines(data[:-1])
-            fout.close()
+        try:
+            with open(path, 'r') as fin:
+                data = fin.read().splitlines(True)
+            with open(path, 'w') as fout:
+                fout.writelines(data[:-1])
+                fout.close()
+            return True
+        except IOError:
+            self.logger.exception(IOError)
+            self.logger.error('File not found at ' + path)
+            return False
 
     @staticmethod
     def sleep_for(tick_time_in_seconds, start_time):

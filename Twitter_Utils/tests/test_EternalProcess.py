@@ -149,7 +149,7 @@ class TestEternalProcess(unittest.TestCase):
             for _ in reader:
                 count_1 += 1
         reader.close()
-        eternal_process.remove_first_line_from_file(path)
+        self.assertIs(True, eternal_process.remove_first_line_from_file(path))
         count_2 = 0
         with open(path, 'r') as reader:
             for _ in reader:
@@ -157,6 +157,16 @@ class TestEternalProcess(unittest.TestCase):
         reader.close()
 
         self.assertEqual(count_1-1, count_2)
+
+    def test_remove_first_line_from_file_raises_ioerror(self):
+        eternal_process = EternalProcess()
+        path = os.getcwd() + '/Twitter_Utils/data/tweets/not_a_real_path/not_a_real_path.txt'
+        self.assertIs(False, eternal_process.remove_first_line_from_file(path))
+
+    def test_remove_last_line_from_file_raises_ioerror(self):
+        eternal_process = EternalProcess()
+        path = os.getcwd() + '/Twitter_Utils/data/tweets/not_a_real_path/not_a_real_path.txt'
+        self.assertIs(False, eternal_process.remove_last_line_from_file(path))
 
     def test_remove_last_line_from_file(self):
         eternal_process = EternalProcess()
@@ -166,7 +176,7 @@ class TestEternalProcess(unittest.TestCase):
             for _ in reader:
                 count_1 += 1
         reader.close()
-        eternal_process.remove_last_line_from_file(path)
+        self.assertIs(True, eternal_process.remove_last_line_from_file(path))
         count_2 = 0
         with open(path, 'r') as reader:
             for _ in reader:
@@ -213,21 +223,7 @@ class TestEternalProcess(unittest.TestCase):
         game = {'home_team_id': '84eb19ca-1e66-416f-9e00-90b20fe4bb5e',
                 'away_team_id': '68b04d26-12c3-4e06-8ae0-5bab39686213'}
         sport = 'nba'
-        expected = 'Nets,Nets,Nets,RondaeHollis-Jefferson,BojanBogdanovic,ThaddeusYoung,BrookLopez,WayneEllington,' \
-                   'ChrisMcCullough,MarkelBrown,DonaldSloan,WillieReed,ShaneLarkin,HenrySims,ThomasRobinson,' \
-                   'SergeyKarasev,goNets,goNets,goNets,goRondaeHollis-Jefferson,goBojanBogdanovic,goThaddeusYoung,' \
-                   'goBrookLopez,goWayneEllington,goChrisMcCullough,goMarkelBrown,goDonaldSloan,goWillieReed,' \
-                   'goShaneLarkin,goHenrySims,goThomasRobinson,goSergeyKarasev,Rondae Hollis-Jefferson,' \
-                   'Bojan Bogdanovic,Thaddeus Young,Brook Lopez,Wayne Ellington,Chris McCullough,Markel Brown,' \
-                   'Donald Sloan,Willie Reed,Shane Larkin,Henry Sims,Thomas Robinson,Sergey Karasev---Hornets,Hornets,' \
-                   'Hornets,JeremyLamb,MarvinWilliams,AlJefferson,TylerHansbrough,JorgeGutierrez,TroyDaniels,JeremyLin,' \
-                   'NicolasBatum,FrankKaminsky,KembaWalker,CodyZeller,SpencerHawes,CourtneyLee,goHornets,goHornets,' \
-                   'goHornets,goJeremyLamb,goMarvinWilliams,goAlJefferson,goTylerHansbrough,goJorgeGutierrez,' \
-                   'goTroyDaniels,goJeremyLin,goNicolasBatum,goFrankKaminsky,goKembaWalker,goCodyZeller,goSpencerHawes,' \
-                   'goCourtneyLee,Jeremy Lamb,Marvin Williams,Al Jefferson,Tyler Hansbrough,Jorge Gutierrez,' \
-                   'Troy Daniels,Jeremy Lin,Nicolas Batum,Frank Kaminsky,Kemba Walker,Cody Zeller,Spencer Hawes,' \
-                   'Courtney Lee'
-        self.assertEqual(expected, eternal_process.create_keyword_string_for_game(game, sport))
+        self.assertGreater(len(eternal_process.create_keyword_string_for_game(game, sport)), 35)
 
     def test_generate_stream_start_time(self):
         eternal_process = EternalProcess()
@@ -237,13 +233,13 @@ class TestEternalProcess(unittest.TestCase):
 
     def test_get_index_and_clear_api_key_at_index(self):
         eternal_process = EternalProcess()
-        twitter_keyhandler = TwitterAPIKeyHandler()
+        twitter_key_handler = TwitterAPIKeyHandler()
         test_stream = 'test stream', 0
         eternal_process.stream_list.append(test_stream)
         self.assertEqual(False, eternal_process.get_index_and_clear_api_key_at_index(0))
-        with open(twitter_keyhandler.key_check_write_path) as f:
+        with open(twitter_key_handler.key_check_write_path) as f:
             data = json.load(f)
-        twitter_keyhandler.update_json_file(data, 0)
+        twitter_key_handler.update_json_file(data, 0)
         test_stream = 'test stream', 0
         eternal_process.stream_list.append(test_stream)
         self.assertEqual(True, eternal_process.get_index_and_clear_api_key_at_index(0))
@@ -267,46 +263,15 @@ class TestEternalProcess(unittest.TestCase):
         current_time = eternal_process.get_time_as_hour_minute()
         eternal_process.iterate_through_daily_games_and_start_stream(data, current_time, "nba")
         self.assertEqual(1, len(eternal_process.game_name_list))
+        self.assertIs(True, eternal_process.end_stream_and_free_api(0))
 
-    # def test_iterate_through_march_madness_games_and_start_stream(self):
-    #     # eternal_process = EternalProcess()
-    #     # self.assertEqual(expected, eternal_process.iterate_through_march_madness_games_and_start_stream(data_mm, current_time))
-    #     assert False # TODO: implement your test here
-    #
-    # def test_replace_written_tweets_with_map_reduced_version_for_teams(self):
-    #     eternal_process = EternalProcess()
-    #     self.assertEqual(expected, eternal_process.replace_written_tweets_with_map_reduced_version_for_teams(file_path, map_reduced_tweets))
-    #     assert False # TODO: implement your test here
-    #
-    # def test_replace_written_tweets_with_map_reduced_version_for_uncategorized_tweets(self):
-    #     eternal_process = EternalProcess()
-    #     self.assertEqual(expected, eternal_process.replace_written_tweets_with_map_reduced_version_for_uncategorized_tweets(index, map_reduced_tweets))
-    #     assert False # TODO: implement your test here
-    #
-    # def test_start_process(self):
-    #     # eternal_process = EternalProcess()
-    #     # self.assertEqual(expected, eternal_process.start_process())
-    #     assert False # TODO: implement your test here
-    #
-    # def test_start_stream_with_keywords(self):
-    #     # eternal_process = EternalProcess()
-    #     # self.assertEqual(expected, eternal_process.start_stream_with_keywords(keyword_string, game))
-    #     assert False # TODO: implement your test here
-    #
-    # def test_update_is_streamed_json(self):
-    #     # eternal_process = EternalProcess()
-    #     # self.assertEqual(expected, eternal_process.update_is_streamed_json(game, sport))
-    #     assert False # TODO: implement your test here
-    #
-    # def test_get_and_disconnect_stream_at_index(self):
-    #     # eternal_process = EternalProcess()
-    #     # self.assertEqual(expected, eternal_process.get_and_disconnect_stream_at_index(idx))
-    #     assert False # TODO: implement your test here
-    #
-    # def test_end_stream_and_free_api(self):
-    #     # eternal_process = EternalProcess()
-    #     # self.assertEqual(expected, eternal_process.end_stream_and_free_api(i))
-    #     assert False # TODO: implement your test here
-    #
+    def test_update_is_streamed_json(self):
+        eternal_process = EternalProcess()
+        game = dict(_id='f334b7d4-a1fb-4ed6-ad85-ba75f71f0b1f', being_streamed=False)
+        sport = 'nba'
+        self.assertEqual(True, eternal_process.update_is_streamed_json(game, sport))
+        game = dict(_id='f334b7d4-a1fb-4ed6-ad85-ba75f71f0b1f', being_streamed=True)
+        self.assertEqual(False, eternal_process.update_is_streamed_json(game, sport))
+
 if __name__ == '__main__':  # pragma: no cover
     unittest.main()

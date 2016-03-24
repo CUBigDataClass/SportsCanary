@@ -19,28 +19,22 @@ class SportsData:
         self.CLIENT_ID = CommonUtils.get_environ_variable('STAT_CLIENT_ID')
         self.STAT_CLIENT_SECRET = CommonUtils.get_environ_variable('STAT_CLIENT_SECRET')
         self.STAT_ACCESS_TOKEN = CommonUtils.get_environ_variable('STAT_ACCESS_TOKEN')
-        self.base_url_basketball = 'https://www.stattleship.com/basketball'
-        self.base_url_hockey = 'https://www.stattleship.com/hockey'
         self.logger = logging.getLogger(__name__)
 
-    def get_nba_games_for_today(self):
-        """Gets all games for today"""
-        self.logger.info('Getting games for today.')
-        url = self.base_url_basketball + '/nba/games?on=today'
-        headers = {
-            'Authorization': str(self.STAT_ACCESS_TOKEN),
-            'Accept': 'application/vnd.stattleship.com; version=1',
-            'Content-Type': 'application/json'
-        }
+    @staticmethod
+    def get_url_for_sport(sport):
+        if sport == "nba":
+            return 'https://www.stattleship.com/basketball/nba/'
+        elif sport == "nhl":
+            return 'https://www.stattleship.com/hockey/nhl/'
 
-        res = requests.get(url, headers=headers)
-        content = json.loads(res.content)
-        return self.create_game_log_object(content['games'])
-
-    def get_nhl_games_for_today(self):
-        """Gets all games for today"""
+    def get_games_for_today_for_sport(self, sport):
+        """
+        Gets all games for today
+        :param sport:
+        """
+        url = self.get_url_for_sport(sport) + 'games?on=today'
         self.logger.info('Getting games for today.')
-        url = self.base_url_hockey + '/nhl/games?on=today'
         headers = {
             'Authorization': str(self.STAT_ACCESS_TOKEN),
             'Accept': 'application/vnd.stattleship.com; version=1',
@@ -81,7 +75,8 @@ class SportsData:
         :param team_id: UUID of team given by stattleship
         :param slug_name: slug name for team given by stattleship
         """
-        url = self.base_url_basketball + '/nba/game_logs?team_id='+slug_name
+
+        url = self.get_url_for_sport("nba") + '/game_logs?team_id='+slug_name
         headers = {
             'Authorization': str(self.STAT_ACCESS_TOKEN),
             'Accept': 'application/vnd.stattleship.com; version=1',
@@ -103,7 +98,7 @@ class SportsData:
         :param team_id: UUID of team given by stattleship
         :param slug_name: slug name for team given by stattleship
         """
-        url = self.base_url_basketball + '/nhl/game_logs?team_id='+slug_name
+        url = self.get_url_for_sport("nhl") + '/game_logs?team_id='+slug_name
         headers = {
             'Authorization': str(self.STAT_ACCESS_TOKEN),
             'Accept': 'application/vnd.stattleship.com; version=1',

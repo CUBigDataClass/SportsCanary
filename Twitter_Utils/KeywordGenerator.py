@@ -65,6 +65,7 @@ class KeywordGenerator:
         except IOError:
             self.logger.exception(IOError)
             self.logger.error('Search terms not found at ' + self.team_data_path)
+            raise IOError
 
     @staticmethod
     def append_word_with_go_to_list(word_list):
