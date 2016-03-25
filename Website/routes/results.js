@@ -41,7 +41,7 @@ function crypt() {
 
     var cipher = crypto.createCipheriv(algorithm, key, iv);
     var encrypted = cipher.update(text, 'utf8', 'hex') + cipher.final('hex');
-    console.log(encrypted)
+    console.log(encrypted);
 }
 
 router.use(bodyParser.urlencoded({ extended: true }));
@@ -50,7 +50,7 @@ router.use(methodOverride(function(req, res){
         // look in urlencoded POST bodies and delete it
         var method = req.body._method;
         delete req.body._method;
-        return method
+        return method;
     }
 }));
 
@@ -106,7 +106,7 @@ router.route('/')
                     }
                 });
             }
-        })
+        });
     });
 router.get('/new', function(req, res) {
     res.render('results/new', { title: 'Add New Result' });
@@ -117,7 +117,6 @@ router.param('id', function(req, res, next, id) {
         if (err) {
             console.log(id + ' was not found');
             res.status(404);
-            var err = new Error('Not Found');
             err.status = 404;
             res.format({
                 html: function(){
@@ -205,7 +204,7 @@ router.put('/:id/edit', function(req, res) {
                     }
                 });
             }
-        })
+        });
     });
 });
 router.delete('/:id/edit', function (req, res){

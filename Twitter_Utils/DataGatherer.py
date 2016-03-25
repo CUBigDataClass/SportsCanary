@@ -9,6 +9,13 @@ import os
 import logging
 
 
+def save_tweet_to_disk(tweet, file_path):  # pragma: no cover
+    with open(file_path, 'a+b') as f:
+        f.write(tweet)
+        f.write('\n')
+    f.close()
+
+
 class DataGatherer(StreamListener):
     """
     Class responsible for spawning twitter streams and storing tweets.
@@ -55,11 +62,11 @@ class DataGatherer(StreamListener):
         if status.lang == 'en':
             processed_tweet = self.processor.standardize_tweet(status.text)
             if any(word in status.text.lower() for word in self.home_team_track_words.lower().split(',')):
-                self.save_tweet_to_disk(processed_tweet, self.home_team_file_path)
+                save_tweet_to_disk(processed_tweet, self.home_team_file_path)
             elif any(word in status.text.lower() for word in self.away_team_track_words.lower().split(',')):
-                self.save_tweet_to_disk(processed_tweet, self.away_team_file_path)
+                save_tweet_to_disk(processed_tweet, self.away_team_file_path)
             else:
-                self.save_tweet_to_disk(processed_tweet, self.common_file_path)
+                save_tweet_to_disk(processed_tweet, self.common_file_path)
 
     def get_tweet_stream(self, track, game_id, game_name):
         index = self.get_auth()
@@ -124,17 +131,6 @@ class DataGatherer(StreamListener):
         else:
             path = wd
         return path + '/Twitter_Utils/data/tweets/' + self.game_name_to_store + '/' + self.game_name_to_store + '.txt'
-
-    # TODO - Figure out how to test
-    def save_tweet_to_disk(self, tweet, file_path):  # pragma: no cover
-        # commented below lines as directory check needs only once
-	#if not os.path.exists(self.get_base_directory_path()):
-        #    os.makedirs(self.get_base_directory_path())
-
-        with open(file_path, 'a+b') as f:
-            f.write(tweet)
-            f.write('\n')
-        f.close()
 
     @staticmethod
     def create_feature_vector(tweet):

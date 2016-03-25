@@ -37,7 +37,7 @@ router.route('/games')
 
     .get(function(req, res, next) {
         var query = require('url').parse(req.url,true).query;
-        if(query.date == "" || query.date == undefined) {
+        if(query.date === "" || query.date === undefined) {
             mongoose.model('MM_Game').find({}, function (err, results) {
                 if (err) {
                     return console.error(err);

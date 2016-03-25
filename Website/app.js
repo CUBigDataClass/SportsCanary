@@ -27,6 +27,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+app.use('/components', express.static(__dirname + '/bower_components'));
 
 // Pass in the absolute path to your robots.txt file
 app.use(robots(__dirname + '/robots.txt'));

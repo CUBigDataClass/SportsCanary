@@ -2,6 +2,10 @@ extends ../layout
 
 block content
   script(src='../js/logos.js')
+  link(rel='stylesheet', type='text/css', href='components/bootstrap/dist/css/bootstrap.css')
+  script(src='/components/jquery/dist/jquery.js')
+  script(src='/components/bootstrap/dist/js/bootstrap.js')
+  link(rel='stylesheet', href='/stylesheets/results.css')
   br
   - each result, i in results
           .container
@@ -15,7 +19,7 @@ block content
                      .row
                        .col.s6
                            .col
-                             img.circle.responsive-img(src='images/nba_logos/Denver_Nuggets.jpg', alt='Denver Nuggets')
+                             img.circle.responsive-img.team-icon(src='images/nba_logos/Denver_Nuggets.jpg', alt='Denver Nuggets')
                            .col
                              span.black-text
                                | 
@@ -31,7 +35,7 @@ block content
                                br
                          .col.s6
                        .col
-                         img.circle.responsive-img(src='images/nba_logos/Goldenstate_Warriors.jpg', alt='Golden State Warriors')
+                         img.circle.responsive-img.team-icon(src='images/nba_logos/Goldenstate_Warriors.jpg', alt='Golden State Warriors')
                        .col
                          span.black-text
                                | 
