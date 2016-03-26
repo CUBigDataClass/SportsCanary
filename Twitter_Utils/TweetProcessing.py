@@ -7,7 +7,7 @@ from nltk.stem import WordNetLemmatizer
 
 class TweetProcessor:
     def __init__(self):
-        pass
+        self.list_of_key_words = ['nba','basketball', 'ball', 'hoops']
 
     def standardize_tweet(self, tweet):
         """
@@ -106,17 +106,8 @@ class TweetProcessor:
             new_tweet = new_tweet + stemmed_word
         return new_tweet
 
-
-class Filter:
-    def __init__(self):
-        pass
-
     def check_words_in_tweet(self, tweet):
-    	tweet = tweet + self.add_key_words_to_tweet()
-    	long_word_set = set(tweet.split())
-        if set(tweet.split()) & long_word_set:
-        	print "True"
-
-    def add_key_words_to_tweet(self):
-    	word_list = ['nba','basketball', 'ball']
-    	return ' '.join(word[0] for word in word_list)
+        if any(word in tweet for word in self.list_of_key_words):
+            return True
+        else:
+            return False

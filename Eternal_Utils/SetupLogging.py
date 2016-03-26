@@ -13,14 +13,14 @@ def setup_logging(default_path='logging.json', default_level=logging.INFO, env_k
     """
     value = os.getenv(env_key, None)
     path = os.getcwd() + '/Eternal_Utils/logging.json'
-    if value:
+    if value:  # pragma: no cover
         path = value
     if os.path.exists(path):
         with open(path, 'rt') as f:
             config = json.load(f)
         logging.config.dictConfig(config)
         return True
-    else:
+    else:  # pragma: no cover
         print 'Path doesnt exist'
         logging.basicConfig(level=default_level)
         return False

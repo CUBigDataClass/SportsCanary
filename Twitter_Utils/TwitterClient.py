@@ -22,3 +22,7 @@ class TwitterClient:
         """
         self.api.update_status(tweet)
 
+    def delete_latest_tweet(self):
+        timeline = self.api.user_timeline(count=1)
+        for t in timeline:
+            self.api.destroy_status(t.id)

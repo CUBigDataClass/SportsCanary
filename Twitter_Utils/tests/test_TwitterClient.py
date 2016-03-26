@@ -12,7 +12,10 @@ class TestTwitterClient(unittest.TestCase):
         self.assertIsNotNone(twitter_client.auth)
         self.assertIsNotNone(twitter_client.api)
 
-    def test_tweet(self):
+    def test_tweet_and_delete(self):
+        twitter_client = TwitterClient()
+        twitter_client.tweet('Tweeting for our test coverage!')
+        twitter_client.delete_latest_tweet()
         assert True
 
 if __name__ == '__main__':  # pragma: no cover

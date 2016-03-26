@@ -10,7 +10,7 @@ class TestSportsData(unittest.TestCase):
 
     def test_get_nba_games_for_today(self):
         sports_data = SportsData()
-        result = sports_data.get_nba_games_for_today()
+        result = sports_data.get_games_for_today_for_sport("nba")
         self.assertIsNotNone(result)
 
     def test_create_game_log_object(self):
@@ -41,8 +41,32 @@ class TestSportsData(unittest.TestCase):
 
     def test_get_nba_players_for_today(self):
         sports_data = SportsData()
-        result = sports_data.get_nba_players_for_today('nba-dal','35ded680-b7b1-4cd9-a223-7bc4ab0b77ed')
+        result = sports_data.get_nba_players_for_today('nba-dal', '35ded680-b7b1-4cd9-a223-7bc4ab0b77ed')
         self.assertIsNot(False, result)
+
+    def test_get_nhl_games_for_today(self):
+        sports_data = SportsData()
+        self.assertIsNotNone(sports_data.get_games_for_today_for_sport("nhl"))
+
+    def test_get_games_for_today_for_sport_nba(self):
+        sports_data = SportsData()
+        self.assertIsNot(0, sports_data.get_games_for_today_for_sport("nba"))
+
+    def test_get_games_for_today_for_sport_nhl(self):
+        sports_data = SportsData()
+        self.assertIsNot(0, sports_data.get_games_for_today_for_sport("nhl"))
+
+    def test_get_nhl_players_for_today(self):
+        sports_data = SportsData()
+        result = sports_data.get_nhl_players_for_today('nhl-ana', '0e39b5fe-bbac-4488-8a4c-6556fa1fff88')
+        self.assertIsNot(False, result)
+
+    def test_get_url_for_sport(self):
+        sports_data = SportsData()
+        expected_nba = 'https://www.stattleship.com/basketball/nba/'
+        expected_nhl = 'https://www.stattleship.com/hockey/nhl/'
+        self.assertEqual(expected_nba, sports_data.get_url_for_sport("nba"))
+        self.assertEqual(expected_nhl, sports_data.get_url_for_sport("nhl"))
 
 if __name__ == '__main__':  # pragma: no cover
     unittest.main()

@@ -46,7 +46,7 @@ class EternalProcess:
             handler.formatter = formatter
             self.logger.addHandler(handler)
 
-    def start_process(self):
+    def start_process(self):  #pragma: no cover
         """
         This process is our workhorse, it has to check if it should log games.
         It has to check if a game is starting and if that is the case, fork the process,
@@ -127,12 +127,12 @@ class EternalProcess:
                 # TODO - Create this
                 keyword_string = self.march_madness.create_keyword_stream()
                 self.start_stream_with_keywords(keyword_string, game)
+                return True
 
     def iterate_through_daily_games_and_start_stream(self, data, current_time, sport):
         for idx, game in enumerate(data):
             game_time = self.generate_stream_start_time(game)
             self.logger.info(sport.upper() + ' Game Time: ' + game_time)
-
             if game_time == current_time and not game['being_streamed']:
                 self.update_is_streamed_json(game, sport)
                 self.logger.info('Acquiring twitter data for ' + str(game["title"]))
@@ -155,11 +155,10 @@ class EternalProcess:
 
     def wait_till_five_seconds_into_minute(self):
         self.logger.info('Waiting till five seconds into minute to start.')
-        start = False
-        while not start:
+        while True:
             current_time = datetime.datetime.now().strftime('%S')
             if current_time == '05':
-                start = True
+                return True
 
     def create_keyword_string_for_game(self, game, sport):
         """
@@ -180,19 +179,26 @@ class EternalProcess:
         :param sport: Sport in short hand, currently "nba" or "nhl"
         :param game: game data, containing _id of game to be updated
         """
-        game_id = game["_id"]
-        db = self.get_aws_mongo_db()
+        try:
+            game_id = game["_id"]
+            db = self.get_aws_mongo_db()
 
-        if not game['being_streamed']:
-            if sport == "nba":
-                db.nba_logs.update({'_id': game_id}, {"$set": {"being_streamed": True}}, upsert=False)
-            elif sport == "nhl":
-                db.nhl_logs.update({'_id': game_id}, {"$set": {"being_streamed": True}}, upsert=False)
-        else:
-            if sport == "nba":
-                db.nba_logs.update({'_id': game_id}, {"$set": {"being_streamed": False}}, upsert=False)
-            elif sport == "nhl":
-                db.nhl_logs.update({'_id': game_id}, {"$set": {"being_streamed": False}}, upsert=False)
+            if not game['being_streamed']:
+                if sport == "nba":
+                    db.nba_logs.update({'_id': game_id}, {"$set": {"being_streamed": True}}, upsert=False)
+                    return True
+                elif sport == "nhl":
+                    db.nhl_logs.update({'_id': game_id}, {"$set": {"being_streamed": True}}, upsert=False)
+                    return True
+            else:
+                if sport == "nba":
+                    db.nba_logs.update({'_id': game_id}, {"$set": {"being_streamed": False}}, upsert=False)
+                    return False
+                elif sport == "nhl":
+                    db.nhl_logs.update({'_id': game_id}, {"$set": {"being_streamed": False}}, upsert=False)
+                    return False
+        except:
+            print 'error'
 
     @staticmethod
     def get_aws_mongo_db():
@@ -275,7 +281,7 @@ class EternalProcess:
         """
         index_stream = self.stream_list[idx]
         index = index_stream[1]
-        self.data_gatherer.key_handler.clear_api_key_at_index_for_use(index)
+        return self.data_gatherer.key_handler.clear_api_key_at_index_for_use(index)
 
     def get_and_disconnect_stream_at_index(self, idx):
         """
@@ -393,18 +399,23 @@ class EternalProcess:
         return path + '/Twitter_Utils/data/tweets/' + game_name + '/' + game_name + '.txt'
 
     def get_team_name_base_file_path(self, index):
-        game_name = self.game_name_list[index]
-        split_str = game_name.split('-')
-        vs_index = split_str.index('vs')
-        team1_name, team2_name = split_str[vs_index-1], split_str[vs_index+1]
-        wd = os.getcwd()
-        pos = wd.find("BigDataMonsters")
-        if pos > 0:  # pragma: no cover
-            path = wd[0:pos + 15]
-        else:
-            path = wd
-        return path + '/Twitter_Utils/data/tweets/' + game_name + '/' + team1_name + '.txt',\
-            path + '/Twitter_Utils/data/tweets/' + game_name + '/' + team2_name + '.txt'
+        try:
+            game_name = self.game_name_list[index]
+            split_str = game_name.split('-')
+            vs_index = split_str.index('vs')
+            team1_name, team2_name = split_str[vs_index-1], split_str[vs_index+1]
+            wd = os.getcwd()
+            pos = wd.find("BigDataMonsters")
+            if pos > 0:  # pragma: no cover
+                path = wd[0:pos + 15]
+            else:
+                path = wd
+            return path + '/Twitter_Utils/data/tweets/' + game_name + '/' + team1_name + '.txt',\
+                path + '/Twitter_Utils/data/tweets/' + game_name + '/' + team2_name + '.txt'
+        except IndexError:
+            print 'IndexError while getting team name base file path.'
+        except IOError:
+            print 'IOError while getting team name base file path.'
 
     # TODO - Figure out how to test this
     def write_days_games_data_for_nba(self):
@@ -413,7 +424,7 @@ class EternalProcess:
         """
         db = self.get_aws_mongo_db()
         write_path = self.get_write_path_for_days_games()
-        data_to_write = self.sports_data.get_nba_games_for_today()
+        data_to_write = self.sports_data.get_games_for_today_for_sport("nba")
         try:
             with open(write_path, 'w+') as f:
                 f.write(data_to_write)
@@ -421,10 +432,14 @@ class EternalProcess:
             with open(write_path) as data_file:
                 data = json.load(data_file)
             db.nba_logs.insert(data)
+            return True
         except IOError:
             self.logger.exception(IOError)
             self.logger.error('Unable to write at ' + write_path)
             raise IOError
+        except:
+            self.logger.error('Unable to write days data for nba, due to data existing already.')
+            return False
 
     def write_days_games_data_for_nhl(self):
         """
@@ -432,7 +447,7 @@ class EternalProcess:
         """
         db = self.get_aws_mongo_db()
         write_path = self.get_write_path_for_days_games()
-        data_to_write = self.sports_data.get_nhl_games_for_today()
+        data_to_write = self.sports_data.get_games_for_today_for_sport("nhl")
         try:
             with open(write_path, 'w+') as f:
                 f.write(data_to_write)
@@ -440,10 +455,14 @@ class EternalProcess:
             with open(write_path) as data_file:
                 data = json.load(data_file)
             db.nhl_logs.insert(data)
+            return True
         except IOError:
             self.logger.exception(IOError)
             self.logger.error('Unable to write at ' + write_path)
             raise IOError
+        except:
+            self.logger.error('Unable to write days data for nhl, due to data existing already.')
+            return False
 
     def remove_first_line_from_file(self, path):
         """
@@ -456,21 +475,28 @@ class EternalProcess:
             with open(path, 'w') as fout:
                 fout.writelines(data[1:])
                 fout.close()
+            return True
         except IOError:
             self.logger.exception(IOError)
             self.logger.error('File not found at ' + path)
+            return False
 
-    @staticmethod
-    def remove_last_line_from_file(path):
+    def remove_last_line_from_file(self, path):
         """
         Removes last line from file
         :param path: path to file
         """
-        with open(path, 'r') as fin:
-            data = fin.read().splitlines(True)
-        with open(path, 'w') as fout:
-            fout.writelines(data[:-1])
-            fout.close()
+        try:
+            with open(path, 'r') as fin:
+                data = fin.read().splitlines(True)
+            with open(path, 'w') as fout:
+                fout.writelines(data[:-1])
+                fout.close()
+            return True
+        except IOError:
+            self.logger.exception(IOError)
+            self.logger.error('File not found at ' + path)
+            return False
 
     @staticmethod
     def sleep_for(tick_time_in_seconds, start_time):

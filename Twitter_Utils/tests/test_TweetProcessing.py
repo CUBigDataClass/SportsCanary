@@ -60,5 +60,17 @@ class TestTweetProcessor(unittest.TestCase):
         self.assertEqual('testing go buffs go heat nba',
                          tweet_processor.replace_hashtag_with_word('testing #go #buffs go #heat #nba'))
 
+    def test_lemmatize_tweet(self):
+        tweet_processor = TweetProcessor()
+        self.assertEqual('i love the nba go buffs', tweet_processor.lemmatize_tweet('i love the nba go buffs'))
+
+    def test_check_words_in_tweet(self):
+        tweet_processor = TweetProcessor()
+        self.assertEqual(True, tweet_processor.check_words_in_tweet('i love the nba'))
+
+    def test_check_words_in_tweet_can_return_false(self):
+        tweet_processor = TweetProcessor()
+        self.assertEqual(False, tweet_processor.check_words_in_tweet('no words should match our filter'))
+
 if __name__ == '__main__':  # pragma: no cover
     unittest.main()

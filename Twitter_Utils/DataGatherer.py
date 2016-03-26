@@ -84,8 +84,6 @@ class DataGatherer(StreamListener):
             self.set_base_file_path(team2_name, team1_name, game_name)
         else:
             self.logger.error("Error: Team name not matching keywords")
-        #self.save_tweet_to_disk(self.home_team_track_words, self.home_team_file_path)
-        #self.save_tweet_to_disk(self.away_team_track_words, self.away_team_file_path)
 
     def set_base_directory_path(self):
         wd = os.getcwd()

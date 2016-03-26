@@ -5,6 +5,9 @@ import datetime
 import time
 from Twitter_Utils.EternalProcess import EternalProcess
 from Twitter_Utils.DataGatherer import DataGatherer
+from Eternal_Utils.CommonUtils import CommonUtils
+from Twitter_Utils.TwitterAPIKeySwitcher import TwitterAPIKeyHandler
+from pymongo import MongoClient
 
 
 class TestEternalProcess(unittest.TestCase):
@@ -34,11 +37,11 @@ class TestEternalProcess(unittest.TestCase):
             os.makedirs(dir_path)
 
         self.addCleanup(os.rmdir, dir_path)
-        path_2 = os.getcwd() + '/Twitter_Utils/data/tweets/base_tweets_for_tests/base_tweets_for_tests.txt'
-        fo = open(path_2, 'w+')
+        self.path_2 = os.getcwd() + '/Twitter_Utils/data/tweets/base_tweets_for_tests/base_tweets_for_tests.txt'
+        fo = open(self.path_2, 'w+')
         fo.write('test tweet 1\ntest tweet 1\ntest tweet 1\ntest tweet 1\ntest tweet 2\ntest tweet 2\ntest tweet 2\n')
         fo.close()
-        self.addCleanup(os.remove, path_2)
+        self.addCleanup(os.remove, self.path_2)
 
     def test_check_if_stream_should_end(self):
         # Shouldn't end if there is no stream
@@ -113,9 +116,6 @@ class TestEternalProcess(unittest.TestCase):
         path = self.eternalProcess.get_game_name_base_file_path(0)
         self.assertIsNotNone(self.eternalProcess.map_reduce_tweets_after_disconnect(path, 0))
 
-    def test_start_process(self):
-        assert True  # TODO: implement your test here
-
     def test_get_game_name_base_file_path(self):
         self.eternalProcess.game_name_list.append('2016-03-05-Pacers-vs-Wizards')
         self.assertEqual(os.getcwd() + '/Twitter_Utils/data/tweets/2016-03-05-Pacers-vs-Wizards/'
@@ -149,7 +149,7 @@ class TestEternalProcess(unittest.TestCase):
             for _ in reader:
                 count_1 += 1
         reader.close()
-        eternal_process.remove_first_line_from_file(path)
+        self.assertIs(True, eternal_process.remove_first_line_from_file(path))
         count_2 = 0
         with open(path, 'r') as reader:
             for _ in reader:
@@ -157,6 +157,16 @@ class TestEternalProcess(unittest.TestCase):
         reader.close()
 
         self.assertEqual(count_1-1, count_2)
+
+    def test_remove_first_line_from_file_raises_ioerror(self):
+        eternal_process = EternalProcess()
+        path = os.getcwd() + '/Twitter_Utils/data/tweets/not_a_real_path/not_a_real_path.txt'
+        self.assertIs(False, eternal_process.remove_first_line_from_file(path))
+
+    def test_remove_last_line_from_file_raises_ioerror(self):
+        eternal_process = EternalProcess()
+        path = os.getcwd() + '/Twitter_Utils/data/tweets/not_a_real_path/not_a_real_path.txt'
+        self.assertIs(False, eternal_process.remove_last_line_from_file(path))
 
     def test_remove_last_line_from_file(self):
         eternal_process = EternalProcess()
@@ -166,13 +176,102 @@ class TestEternalProcess(unittest.TestCase):
             for _ in reader:
                 count_1 += 1
         reader.close()
-        eternal_process.remove_last_line_from_file(path)
+        self.assertIs(True, eternal_process.remove_last_line_from_file(path))
         count_2 = 0
         with open(path, 'r') as reader:
             for _ in reader:
                 count_2 += 1
         reader.close()
         self.assertEqual(count_1-1, count_2)
+
+    def test_create_game_name_from_title(self):
+        eternal_process = EternalProcess()
+        game = {'title': 'Test vs Cases'}
+        date = datetime.datetime.now().strftime('%Y-%m-%d')
+        expected = date + '-Test-vs-Cases'
+        self.assertEqual(expected, eternal_process.create_game_name_from_title(game))
+
+    def test_get_aws_mongo_db(self):
+        eternal_process = EternalProcess()
+        uri = 'mongodb://' + CommonUtils.get_environ_variable('AWS_MONGO_USER') + ':' \
+              + CommonUtils.get_environ_variable('AWS_MONGO_PASS') + '@' \
+              + CommonUtils.get_environ_variable('AWS_ADDRESS')
+        client = MongoClient(uri)
+        expected = client.eventsDB
+        self.assertEqual(expected, eternal_process.get_aws_mongo_db())
+
+    def test_get_time_as_hour_minute(self):
+        eternal_process = EternalProcess()
+        self.assertEqual(datetime.datetime.now().strftime('%H:%M'), eternal_process.get_time_as_hour_minute())
+
+    def test_wait_till_five_seconds_into_minute(self):
+        eternal_process = EternalProcess()
+        self.assertEqual(True, eternal_process.wait_till_five_seconds_into_minute())
+        current_time = datetime.datetime.now().strftime('%S')
+        self.assertEqual(current_time, '05')
+
+    def test_write_days_games_data_for_nba(self):
+        eternal_process = EternalProcess()
+        self.assertIsNotNone(eternal_process.write_days_games_data_for_nba())
+
+    def test_write_days_games_data_for_nhl(self):
+        eternal_process = EternalProcess()
+        self.assertIsNotNone(eternal_process.write_days_games_data_for_nhl())
+
+    def test_create_keyword_string_for_game(self):
+        eternal_process = EternalProcess()
+        game = {'home_team_id': '84eb19ca-1e66-416f-9e00-90b20fe4bb5e',
+                'away_team_id': '68b04d26-12c3-4e06-8ae0-5bab39686213'}
+        sport = 'nba'
+        self.assertGreater(len(eternal_process.create_keyword_string_for_game(game, sport)), 35)
+
+    def test_generate_stream_start_time(self):
+        eternal_process = EternalProcess()
+        game = {'start_time': '2016-03-17T19:00:00-06:00'}
+        expected = '16:00'
+        self.assertEqual(expected, eternal_process.generate_stream_start_time(game))
+
+    def test_get_index_and_clear_api_key_at_index(self):
+        eternal_process = EternalProcess()
+        twitter_key_handler = TwitterAPIKeyHandler()
+        test_stream = 'test stream', 0
+        eternal_process.stream_list.append(test_stream)
+        self.assertEqual(False, eternal_process.get_index_and_clear_api_key_at_index(0))
+        with open(twitter_key_handler.key_check_write_path) as f:
+            data = json.load(f)
+        twitter_key_handler.update_json_file(data, 0)
+        test_stream = 'test stream', 0
+        eternal_process.stream_list.append(test_stream)
+        self.assertEqual(True, eternal_process.get_index_and_clear_api_key_at_index(0))
+
+    def test_get_team_name_base_file_path(self):
+        eternal_process = EternalProcess()
+        # ExpectedNone
+        self.assertIsNone(eternal_process.get_team_name_base_file_path(0))
+        eternal_process.game_name_list.append('Cavaliers-vs-Bronx')
+
+        expected = os.getcwd() + '/Twitter_Utils/data/tweets/Cavaliers-vs-Bronx/Cavaliers-vs-Bronx.txt'
+        self.assertEqual(expected, eternal_process.get_game_name_base_file_path(0))
+
+    def test_iterate_through_daily_games_and_start_stream(self):
+        eternal_process = EternalProcess()
+        start_time = datetime.datetime.now() + datetime.timedelta(minutes=180)
+        data = [{'start_time': str(start_time), 'being_streamed': False, '_id': 'fak31D',
+                 'title': 'Cavaliers vs Mavericks',
+                 'home_team_id': 'a9abb922-3a47-4d37-9250-2e5224a2b58a',
+                 'away_team_id': '35ded680-b7b1-4cd9-a223-7bc4ab0b77ed'}]
+        current_time = eternal_process.get_time_as_hour_minute()
+        eternal_process.iterate_through_daily_games_and_start_stream(data, current_time, "nba")
+        self.assertEqual(1, len(eternal_process.game_name_list))
+        self.assertIs(True, eternal_process.end_stream_and_free_api(0))
+
+    def test_update_is_streamed_json(self):
+        eternal_process = EternalProcess()
+        game = dict(_id='f334b7d4-a1fb-4ed6-ad85-ba75f71f0b1f', being_streamed=False)
+        sport = 'nba'
+        self.assertEqual(True, eternal_process.update_is_streamed_json(game, sport))
+        game = dict(_id='f334b7d4-a1fb-4ed6-ad85-ba75f71f0b1f', being_streamed=True)
+        self.assertEqual(False, eternal_process.update_is_streamed_json(game, sport))
 
 if __name__ == '__main__':  # pragma: no cover
     unittest.main()
