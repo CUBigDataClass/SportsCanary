@@ -1,6 +1,6 @@
 function getLogoForTeam(team) {
+    console.log('testing');
     switch(team) {
-    case '321':
     case 1:
        alert('Hey');
        break;

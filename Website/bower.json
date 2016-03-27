@@ -1,15 +1,13 @@
 {
   "name": "SportsCanary",
   "description": "",
-  "main": "",
+  "main": "index.html",
   "authors": [
     "Frederik Lohner <freddylohner@gmail.com>"
   ],
   "license": "MIT",
   "homepage": "https://github.com/CUBigDataClass/SportsCanary",
-  "moduleType": [
-    "node"
-  ],
+  "moduleType": [],
   "private": true,
   "ignore": [
     "**/.*",
@@ -19,6 +17,7 @@
     "tests"
   ],
   "dependencies": {
+    "Materialize": "materialize#^0.97.5",
     "bootstrap": "^3.3.6",
     "c3": "^0.4.10"
   }

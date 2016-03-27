@@ -46,13 +46,13 @@ class EternalProcess:
             handler.formatter = formatter
             self.logger.addHandler(handler)
 
-    def start_process(self):  #pragma: no cover
+    def start_process(self):  # pragma: no cover
         """
         This process is our workhorse, it has to check if it should log games.
         It has to check if a game is starting and if that is the case, fork the process,
         And in that new process check for game data during the time period assigned to it.
         """
-        # self.wait_till_five_seconds_into_minute()
+        self.wait_till_five_seconds_into_minute()
         start_time = time.time()
         print(50 * '*' + '\n' + 10 * '*' + '  STARTING SCANNING PROCESS   ' + 10 * '*' + '\n' + 50 * '*')
         while True:
@@ -202,6 +202,10 @@ class EternalProcess:
 
     @staticmethod
     def get_aws_mongo_db():
+        """
+        Connects to AWS hosted MongoDB
+        :return: MongoDB instance with database
+        """
         uri = 'mongodb://' + CommonUtils.get_environ_variable('AWS_MONGO_USER') + ':' \
               + CommonUtils.get_environ_variable('AWS_MONGO_PASS') + '@' \
               + CommonUtils.get_environ_variable('AWS_ADDRESS')
