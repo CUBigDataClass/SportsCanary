@@ -133,6 +133,7 @@ fabric.properties
 logs
 *.log
 npm-debug.log*
+bower_components
 
 # Runtime data
 pids

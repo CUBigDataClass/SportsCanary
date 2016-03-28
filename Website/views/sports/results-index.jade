@@ -1,8 +1,11 @@
 extends ../layout
 
 block content
-  script(src='../js/logos.js')
-  br
+  link(rel='stylesheet', href='/components/c3/c3.min.css')
+  script(src='/components/d3/d3.min.js', type='text/javascript')
+  script(src='/components/c3/c3.min.js', type='text/javascript')
+  script(src='../js/logos.min.js', type='text/javascript')
+    br
   - each result, i in results
           .container
                .row
@@ -15,7 +18,7 @@ block content
                      .row
                        .col.s6
                            .col
-                             img.circle.responsive-img(src='images/nba_logos/Denver_Nuggets.jpg', alt='Denver Nuggets')
+                             img.circle.responsive-img.team-icon(src='images/nba_logos/Denver_Nuggets.jpg', alt='Denver Nuggets')
                            .col
                              span.black-text
                                | 
@@ -31,7 +34,7 @@ block content
                                br
                          .col.s6
                        .col
-                         img.circle.responsive-img(src='images/nba_logos/Goldenstate_Warriors.jpg', alt='Golden State Warriors')
+                         img.circle.responsive-img.team-icon(src='images/nba_logos/Goldenstate_Warriors.jpg', alt='Golden State Warriors')
                        .col
                          span.black-text
                                | 
@@ -45,11 +48,12 @@ block content
                                b Spread
                                | -2
                                br
-                     img(src='images/sports/graph.jpg', alt='') 
+                     img(src='images/sports/graph.jpg', alt='')
+                     #chart
                      br
                      span.black-text.right
                        b Last updated: 
                        b.team-date
-                       = result.event_date 
+                       = result.event_date
 
   br

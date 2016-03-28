@@ -14,7 +14,7 @@ describe('Robots', function() {
 		// TODO - Write tests to check that robots.txt have the correct body.
 		.end(function(err, res) {
 			res.should.have.status(200);
-			res.should.be.text;
+			chai.expect(res.should.be.text);
 			done();
 		});
 	});

@@ -11,7 +11,7 @@ router.route('/')
         } else {
             res.format({
                 html: function() {
-                    res.render('sports/index', {
+                    res.render('sports/results-index', {
                         title: 'All my Results',
                         "results" : results
                     });

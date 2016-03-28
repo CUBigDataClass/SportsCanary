@@ -13,7 +13,7 @@ describe('Results', function() {
             .get('/api/march_madness/teams')
             .end(function(err, res){
                 res.should.have.status(200);
-                res.should.be.json;
+                chai.expect(res.should.be.json);
                 done();
             });
     });
@@ -22,7 +22,7 @@ describe('Results', function() {
             .get('/api/march_madness/games')
             .end(function(err, res){
                 res.should.have.status(200);
-                res.should.be.json;
+                chai.expect(res.should.be.json);
                 done();
             });
     });
@@ -31,7 +31,7 @@ describe('Results', function() {
             .get('/api/march_madness/games?date=today')
             .end(function(err, res){
                 res.should.have.status(200);
-                res.should.be.json;
+                chai.expect(res.should.be.json);
                 done();
             });
     });

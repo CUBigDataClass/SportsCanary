@@ -125,12 +125,8 @@ class DataGatherer(StreamListener):
             path = wd
         return path + '/Twitter_Utils/data/tweets/' + self.game_name_to_store + '/' + self.game_name_to_store + '.txt'
 
-    # TODO - Figure out how to test
-    def save_tweet_to_disk(self, tweet, file_path):  # pragma: no cover
-        # commented below lines as directory check needs only once
-	#if not os.path.exists(self.get_base_directory_path()):
-        #    os.makedirs(self.get_base_directory_path())
-
+    @staticmethod
+    def save_tweet_to_disk(tweet, file_path):
         with open(file_path, 'a+b') as f:
             f.write(tweet)
             f.write('\n')
