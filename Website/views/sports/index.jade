@@ -1,22 +1,42 @@
 extends ../layout
 
 block content
+  script(type='text/javascript', src='https://www.gstatic.com/charts/loader.js')
+    script(type='text/javascript').
+      google.charts.load('current', {'packages':['corechart']});
+      google.charts.setOnLoadCallback(drawChart);
+      function drawChart() {
+      var data = google.visualization.arrayToDataTable([
+      ['Year', 'Nuggets', 'Warriors'],
+      ['2013',  1000,      400],
+      ['2014',  1170,      460],
+      ['2015',  660,       1120],
+      ['2016',  1030,      540]
+      ]);
+      var options = {
+      title: 'Company Performance',
+      hAxis: {title: 'Year',  titleTextStyle: {color: '#333'}},
+      vAxis: {minValue: 0}
+      };
+      var chart = new google.visualization.AreaChart(document.getElementById('chart_div'));
+      chart.draw(data, options);
+      }
   script(src='../js/logos.js')
   br
   - each result, i in results
-          .container
+          .container.center
                .row
-                 .col.s12
+                 .col.s12.m4.l8
                    .card-panel
                      span.black-text
                        b NBA
                        b.team-name
                        = result.event_name
                      .row
-                       .col.s6
+                       .col.s5
                            .col
                              img.circle.responsive-img(src='images/nba_logos/Denver_Nuggets.jpg', alt='Denver Nuggets')
-                           .col
+                           .col.right
                              span.black-text
                                | 
                                br
@@ -27,12 +47,16 @@ block content
                                br
                                br
                                b Spread
+                               br
                                | +2
                                br
-                         .col.s6
-                       .col
-                         img.circle.responsive-img(src='images/nba_logos/Goldenstate_Warriors.jpg', alt='Golden State Warriors')
-                       .col
+                         .col.s2
+                           span.black-text
+                            br
+                            br
+                            h5.b vs
+                         .col.s5
+                       .col.left
                          span.black-text
                                | 
                                br
@@ -43,9 +67,11 @@ block content
                                br
                                br
                                b Spread
+                               br
                                | -2
                                br
-                     img(src='images/sports/graph.jpg', alt='') 
+                        .col
+                         img.circle.responsive-img(src='images/nba_logos/Goldenstate_Warriors.jpg', alt='Golden State Warriors')
                      br
                      span.black-text.right
                        b Last updated: 
