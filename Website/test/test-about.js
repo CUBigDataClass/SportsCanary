@@ -12,8 +12,7 @@ describe('about', function() {
 		.get('/about')
 		.end(function(err, res) {
 			res.should.have.status(200);
-			res.should.be.html;
-			
+			chai.expect(res.should.be.html);
 			done();
 		});
 	});
