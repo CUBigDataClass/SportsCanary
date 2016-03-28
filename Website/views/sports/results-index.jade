@@ -1,25 +1,24 @@
 extends ../layout
-
+link(rel='stylesheet', href='/components/c3/c3.min.css')
+script(src='/components/d3/d3.min.js', type='text/javascript')
+script(src='/components/c3/c3.min.js', type='text/javascript')
+script(src='../js/logos.min.js', type='text/javascript')
 block content
-  link(rel='stylesheet', href='/components/c3/c3.min.css')
-  script(src='/components/d3/d3.min.js', type='text/javascript')
-  script(src='/components/c3/c3.min.js', type='text/javascript')
-  script(src='../js/logos.min.js', type='text/javascript')
-    br
+  br
   - each result, i in results
-          .container
+          .container.center
                .row
-                 .col.s12
+                 .col.s12.m4.l8
                    .card-panel
                      span.black-text
                        b NBA
                        b.team-name
                        = result.event_name
                      .row
-                       .col.s6
+                       .col.s5
                            .col
-                             img.circle.responsive-img.team-icon(src='images/nba_logos/Denver_Nuggets.jpg', alt='Denver Nuggets')
-                           .col
+                             img.circle.responsive-img(src='images/nba_logos/Denver_Nuggets.jpg', alt='Denver Nuggets')
+                           .col.right
                              span.black-text
                                | 
                                br
@@ -30,12 +29,16 @@ block content
                                br
                                br
                                b Spread
+                               br
                                | +2
                                br
-                         .col.s6
-                       .col
-                         img.circle.responsive-img.team-icon(src='images/nba_logos/Goldenstate_Warriors.jpg', alt='Golden State Warriors')
-                       .col
+                         .col.s2
+                           span.black-text
+                            br
+                            br
+                            h5.b vs
+                         .col.s5
+                       .col.left
                          span.black-text
                                | 
                                br
@@ -46,14 +49,16 @@ block content
                                br
                                br
                                b Spread
+                               br
                                | -2
                                br
-                     img(src='images/sports/graph.jpg', alt='')
-                     #chart
+                        .col
+                         img.circle.responsive-img(src='images/nba_logos/Goldenstate_Warriors.jpg', alt='Golden State Warriors')
                      br
                      span.black-text.right
                        b Last updated: 
                        b.team-date
-                       = result.event_date
+                       = result.event_date 
 
   br
+
