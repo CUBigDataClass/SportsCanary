@@ -12,7 +12,7 @@ router.route('/')
             res.format({
                 html: function() {
                     res.render('sports/results-index', {
-                        title: 'All my Results',
+                        title: 'SportsCanary - Predictions for Basketball, Hockey',
                         "results" : results
                     });
                 }
