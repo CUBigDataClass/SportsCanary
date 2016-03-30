@@ -124,7 +124,6 @@ class EternalProcess:
                 self.march_madness.update_is_streamed_json(game)
                 self.logger.info('Acquiring twitter data for ' + str(game["title"]))
 
-                # TODO - Create this
                 keyword_string = self.march_madness.create_keyword_stream()
                 self.start_stream_with_keywords(keyword_string, game)
                 return True
@@ -358,8 +357,6 @@ class EternalProcess:
             self.logger.exception(IOError)
             self.logger.error('File not found at ' + self.get_game_name_base_file_path(index))
             print 'IOError'
-            # TODO - Raise IOError
-            # raise IOError
 
     def replace_written_tweets_with_map_reduced_version_for_teams(self, file_path, map_reduced_tweets):
         """
@@ -375,8 +372,6 @@ class EternalProcess:
             self.logger.exception(IOError)
             self.logger.error('File not found to map reduce for team 1.')
             print 'IOError'
-            # TODO - Raise IOError
-            # raise IOError
 
     def get_game_name_directory(self, index):
         """
