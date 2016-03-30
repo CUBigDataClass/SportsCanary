@@ -11,7 +11,7 @@ block content
                  .col.s12.m4.l8
                    .card-panel
                      span.black-text
-                       b NBA
+                       b= result.sport_type
                        //- b.team-type
                        //- = result.sport_type
                        b.team-name
@@ -32,7 +32,7 @@ block content
                                br
                                b % Win
                                br
-                               | +2
+                               = result.team_1_percentage_win
                                br
                          .col.s2
                            span.black-text
@@ -52,7 +52,7 @@ block content
                                br
                                b % Win
                                br
-                               | -2
+                               = result.team_2_percentage_win
                                br
                         .col
                          img.circle.responsive-img(src='images/nba_logos/Goldenstate_Warriors.jpg', alt='Golden State Warriors')
