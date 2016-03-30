@@ -75,18 +75,22 @@ router.route('/')
         });
     })
     .post(function(req, res) {
-        //crypt(function() {
-        //});
+        var sport_type = req.body.sport_type;
         var event_name = req.body.event_name;
         var score_applicable = req.body.score_applicable;
         var score_1 = req.body.score_1;
         var score_2 = req.body.score_2;
         var event_date = req.body.event_date;
+        var team_1_percentage_win = req.body.team_1_percentage_win;
+        var team_2_percentage_win = req.body.team_2_percentage_win;
         var encrypted = req.body.encrypted;
         console.log(encrypted);
         mongoose.model('Result').create({
+            sport_type: sport_type,
             event_name : event_name,
             score_applicable : score_applicable,
+            team_1_percentage_win: team_1_percentage_win,
+            team_2_percentage_win: team_2_percentage_win,
             score_1 : score_1,
             score_2 : score_2,
             event_date : event_date

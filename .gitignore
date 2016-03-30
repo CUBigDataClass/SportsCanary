@@ -167,9 +167,8 @@ node_modules
 
 ### WebStorm ###
 # Covers JetBrains IDEs: IntelliJ, RubyMine, PhpStorm, AppCode, PyCharm, CLion, Android Studio and Webstorm
-
+*.env
 *.iml
-
 ## Directory-based project format:
 .idea/
 # if you remove the above rule, at least ignore the following:
