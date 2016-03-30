@@ -12,6 +12,8 @@ block content
                    .card-panel
                      span.black-text
                        b NBA
+                       //- b.team-type
+                       //- = result.sport_type
                        b.team-name
                        = result.event_name
                      .row
@@ -28,7 +30,7 @@ block content
                                = result.score_1
                                br
                                br
-                               b Spread
+                               b % Win
                                br
                                | +2
                                br
@@ -48,7 +50,7 @@ block content
                                = result.score_2
                                br
                                br
-                               b Spread
+                               b % Win
                                br
                                | -2
                                br

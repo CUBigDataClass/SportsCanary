@@ -4,12 +4,18 @@ block content
     h1.
         #{title}
     form#formAddResult(name="addresult",method="post",action="/api/results")
+        p Sport Type:
+            input#inputSportType(type="text", placeholder="NBA, NHL, etc.", name="sport_type")
         p Event Name:
             input#inputEventName(type="text", placeholder="ex. Cavaliers vs Rockets", name="event_name")
         p Score 1:
             input#inputScore1(type="number", placeholder="ex. 100", name="score_1")
         p Score 2:
             input#inputScore2(type="number", placeholder="ex. 100", name="score_2")
+        p % Win Team 1:
+            input#inputTeam1Win(type="number", placeholder="20%", name="team_1_percentage_win", min=0, max = 100)
+        p % Win Team 2:
+            input#inputTeam2Win(type="number", placeholder="80%", name="team_2_percentage_win", min=0, max = 100)
         p Event Date:
             input#inputDob(type="date", name="event_date")
         p Score Applicable:
