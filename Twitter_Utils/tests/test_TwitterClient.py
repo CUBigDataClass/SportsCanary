@@ -1,4 +1,5 @@
 import unittest
+from random import randint
 from Twitter_Utils.TwitterClient import TwitterClient
 
 
@@ -14,7 +15,8 @@ class TestTwitterClient(unittest.TestCase):
 
     def test_tweet_and_delete(self):
         twitter_client = TwitterClient()
-        twitter_client.tweet('Tweeting for our test coverage!')
+        number = randint(0, 100)
+        twitter_client.tweet('Tweeting for our test coverage! #' + str(number))
         twitter_client.delete_latest_tweet()
         assert True
 
