@@ -15,22 +15,23 @@ block content
                 form.register(action='/leads', accept-charset='UTF-8', data-remote='true', method='post')
                   input(name='utf8', type='hidden', value='✓')
                   span.error.hide Please try that again.
-                  input#search-bar-home(type='text', name='searchbar' placeholder='Start Here')
-                div
-                  button(onclick='goToSearchTerm()') Search
+                  input#search-bar-home(type='text', name='searchbar' placeholder='Start Here' class='white-text')
+                  button.btn.waves-effect.waves-light(onclick='goToSearchTerm()', type='submit', name='action')
+                    | Search
+                    i.material-icons.right send
                     script.
                       function goToSearchTerm(){
                         var value = document.getElementById("search-bar").value
                         window.location = "http://sportscanary.com/search?category=" + value;
                       }
-                  
               .col.m6.s11.offset-s1.offset-m1.center-align.multi-device-mockup
                 img(src='images/home/main.png', alt='SportsCanary - Homepage image')
-    #content
+    section#NBA
       .container
-        .row
-          .col.m5.s12
-            h3.header.light-blue-text.accent-3 Recent Predictions
-            br
-            
-
+        h3.header.light-blue-text.accent-3 Recent NBA Predictions
+    section#NHL
+      .container
+        h3.header.light-blue-text.accent-3 Recent NHL Predictions
+    section#MLB
+      .container
+        h3.header.light-blue-text.accent-3 Recent MLB Predictions
