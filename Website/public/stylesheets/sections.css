@@ -1,0 +1,35 @@
+section#NBA {
+    background-color: #EDEDED;
+    color: #5C5C5C;
+    padding: 20px 0
+}
+
+section#NBA h3 {
+    font-size: 2em;
+    font-weight: 300;
+    padding-top: 10px
+}
+
+section#NHL {
+    color: #5C5C5C;
+    padding: 20px 0
+}
+
+section#NHL h3 {
+    font-size: 2em;
+    font-weight: 300;
+    padding-top: 10px
+}
+
+section#MLB {
+    background-color: #EDEDED;
+    color: #5C5C5C;
+    padding: 20px 0
+}
+
+section#MLB h3 {
+    font-size: 2em;
+    font-weight: 300;
+    padding-top: 10px
+}
+

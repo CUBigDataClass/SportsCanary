@@ -8,7 +8,7 @@ block content
   - each result, i in results
           .container.center
                .row
-                 .col.s12.m4.l8
+                 .col.s6.m4.l8
                    .card-panel
                      span.black-text
                        b= result.sport_type
@@ -30,7 +30,7 @@ block content
                                = result.score_1
                                br
                                br
-                               b % Win
+                               b Win (%)
                                br
                                = result.team_1_percentage_win
                                br
@@ -50,7 +50,7 @@ block content
                                = result.score_2
                                br
                                br
-                               b % Win
+                               b Win (%)
                                br
                                = result.team_2_percentage_win
                                br
