@@ -27,6 +27,8 @@ class SportsData:
             return 'https://www.stattleship.com/basketball/nba/'
         elif sport == "nhl":
             return 'https://www.stattleship.com/hockey/nhl/'
+        elif sport == "mlb":
+            return 'https://www.stattleship.com/baseball/mlb/'
 
     def get_games_for_today_for_sport(self, sport):
         """
@@ -69,36 +71,14 @@ class SportsData:
         list_of_games = str(list_of_games).replace("'", "")
         return list_of_games
 
-    def get_nba_players_for_today(self, slug_name, team_id):
-        """
-        Given a slug returns all team members for a given NBA team
-        :param team_id: UUID of team given by stattleship
-        :param slug_name: slug name for team given by stattleship
-        """
-
-        url = self.get_url_for_sport("nba") + '/game_logs?team_id='+slug_name
-        headers = {
-            'Authorization': str(self.STAT_ACCESS_TOKEN),
-            'Accept': 'application/vnd.stattleship.com; version=1',
-            'Content-Type': 'application/json'
-        }
-
-        res = requests.get(url, headers=headers)
-        content = json.loads(res.content)
-        if len(content['game_logs']) == 0:  # pragma: no cover
-            return True
-        if content['players']:
-            return self.create_players_log_object(content['players'], team_id)
-        else:  # pragma: no cover
-            return False
-
-    def get_nhl_players_for_today(self, slug_name, team_id):
+    def get_players_for_today_for_sport(self, slug_name, team_id, sport):
         """
         Given a slug returns all team members for a given NHL team
+        :param sport: nhl, nba, mlb
         :param team_id: UUID of team given by stattleship
         :param slug_name: slug name for team given by stattleship
         """
-        url = self.get_url_for_sport("nhl") + '/game_logs?team_id='+slug_name
+        url = self.get_url_for_sport(sport) + '/game_logs?team_id='+slug_name
         headers = {
             'Authorization': str(self.STAT_ACCESS_TOKEN),
             'Accept': 'application/vnd.stattleship.com; version=1',
