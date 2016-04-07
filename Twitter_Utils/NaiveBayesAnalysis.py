@@ -22,7 +22,7 @@ class NaiveBayesAnalysis:
         tweets = []
         for row in input_tweets:
             sentiment = self.get_sentiment(row[0])
-            tweet = row[5]
+            tweet = row[1]
             processed_tweet = self.tweet_processor.standardize_tweet(tweet)
             feature_vector = self.data_gatherer.create_feature_vector(processed_tweet)
             self.feature_list.extend(feature_vector)

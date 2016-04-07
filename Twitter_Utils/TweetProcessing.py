@@ -1,9 +1,25 @@
 # coding=utf-8
 import re
 import nltk
-from nltk.corpus import stopwords
 from nltk.stem import WordNetLemmatizer
 
+
+STOPWORDS = ['i', 'me', 'my', 'myself', 'we', 'our', 'ours', 'ourselves', 'you',
+             'your', 'yours', 'yourself', 'yourselves', 'he', 'him', 'his',
+             'himself', 'she', 'her', 'hers', 'herself', 'it', 'its', 'itself',
+             'they', 'them', 'their', 'theirs', 'themselves', 'what', 'which',
+             'who', 'whom', 'this', 'that', 'these', 'those', 'am', 'is', 'are',
+             'was', 'were', 'be', 'been', 'being', 'have', 'has', 'had',
+             'having', 'do', 'does', 'did', 'doing', 'a', 'an', 'the', 'and',
+             'but', 'if', 'or', 'because', 'as', 'until', 'while', 'of', 'at',
+             'by', 'for', 'with', 'about', 'against', 'between', 'into',
+             'through', 'during', 'before', 'after', 'above', 'below', 'to',
+             'from', 'up', 'down', 'in', 'out', 'on', 'off', 'over', 'under',
+             'again', 'further', 'then', 'once', 'here', 'there', 'when',
+             'where', 'why', 'how', 'all', 'any', 'both', 'each', 'few', 'more',
+             'most', 'other', 'some', 'such', 'no', 'nor', 'not', 'only', 'own',
+             'same', 'so', 'than', 'too','very', 's', 't', 'can', 'will',
+             'just', 'don', 'should', 'now', 'USER', 'URL']
 
 class TweetProcessor:
     def __init__(self):
@@ -26,85 +42,54 @@ class TweetProcessor:
         # Convert to lowercase
         tweet = tweet.lower()
 
-        tweet = self.remove_rt(tweet)
-
-        tweet = self.replace_hashtag_with_word(tweet)
-
-        tweet = self.replace_at_with_word(tweet)
-
-        tweet = self.remove_url(tweet)
-
-        tweet = self.remove_emoji(tweet)
-
-        tweet = self.remove_non_letter_and_space(tweet)
-
-        tweet = self.remove_repeated_chars(tweet)
-
-        tweet = self.remove_extra_whitespaces(tweet)
-        
-        tweet = self.remove_stop_words(tweet)
-
-        tweet = self.remove_appended_url_or_user(tweet)
-
-        tweet = self.lemmatize_tweet(tweet)
-
-        return tweet
-
-    @staticmethod
-    def remove_rt(tweet):
+        # remove rt
         if tweet[:2] == "rt":
-            return tweet[3:]
-        else:
-            return tweet
+            tweet = tweet[3:]
 
-    @staticmethod
-    def replace_hashtag_with_word(tweet):
-        return re.sub(r'#([^\s]+)', r'\1', tweet)
+        # replace # with word
+        tweet = re.sub(r'#([^\s]+)', r'\1', tweet)
 
-    @staticmethod
-    def replace_at_with_word(tweet):
-        return re.sub(r'@[^\s]+', 'USER', tweet)
+        # replace @ with word
+        tweet = re.sub(r'@[^\s]+', 'USER', tweet)
 
-    @staticmethod
-    def remove_url(tweet):
-        return re.sub(r'((www\.[^\s]+)|(https?://[^\s]+))', 'URL', tweet)
+        # remove url
+        tweet = re.sub(r'((www\.[^\s]+)|(https?://[^\s]+))', 'URL', tweet)
 
-    @staticmethod
-    def remove_emoji(tweet):
+        # remove emoji
         try:
-        # UCS-4
+            # UCS-4
             emoji_pattern = re.compile(u'([\U00002600-\U000027BF])|([\U0001f300-\U0001f64F])|([\U0001f680-\U0001f6FF])')
         except re.error:
-        # UCS-2
+            # UCS-2
             emoji_pattern = re.compile(u'([\u2600-\u27BF])|([\uD83C][\uDF00-\uDFFF])|([\uD83D][\uDC00-\uDE4F])|([\uD83D][\uDE80-\uDEFF])')
-        return emoji_pattern.sub('', tweet)
+        tweet = emoji_pattern.sub('', tweet)
 
-    def remove_non_letter_and_space(self, tweet):
-        return re.sub('[^a-zA-Z ]+', '', tweet)
+        # remove non-letter and space
+        tweet = re.sub('[^a-zA-Z ]+', '', tweet)
 
-    def remove_repeated_chars(self, tweet):
-        return re.sub(r'(.)\1+', r'\1\1', tweet)
+        # remove remove repeated chars
+        tweet = re.sub(r'(.)\1+', r'\1\1', tweet)
 
-    def remove_extra_whitespaces(self, tweet):
-        return re.sub(r'[\s]+', ' ', tweet)
+        # remove extra whitespaces
+        tweet = re.sub(r'[\s]+', ' ', tweet.strip())
 
-    def remove_stop_words(self, tweet):
-        english_stop_words = stopwords.words('english')
-        english_stop_words.extend(('USER','URL'))
+        # remove stop words
         words = nltk.word_tokenize(tweet)
-        return " ".join([x for x in words if x not in english_stop_words])
+        tweet = " ".join([x for x in words if x not in STOPWORDS])
 
-    def remove_appended_url_or_user(self, tweet):
+        # remove appeneded url or user
         tweet = tweet.replace('URL','')
-        return tweet.replace('USER','')
+        tweet = tweet.replace('USER','')
 
-    def lemmatize_tweet(self, tweet):
+        # lemmatize tweet
         wordnet_lemmatizer = WordNetLemmatizer()
         new_tweet = ''
         for word in tweet:
             stemmed_word = wordnet_lemmatizer.lemmatize(word)
             new_tweet = new_tweet + stemmed_word
-        return new_tweet
+        tweet = new_tweet
+
+        return tweet
 
     def check_words_in_tweet(self, tweet):
         if any(word in tweet for word in self.list_of_key_words):
