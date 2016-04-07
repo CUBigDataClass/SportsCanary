@@ -37,7 +37,7 @@ class TestFeatureExtractor(unittest.TestCase):
             path = wd[0:pos+15]
         else:
             path = wd
-        expected = path + '/Twitter_Utils/data/training_set_short.csv'
+        expected = path + '/Twitter_Utils/data/trimmed.csv'
         feature_extractor = NaiveBayesAnalysis.NaiveBayesAnalysis()
         self.assertEqual(expected, feature_extractor.get_base_training_file_path())
 
@@ -55,9 +55,9 @@ class TestFeatureExtractor(unittest.TestCase):
         feature_extractor.remove_duplicates()
         self.assertEqual(expected, feature_extractor.feature_list)
 
-    def test_create_tweets_list_with_sentiment(self):
-        feature_extractor = NaiveBayesAnalysis.NaiveBayesAnalysis()
-        self.assertIsNotNone(feature_extractor.create_tweets_list_with_sentiment())
+    # def test_create_tweets_list_with_sentiment(self):
+    #     feature_extractor = NaiveBayesAnalysis.NaiveBayesAnalysis()
+    #     self.assertIsNotNone(feature_extractor.create_tweets_list_with_sentiment())
 
 if __name__ == '__main__':  # pragma: no cover
     unittest.main()
