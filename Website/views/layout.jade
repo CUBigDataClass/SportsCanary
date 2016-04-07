@@ -1,7 +1,6 @@
 doctype html
 html
   head
-    script(src='https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.5/js/materialize.min.js')
     script.
       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
       (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
@@ -37,16 +36,31 @@ html
     meta(name='msapplication-TileColor', content='#ffffff')
     meta(name='msapplication-TileImage', content='/ms-icon-144x144.png')
     meta(name='theme-color', content='#ffffff')
+    
   body
     nav
       .nav-wrapper.light-blue.accent-3
         a.brand-logo.center(href='/') SportsCanary
-        ul#nav-mobile.right.hide-on-med-and-down
+        a.button-collapse(href='#', data-activates='mobile-demo')
+          i.material-icons menu
+        ul.right.hide-on-med-and-down
           li
             a(href='/') Home
           li
             a(href='/sports') All Predictions
           li
             a(href='/about') About
+          li
+        ul#mobile-demo.side-nav
+          li
+            a(href='/') Home
+          li
+            a(href='/sports') All Predictions
+          li
+            a(href='/about') About
+          li
+    
+
+
     block content
     include footer

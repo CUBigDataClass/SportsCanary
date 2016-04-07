@@ -22,7 +22,7 @@ class NaiveBayesAnalysis:
         tweets = []
         for row in input_tweets:
             sentiment = self.get_sentiment(row[0])
-            tweet = row[5]
+            tweet = row[1]
             processed_tweet = self.tweet_processor.standardize_tweet(tweet)
             feature_vector = self.data_gatherer.create_feature_vector(processed_tweet)
             self.feature_list.extend(feature_vector)
@@ -48,7 +48,7 @@ class NaiveBayesAnalysis:
             path = wd[0:pos+15]
         else:
             path = wd
-        return path + '/Twitter_Utils/data/training_set_short.csv'
+        return path + '/Twitter_Utils/data/trimmed.csv'
 
     @staticmethod
     def get_base_path_to_save_classifier():
@@ -130,3 +130,6 @@ class NaiveBayesAnalysis:
                 print naive_bayes_classifier.classify(self.extract_features(self.create_feature_vector(line)))
 
         print naive_bayes_classifier.show_most_informative_features(10)
+
+# t = NaiveBayesAnalysis()
+# t.analyze_tweets()
