@@ -63,6 +63,7 @@ class EternalProcess:
             if self.is_time_to_get_game_data_for_day():
                 self.write_days_games_data_for_nba()
                 self.write_days_games_data_for_nhl()
+                self.write_days_games_data_for_mlb()
 
             # Read in file to see if it is time to analyze twitter
             read_path = self.get_write_path_for_days_games()
@@ -70,6 +71,7 @@ class EternalProcess:
             db = self.get_aws_mongo_db()
             data_nba = []
             data_nhl = []
+            data_mlb =[]
             for post in db.nba_logs.find():
                 if post['date'] == datetime.datetime.now().strftime('%Y-%m-%d'):
                     data_nba.append(post)
@@ -77,6 +79,10 @@ class EternalProcess:
             for post in db.nhl_logs.find():
                 if post['date'] == datetime.datetime.now().strftime('%Y-%m-%d'):
                     data_nhl.append(post)
+
+            for post in db.mlb_logs.find():
+                if post['date'] == datetime.datetime.now().strftime('%Y-%m-%d'):
+                    data_mlb.append(post)
 
             data_mm = self.march_madness.return_games_for_the_day()
 
@@ -91,6 +97,9 @@ class EternalProcess:
                     self.iterate_through_daily_games_and_start_stream(data=data_nhl, current_time=current_time,
                                                                       sport="nhl")
                     self.logger.info('--------------------')
+                    self.iterate_through_daily_games_and_start_stream(data=data_nhl, current_time=current_time,
+                                                                      sport="mlb")
+                    self.logger.info('--------------------')
                     self.iterate_through_march_madness_games_and_start_stream(data_mm=data_mm,
                                                                               current_time=current_time)
 
@@ -98,6 +107,7 @@ class EternalProcess:
                 self.logger.error('File not found at ' + read_path)
                 self.write_days_games_data_for_nba()
                 self.write_days_games_data_for_nhl()
+                self.write_days_games_data_for_mlb()
                 continue
 
             self.sleep_for(self.tick_time_in_seconds, start_time)
@@ -189,12 +199,18 @@ class EternalProcess:
                 elif sport == "nhl":
                     db.nhl_logs.update({'_id': game_id}, {"$set": {"being_streamed": True}}, upsert=False)
                     return True
+                elif sport == "mlb":
+                    db.mlb_logs.update({'_id': game_id}, {"$set": {"being_streamed": True}}, upsert=False)
+                    return True
             else:
                 if sport == "nba":
                     db.nba_logs.update({'_id': game_id}, {"$set": {"being_streamed": False}}, upsert=False)
                     return False
                 elif sport == "nhl":
                     db.nhl_logs.update({'_id': game_id}, {"$set": {"being_streamed": False}}, upsert=False)
+                    return False
+                elif sport == "mlb":
+                    db.mlb_logs.update({'_id': game_id}, {"$set": {"being_streamed": True}}, upsert=False)
                     return False
         except:
             print 'error'
@@ -461,6 +477,29 @@ class EternalProcess:
             raise IOError
         except:
             self.logger.error('Unable to write days data for nhl, due to data existing already.')
+            return False
+
+    def write_days_games_data_for_mlb(self):
+        """
+        Writes API response containing info for days games in the MLB
+        """
+        db = self.get_aws_mongo_db()
+        write_path = self.get_write_path_for_days_games()
+        data_to_write = self.sports_data.get_games_for_today_for_sport("mlb")
+        try:
+            with open(write_path, 'w+') as f:
+                f.write(data_to_write)
+            f.close()
+            with open(write_path) as data_file:
+                data = json.load(data_file)
+            db.mlb_logs.insert(data)
+            return True
+        except IOError:
+            self.logger.exception(IOError)
+            self.logger.error('Unable to write at ' + write_path)
+            raise IOError
+        except:
+            self.logger.error('Unable to write days data for mlb, due to data existing already.')
             return False
 
     def remove_first_line_from_file(self, path):
