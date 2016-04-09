@@ -11,6 +11,7 @@ from SportsData import SportsData
 from DataGatherer import DataGatherer
 from KeywordGenerator import KeywordGenerator
 from Eternal_Utils.CommonUtils import CommonUtils
+from Eternal_Utils.WebsiteInteraction import WebsiteInteraction
 from sys import platform as _platform
 from MarchMadness import MarchMadness
 
@@ -20,9 +21,10 @@ class EternalProcess:
         self.sports_data = SportsData()
         self.keyword_generator = KeywordGenerator()
         self.march_madness = MarchMadness()
+        self.website_interaction = WebsiteInteraction()
         self.tick_time_in_seconds = 60.0
-        self.time_prior_to_game_to_start_stream = 114
-        self.time_to_check_games_for_the_day = '16:34'
+        self.time_prior_to_game_to_start_stream = 43
+        self.time_to_check_games_for_the_day = '02:00'
         self.data_gatherer = DataGatherer()
         wd = os.getcwd()
         pos = wd.find("BigDataMonsters")
@@ -34,6 +36,7 @@ class EternalProcess:
         self.stream_list = []
         self.end_times_list = []
         self.game_name_list = []
+        self.slug_list = []
         self.logger = logging.getLogger(__name__)
         if _platform == "linux" or _platform == "linux2":
             handler = logging.handlers.SysLogHandler('/dev/log')
@@ -58,6 +61,7 @@ class EternalProcess:
         while True:
             self.logger.info('Stream list: ' + str(self.stream_list))
             self.logger.info('Game list: ' + str(self.game_name_list))
+            self.logger.info('Slug list: ' + str(self.slug_list))
             self.logger.info('End Times list: ' + str(self.end_times_list))
             self.check_if_stream_should_end()
 
@@ -154,6 +158,7 @@ class EternalProcess:
     def start_stream_with_keywords(self, keyword_string, game):
         game_name = self.create_game_name_from_title(game)
         self.game_name_list.append(game_name)
+        self.slug_list.append(game['slug'])
         data_gatherer = DataGatherer()
         stream = data_gatherer.get_tweet_stream(keyword_string, game['_id'], game_name)
         self.stream_list.append(stream)
@@ -238,7 +243,7 @@ class EternalProcess:
         """
         time_now = datetime.datetime.now()
         # now_plus_10 = time_now + datetime.timedelta(minutes=minutes)
-        now_plus_10 = time_now + datetime.timedelta(minutes=3)
+        now_plus_10 = time_now + datetime.timedelta(minutes=1)
         return now_plus_10.strftime('%H:%M')
 
     def check_if_stream_should_end(self):
@@ -267,6 +272,18 @@ class EternalProcess:
         game_path = self.get_game_name_base_file_path(i)
         team_path_tuple = self.get_team_name_base_file_path(i)
 
+        team_tweet_counts = self.get_percentage_of_tweets_per_team(i)
+        print(team_tweet_counts)
+        total_tweet_count = team_tweet_counts[0] + team_tweet_counts[1]
+        print(total_tweet_count)
+        self.website_interaction.post_request_to_sports_canary(event_name=self.get_game_name_in_team1_vs_team2_format(i),
+                                                               score_1=(team_tweet_counts[0]/total_tweet_count),
+                                                               score_2=(team_tweet_counts[1]/total_tweet_count),
+                                                               score_applicable=True,
+                                                               stattleship_slug=self.slug_list[i],
+                                                               sport_type=str(self.slug_list[i])[:3],
+                                                               team_1_percentage_win=50, team_2_percentage_win=50)
+
         # map_reduced_tweets_game = self.map_reduce_tweets_after_disconnect(game_path, i)
         # map_reduced_tweets_team1 = self.map_reduce_tweets_after_disconnect(team_path_tuple[0], i)
         # map_reduced_tweets_team2 = self.map_reduce_tweets_after_disconnect(team_path_tuple[1], i)
@@ -280,8 +297,22 @@ class EternalProcess:
         # self.remove_first_line_from_file(team_path_tuple[1])
 
         self.delete_stream_end_time_game_name_from_lists(i)
+
         if not self.check_if_stream_should_end():
             return True
+
+    def get_percentage_of_tweets_per_team(self, i):
+        team_path_tuple = self.get_team_name_base_file_path(i)
+        with open(team_path_tuple[0]) as f:
+            for i, l in enumerate(f):
+                pass
+        team1_count = i + 1
+
+        with open(team_path_tuple[1]) as f:
+            for x, li in enumerate(f):
+                pass
+        team2_count = x + 1
+        return team1_count, team2_count
 
     def delete_stream_end_time_game_name_from_lists(self, i):
         """
@@ -292,6 +323,7 @@ class EternalProcess:
             del self.stream_list[i]
             del self.end_times_list[i]
             del self.game_name_list[i]
+            del self.slug_list[i]
         except KeyError:
             raise KeyError
 
@@ -414,6 +446,13 @@ class EternalProcess:
         else:
             path = wd
         return path + '/Twitter_Utils/data/tweets/' + game_name + '/' + game_name + '.txt'
+
+    def get_game_name_in_team1_vs_team2_format(self, index):
+        game_name = self.game_name_list[index]
+        split_str = game_name.split('-')
+        vs_index = split_str.index('vs')
+        team1_name, team2_name = split_str[vs_index-1], split_str[vs_index+1]
+        return str(team1_name) + ' vs ' + str(team2_name)
 
     def get_team_name_base_file_path(self, index):
         try:
