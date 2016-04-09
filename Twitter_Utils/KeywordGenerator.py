@@ -24,7 +24,7 @@ class KeywordGenerator:
         elif sport == "nba":
             add = 'nba-teams-data.json'
         elif sport == "mlb":
-            add = 'nba-teams-data.json'
+            add = 'mlb-teams-data.json'
         return path + '/Twitter_Utils/data/' + add
 
     def generate_search_terms(self, team_id, sport):
@@ -84,4 +84,8 @@ class KeywordGenerator:
         return word_list
 
     def append_players_name(self, team_slug_name, team_id):
-        return self.sports_data.get_players_for_today_for_sport(team_slug_name, team_id, "nba")
+        players_list = self.sports_data.get_players_for_today_for_sport(team_slug_name, team_id, "nba")
+        if players_list:
+            return self.sports_data.get_players_for_today_for_sport(team_slug_name, team_id, "nba")
+        else:
+            return []

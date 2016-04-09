@@ -21,7 +21,7 @@ class EternalProcess:
         self.keyword_generator = KeywordGenerator()
         self.march_madness = MarchMadness()
         self.tick_time_in_seconds = 60.0
-        self.time_prior_to_game_to_start_stream = 180
+        self.time_prior_to_game_to_start_stream = 114
         self.time_to_check_games_for_the_day = '16:34'
         self.data_gatherer = DataGatherer()
         wd = os.getcwd()
@@ -52,11 +52,12 @@ class EternalProcess:
         It has to check if a game is starting and if that is the case, fork the process,
         And in that new process check for game data during the time period assigned to it.
         """
-        self.wait_till_five_seconds_into_minute()
+        # self.wait_till_five_seconds_into_minute()
         start_time = time.time()
         print(50 * '*' + '\n' + 10 * '*' + '  STARTING SCANNING PROCESS   ' + 10 * '*' + '\n' + 50 * '*')
         while True:
             self.logger.info('Stream list: ' + str(self.stream_list))
+            self.logger.info('Game list: ' + str(self.game_name_list))
             self.logger.info('End Times list: ' + str(self.end_times_list))
             self.check_if_stream_should_end()
 
@@ -71,7 +72,7 @@ class EternalProcess:
             db = self.get_aws_mongo_db()
             data_nba = []
             data_nhl = []
-            data_mlb =[]
+            data_mlb = []
             for post in db.nba_logs.find():
                 if post['date'] == datetime.datetime.now().strftime('%Y-%m-%d'):
                     data_nba.append(post)
@@ -97,7 +98,7 @@ class EternalProcess:
                     self.iterate_through_daily_games_and_start_stream(data=data_nhl, current_time=current_time,
                                                                       sport="nhl")
                     self.logger.info('--------------------')
-                    self.iterate_through_daily_games_and_start_stream(data=data_nhl, current_time=current_time,
+                    self.iterate_through_daily_games_and_start_stream(data=data_mlb, current_time=current_time,
                                                                       sport="mlb")
                     self.logger.info('--------------------')
                     self.iterate_through_march_madness_games_and_start_stream(data_mm=data_mm,
@@ -142,7 +143,8 @@ class EternalProcess:
         for idx, game in enumerate(data):
             game_time = self.generate_stream_start_time(game)
             self.logger.info(sport.upper() + ' Game Time: ' + game_time)
-            if game_time == current_time and not game['being_streamed']:
+            # if game_time == current_time and not game['being_streamed']:
+            if game_time == current_time:
                 self.update_is_streamed_json(game, sport)
                 self.logger.info('Acquiring twitter data for ' + str(game["title"]))
 
@@ -236,7 +238,7 @@ class EternalProcess:
         """
         time_now = datetime.datetime.now()
         # now_plus_10 = time_now + datetime.timedelta(minutes=minutes)
-        now_plus_10 = time_now + datetime.timedelta(minutes=minutes)
+        now_plus_10 = time_now + datetime.timedelta(minutes=3)
         return now_plus_10.strftime('%H:%M')
 
     def check_if_stream_should_end(self):
@@ -265,17 +267,17 @@ class EternalProcess:
         game_path = self.get_game_name_base_file_path(i)
         team_path_tuple = self.get_team_name_base_file_path(i)
 
-        map_reduced_tweets_game = self.map_reduce_tweets_after_disconnect(game_path, i)
-        map_reduced_tweets_team1 = self.map_reduce_tweets_after_disconnect(team_path_tuple[0], i)
-        map_reduced_tweets_team2 = self.map_reduce_tweets_after_disconnect(team_path_tuple[1], i)
+        # map_reduced_tweets_game = self.map_reduce_tweets_after_disconnect(game_path, i)
+        # map_reduced_tweets_team1 = self.map_reduce_tweets_after_disconnect(team_path_tuple[0], i)
+        # map_reduced_tweets_team2 = self.map_reduce_tweets_after_disconnect(team_path_tuple[1], i)
+        #
+        # self.replace_written_tweets_with_map_reduced_version_for_uncategorized_tweets(i, map_reduced_tweets_game)
+        # self.replace_written_tweets_with_map_reduced_version_for_teams(team_path_tuple[0], map_reduced_tweets_team1)
+        # self.replace_written_tweets_with_map_reduced_version_for_teams(team_path_tuple[1], map_reduced_tweets_team2)
 
-        self.replace_written_tweets_with_map_reduced_version_for_uncategorized_tweets(i, map_reduced_tweets_game)
-        self.replace_written_tweets_with_map_reduced_version_for_teams(team_path_tuple[0], map_reduced_tweets_team1)
-        self.replace_written_tweets_with_map_reduced_version_for_teams(team_path_tuple[1], map_reduced_tweets_team2)
-
-        self.remove_first_line_from_file(self.get_game_name_base_file_path(i))
-        self.remove_first_line_from_file(team_path_tuple[0])
-        self.remove_first_line_from_file(team_path_tuple[1])
+        # self.remove_first_line_from_file(self.get_game_name_base_file_path(i))
+        # self.remove_first_line_from_file(team_path_tuple[0])
+        # self.remove_first_line_from_file(team_path_tuple[1])
 
         self.delete_stream_end_time_game_name_from_lists(i)
         if not self.check_if_stream_should_end():
