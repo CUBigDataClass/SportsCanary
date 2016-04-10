@@ -18,6 +18,8 @@ class WebsiteInteraction:
                 'team_1_percentage_win': team_1_percentage_win, 'team_2_percentage_win': team_2_percentage_win,
                 'encrypted': str(enc),
                 }
+
+        print('DATAAAAAAAAAAAA: ' + str(data))
         r = requests.post('http://sportscanary.com/api/results', data=data)
         json_response = r.text
         json_response = json.loads(json_response)
