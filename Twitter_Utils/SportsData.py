@@ -84,14 +84,17 @@ class SportsData:
             'Accept': 'application/vnd.stattleship.com; version=1',
             'Content-Type': 'application/json'
         }
-
-        res = requests.get(url, headers=headers)
-        content = json.loads(res.content)
-        if len(content['game_logs']) == 0:  # pragma: no cover
-            return True
-        if content['players']:
-            return self.create_players_log_object(content['players'], team_id)
-        else:  # pragma: no cover
+        try:
+            res = requests.get(url, headers=headers)
+            content = json.loads(res.content)
+            if len(content['game_logs']) == 0:  # pragma: no cover
+                return False
+            if content['players']:
+                return self.create_players_log_object(content['players'], team_id)
+            else:  # pragma: no cover
+                return False
+        except KeyError:
+            self.logger.error('Key error creating players log object.')
             return False
 
     @staticmethod

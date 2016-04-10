@@ -67,6 +67,7 @@ class TestEternalProcess(unittest.TestCase):
 
         stream = self.data_gatherer.get_tweet_stream(keywords, '123', '2016-03-05-Pacers-vs-Wizards')
         self.eternalProcess.stream_list.append(stream)
+        self.eternalProcess.slug_list.append('fake-slugerino-123')
         self.assertEqual(True, self.eternalProcess.check_if_stream_should_end())
 
     def test_check_if_stream_should_end_should_return_false_if_none(self):
@@ -127,6 +128,7 @@ class TestEternalProcess(unittest.TestCase):
         eternal_process.stream_list.append('Stream Test')
         eternal_process.end_times_list.append('End Time Test')
         eternal_process.game_name_list.append('Game Test')
+        eternal_process.slug_list.append('Fake-Slug-mlb-123')
         self.assertIs(len(eternal_process.stream_list), 1)
         self.assertIs(len(eternal_process.end_times_list), 1)
         self.assertIs(len(eternal_process.game_name_list), 1)
@@ -259,7 +261,8 @@ class TestEternalProcess(unittest.TestCase):
         data = [{'start_time': str(start_time), 'being_streamed': False, '_id': 'fak31D',
                  'title': 'Cavaliers vs Mavericks',
                  'home_team_id': 'a9abb922-3a47-4d37-9250-2e5224a2b58a',
-                 'away_team_id': '35ded680-b7b1-4cd9-a223-7bc4ab0b77ed'}]
+                 'away_team_id': '35ded680-b7b1-4cd9-a223-7bc4ab0b77ed',
+                 'slug': 'fake-slug-mlb-123'}]
         current_time = eternal_process.get_time_as_hour_minute()
         eternal_process.iterate_through_daily_games_and_start_stream(data, current_time, "nba")
         self.assertEqual(1, len(eternal_process.game_name_list))
@@ -272,6 +275,19 @@ class TestEternalProcess(unittest.TestCase):
         self.assertEqual(True, eternal_process.update_is_streamed_json(game, sport))
         game = dict(_id='f334b7d4-a1fb-4ed6-ad85-ba75f71f0b1f', being_streamed=True)
         self.assertEqual(False, eternal_process.update_is_streamed_json(game, sport))
+
+    def test_get_game_name_in_team1_vs_team2_format(self):
+        eternal_process = EternalProcess()
+        eternal_process.game_name_list.append('2016-03-18-Warriors-vs-Oilers')
+        self.assertEqual('Warriors vs Oilers', eternal_process.get_game_name_in_team1_vs_team2_format(0))
+
+    def test_write_days_games_data_for_mlb(self):
+        eternal_process = EternalProcess()
+        self.assertIsNotNone(eternal_process.write_days_games_data_for_mlb())
+
+    def test_get_percentage_from_two_inputs(self):
+        eternal_process = EternalProcess()
+        self.assertEqual((25, 75), eternal_process.get_percentage_from_two_inputs(10, 30))
 
 if __name__ == '__main__':  # pragma: no cover
     unittest.main()

@@ -1,7 +1,6 @@
 # coding=utf-8
 import re
 import nltk
-from nltk.stem import WordNetLemmatizer
 
 
 STOPWORDS = ['i', 'me', 'my', 'myself', 'we', 'our', 'ours', 'ourselves', 'you',
@@ -80,14 +79,6 @@ class TweetProcessor:
         # remove appeneded url or user
         tweet = tweet.replace('URL','')
         tweet = tweet.replace('USER','')
-
-        # lemmatize tweet
-        wordnet_lemmatizer = WordNetLemmatizer()
-        new_tweet = ''
-        for word in tweet:
-            stemmed_word = wordnet_lemmatizer.lemmatize(word)
-            new_tweet = new_tweet + stemmed_word
-        tweet = new_tweet
 
         return tweet
 

@@ -9,11 +9,17 @@ class WebsiteInteraction:
         self.id = 0
         self.encryption = Encryption()
 
-    def post_request_to_sports_canary(self, event_name, score_1, score_2, score_applicable):
+    def post_request_to_sports_canary(self, event_name, score_1, score_2, score_applicable, stattleship_slug,
+                                      sport_type, team_1_percentage_win, team_2_percentage_win):
         enc = self.encryption.encrypt_node('API-Passkey')
         data = {'event_name': event_name, 'score_1': score_1,
-                'score_2': score_2, 'event_date': datetime.datetime.now(),
-                'score_applicable': score_applicable, 'encrypted': str(enc)}
+                'score_2': score_2, 'stattleship_slug': stattleship_slug, 'event_date': datetime.datetime.now(),
+                'score_applicable': score_applicable, 'sport_type': sport_type,
+                'team_1_percentage_win': team_1_percentage_win, 'team_2_percentage_win': team_2_percentage_win,
+                'encrypted': str(enc),
+                }
+
+        print('DATAAAAAAAAAAAA: ' + str(data))
         r = requests.post('http://sportscanary.com/api/results', data=data)
         json_response = r.text
         json_response = json.loads(json_response)

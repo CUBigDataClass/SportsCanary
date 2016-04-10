@@ -11,6 +11,7 @@ from SportsData import SportsData
 from DataGatherer import DataGatherer
 from KeywordGenerator import KeywordGenerator
 from Eternal_Utils.CommonUtils import CommonUtils
+from Eternal_Utils.WebsiteInteraction import WebsiteInteraction
 from sys import platform as _platform
 from MarchMadness import MarchMadness
 
@@ -20,9 +21,10 @@ class EternalProcess:
         self.sports_data = SportsData()
         self.keyword_generator = KeywordGenerator()
         self.march_madness = MarchMadness()
+        self.website_interaction = WebsiteInteraction()
         self.tick_time_in_seconds = 60.0
         self.time_prior_to_game_to_start_stream = 180
-        self.time_to_check_games_for_the_day = '16:34'
+        self.time_to_check_games_for_the_day = '02:00'
         self.data_gatherer = DataGatherer()
         wd = os.getcwd()
         pos = wd.find("BigDataMonsters")
@@ -34,6 +36,7 @@ class EternalProcess:
         self.stream_list = []
         self.end_times_list = []
         self.game_name_list = []
+        self.slug_list = []
         self.logger = logging.getLogger(__name__)
         if _platform == "linux" or _platform == "linux2":
             handler = logging.handlers.SysLogHandler('/dev/log')
@@ -57,6 +60,8 @@ class EternalProcess:
         print(50 * '*' + '\n' + 10 * '*' + '  STARTING SCANNING PROCESS   ' + 10 * '*' + '\n' + 50 * '*')
         while True:
             self.logger.info('Stream list: ' + str(self.stream_list))
+            self.logger.info('Game list: ' + str(self.game_name_list))
+            self.logger.info('Slug list: ' + str(self.slug_list))
             self.logger.info('End Times list: ' + str(self.end_times_list))
             self.check_if_stream_should_end()
 
@@ -71,7 +76,7 @@ class EternalProcess:
             db = self.get_aws_mongo_db()
             data_nba = []
             data_nhl = []
-            data_mlb =[]
+            data_mlb = []
             for post in db.nba_logs.find():
                 if post['date'] == datetime.datetime.now().strftime('%Y-%m-%d'):
                     data_nba.append(post)
@@ -97,7 +102,7 @@ class EternalProcess:
                     self.iterate_through_daily_games_and_start_stream(data=data_nhl, current_time=current_time,
                                                                       sport="nhl")
                     self.logger.info('--------------------')
-                    self.iterate_through_daily_games_and_start_stream(data=data_nhl, current_time=current_time,
+                    self.iterate_through_daily_games_and_start_stream(data=data_mlb, current_time=current_time,
                                                                       sport="mlb")
                     self.logger.info('--------------------')
                     self.iterate_through_march_madness_games_and_start_stream(data_mm=data_mm,
@@ -123,7 +128,7 @@ class EternalProcess:
         :return: returns game time as Hour:Minute
         """
         game_time = dateutil.parser.parse(game['start_time']) - \
-            datetime.timedelta(minutes=self.time_prior_to_game_to_start_stream)
+                    datetime.timedelta(minutes=self.time_prior_to_game_to_start_stream)
         return game_time.strftime('%H:%M')
 
     def iterate_through_march_madness_games_and_start_stream(self, data_mm, current_time):
@@ -142,7 +147,8 @@ class EternalProcess:
         for idx, game in enumerate(data):
             game_time = self.generate_stream_start_time(game)
             self.logger.info(sport.upper() + ' Game Time: ' + game_time)
-            if game_time == current_time and not game['being_streamed']:
+            # if game_time == current_time and not game['being_streamed']:
+            if game_time == current_time:
                 self.update_is_streamed_json(game, sport)
                 self.logger.info('Acquiring twitter data for ' + str(game["title"]))
 
@@ -152,6 +158,7 @@ class EternalProcess:
     def start_stream_with_keywords(self, keyword_string, game):
         game_name = self.create_game_name_from_title(game)
         self.game_name_list.append(game_name)
+        self.slug_list.append(game['slug'])
         data_gatherer = DataGatherer()
         stream = data_gatherer.get_tweet_stream(keyword_string, game['_id'], game_name)
         self.stream_list.append(stream)
@@ -235,7 +242,6 @@ class EternalProcess:
         :return: Time object
         """
         time_now = datetime.datetime.now()
-        # now_plus_10 = time_now + datetime.timedelta(minutes=minutes)
         now_plus_10 = time_now + datetime.timedelta(minutes=minutes)
         return now_plus_10.strftime('%H:%M')
 
@@ -265,21 +271,62 @@ class EternalProcess:
         game_path = self.get_game_name_base_file_path(i)
         team_path_tuple = self.get_team_name_base_file_path(i)
 
-        map_reduced_tweets_game = self.map_reduce_tweets_after_disconnect(game_path, i)
-        map_reduced_tweets_team1 = self.map_reduce_tweets_after_disconnect(team_path_tuple[0], i)
-        map_reduced_tweets_team2 = self.map_reduce_tweets_after_disconnect(team_path_tuple[1], i)
+        team_tweet_counts = self.get_tweet_count_per_team(i)
 
-        self.replace_written_tweets_with_map_reduced_version_for_uncategorized_tweets(i, map_reduced_tweets_game)
-        self.replace_written_tweets_with_map_reduced_version_for_teams(team_path_tuple[0], map_reduced_tweets_team1)
-        self.replace_written_tweets_with_map_reduced_version_for_teams(team_path_tuple[1], map_reduced_tweets_team2)
+        if team_tweet_counts:
+            team_tweet_percentages = self.get_percentage_from_two_inputs(team_tweet_counts[0], team_tweet_counts[1])
 
-        self.remove_first_line_from_file(self.get_game_name_base_file_path(i))
-        self.remove_first_line_from_file(team_path_tuple[0])
-        self.remove_first_line_from_file(team_path_tuple[1])
+            self.website_interaction.post_request_to_sports_canary(
+                event_name=self.get_game_name_in_team1_vs_team2_format(i),
+                score_1=0,
+                score_2=0,
+                score_applicable=True,
+                stattleship_slug=self.slug_list[i],
+                sport_type=str(self.slug_list[i])[:3],
+                team_1_percentage_win=team_tweet_percentages[0],
+                team_2_percentage_win=team_tweet_percentages[1]
+            )
+
+        # map_reduced_tweets_game = self.map_reduce_tweets_after_disconnect(game_path, i)
+        # map_reduced_tweets_team1 = self.map_reduce_tweets_after_disconnect(team_path_tuple[0], i)
+        # map_reduced_tweets_team2 = self.map_reduce_tweets_after_disconnect(team_path_tuple[1], i)
+        #
+        # self.replace_written_tweets_with_map_reduced_version_for_uncategorized_tweets(i, map_reduced_tweets_game)
+        # self.replace_written_tweets_with_map_reduced_version_for_teams(team_path_tuple[0], map_reduced_tweets_team1)
+        # self.replace_written_tweets_with_map_reduced_version_for_teams(team_path_tuple[1], map_reduced_tweets_team2)
+
+        # self.remove_first_line_from_file(self.get_game_name_base_file_path(i))
+        # self.remove_first_line_from_file(team_path_tuple[0])
+        # self.remove_first_line_from_file(team_path_tuple[1])
 
         self.delete_stream_end_time_game_name_from_lists(i)
+
         if not self.check_if_stream_should_end():
             return True
+
+    @staticmethod
+    def get_percentage_from_two_inputs(team_1_tweet_count, team_2_tweet_count):
+        total_tweet_count = team_1_tweet_count + team_2_tweet_count
+        team_1_percentage = int(float((float(team_1_tweet_count) / float(total_tweet_count)) * 100))
+        team_2_percentage = int(float((float(team_2_tweet_count) / float(total_tweet_count)) * 100))
+        return team_1_percentage, team_2_percentage
+
+    def get_tweet_count_per_team(self, i):
+        try:
+            team_path_tuple = self.get_team_name_base_file_path(i)
+            with open(team_path_tuple[0]) as f:
+                for i, l in enumerate(f):
+                    pass
+            team1_count = i + 1
+
+            with open(team_path_tuple[1]) as fx:
+                for i, l in enumerate(fx):
+                    pass
+            team2_count = i + 1
+            return team1_count, team2_count
+
+        except IOError:
+            return False
 
     def delete_stream_end_time_game_name_from_lists(self, i):
         """
@@ -290,8 +337,9 @@ class EternalProcess:
             del self.stream_list[i]
             del self.end_times_list[i]
             del self.game_name_list[i]
-        except KeyError:
-            raise KeyError
+            del self.slug_list[i]
+        except IndexError:
+            raise IndexError
 
     def get_index_and_clear_api_key_at_index(self, idx):
         """
@@ -413,20 +461,27 @@ class EternalProcess:
             path = wd
         return path + '/Twitter_Utils/data/tweets/' + game_name + '/' + game_name + '.txt'
 
+    def get_game_name_in_team1_vs_team2_format(self, index):
+        game_name = self.game_name_list[index]
+        split_str = game_name.split('-')
+        vs_index = split_str.index('vs')
+        team1_name, team2_name = split_str[vs_index - 1], split_str[vs_index + 1]
+        return str(team1_name) + ' vs ' + str(team2_name)
+
     def get_team_name_base_file_path(self, index):
         try:
             game_name = self.game_name_list[index]
             split_str = game_name.split('-')
             vs_index = split_str.index('vs')
-            team1_name, team2_name = split_str[vs_index-1], split_str[vs_index+1]
+            team1_name, team2_name = split_str[vs_index - 1], split_str[vs_index + 1]
             wd = os.getcwd()
             pos = wd.find("BigDataMonsters")
             if pos > 0:  # pragma: no cover
                 path = wd[0:pos + 15]
             else:
                 path = wd
-            return path + '/Twitter_Utils/data/tweets/' + game_name + '/' + team1_name + '.txt',\
-                path + '/Twitter_Utils/data/tweets/' + game_name + '/' + team2_name + '.txt'
+            return path + '/Twitter_Utils/data/tweets/' + game_name + '/' + team1_name + '.txt', \
+                   path + '/Twitter_Utils/data/tweets/' + game_name + '/' + team2_name + '.txt'
         except IndexError:
             print 'IndexError while getting team name base file path.'
         except IOError:
@@ -494,10 +549,12 @@ class EternalProcess:
                 data = json.load(data_file)
             db.mlb_logs.insert(data)
             return True
+
         except IOError:
             self.logger.exception(IOError)
             self.logger.error('Unable to write at ' + write_path)
             raise IOError
+
         except:
             self.logger.error('Unable to write days data for mlb, due to data existing already.')
             return False

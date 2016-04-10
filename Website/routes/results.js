@@ -83,6 +83,7 @@ router.route('/')
         var event_date = req.body.event_date;
         var team_1_percentage_win = req.body.team_1_percentage_win;
         var team_2_percentage_win = req.body.team_2_percentage_win;
+        var stattleship_slug = req.body.stattleship_slug;
         var encrypted = req.body.encrypted;
         console.log(encrypted);
         mongoose.model('Result').create({
@@ -93,7 +94,8 @@ router.route('/')
             team_2_percentage_win: team_2_percentage_win,
             score_1 : score_1,
             score_2 : score_2,
-            event_date : event_date
+            event_date : event_date,
+            stattleship_slug: stattleship_slug
         }, function (err, result) {
             if (err) {
                 res.send("There was a problem adding the information to the database.");

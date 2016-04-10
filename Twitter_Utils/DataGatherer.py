@@ -64,6 +64,9 @@ class DataGatherer(StreamListener):
     def get_tweet_stream(self, track, game_id, game_name):
         index = self.get_auth()
         self.logger.info('Using auth: ' + str(self.auth.consumer_key))
+        print(track)
+        print(game_id)
+        print(game_name)
         self.set_paths(track, game_id, game_name)
         stream = Stream(self.auth, self)
         stream.filter(track=[track], async=True)
@@ -83,7 +86,8 @@ class DataGatherer(StreamListener):
         elif team1_name in self.away_team_track_words:
             self.set_base_file_path(team2_name, team1_name, game_name)
         else:
-            self.logger.error("Error: Team name not matching keywords")
+            self.logger.error('Error: Team name not matching keywords.  Team 1: ' + team1_name +
+                              '. Team 2: ' + team2_name)
 
     def set_base_directory_path(self):
         wd = os.getcwd()
