@@ -1,13 +1,15 @@
 function getLogoForTeam(team) {
-    console.log('testing');
+    var htmlStr="";
     switch(team) {
     case 1:
-       alert('Hey');
-       break;
+        console.log('testing');
+        return 2;
+    case 2:
+        console.log('testing 2');
+        return 1;
     default:
     	console.log("Error");
-        console.log('testing');
-        return "images/nba_logos/Error-img.jpeg";
+        return 0;
 	}
 }
 var chart = c3.generate({
