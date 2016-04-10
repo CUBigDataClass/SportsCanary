@@ -27,7 +27,7 @@ module.exports = function(grunt) {
         uglify: {
             build: {
                 files: {
-                    'public/js/logos.min.js': ['public/js/*.js']
+                    'public/js/logos.min.js': ['public/js/*.js', '!**/*.min.js']
                 }
             }
         },
@@ -42,7 +42,7 @@ module.exports = function(grunt) {
             }
         },
         watch: {
-            files: ['**/*.js', '**/*.css'],
+            files: ['**/*.css', '!**/*.min.css'],
             tasks: ['default']
         }
     });

@@ -1,8 +1,8 @@
 doctype html
 html
   head
-    script(type='text/javascript', src='https://code.jquery.com/jquery-2.1.1.min.js')
-    link(rel='stylesheet', href='https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.5/css/materialize.min.css')
+    script(type='text/javascript', src='/components/jquery/dist/jquery.min.js')
+    link(rel='stylesheet', href='/components/Materialize/dist/css/materialize.min.css')
     title= title
     link(rel='stylesheet', href='/stylesheets/style.css')
   body
@@ -14,7 +14,9 @@ html
             p.grey-text.text-lighten-4 SportsCanary attempts to predict sport matches by analyzing Twitter data and running it through a natural language processor. Please note we are not responsible for any inaccurate predictions.
             a.twitter-follow-button(href='https://twitter.com/SportsCanary', data-show-count='false') Follow @SportsCanary
             script.
-              !function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');
+              !function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';
+                if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';
+                  fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');
           .col.l4.offset-l2.s12
             h5.white-text Quick Links
             ul
