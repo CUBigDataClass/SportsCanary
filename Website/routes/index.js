@@ -26,13 +26,13 @@ router.get('/', function(req, res, next) {
                     "nhl_results": nhl_results
                   });
                 }
-              })
+              });
             }
-          });
+          }).limit(1).sort({'event_date': -1});
         }
-      });
+      }).limit(1).sort({'event_date': -1});
     }
-  });
+  }).limit(1).sort({'event_date': -1});
 });
 
 module.exports = router;
