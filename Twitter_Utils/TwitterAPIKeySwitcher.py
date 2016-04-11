@@ -54,6 +54,7 @@ class TwitterAPIKeyHandler:
                         self.update_json_file(data, idx)
                         return idx
             # TODO - What do we do if none is found?
+            return None
         except IOError:
             print 'File not found while checking which key to use in TwitterAPIKeys'
             return self.write_initial_keys_state_to_disk()

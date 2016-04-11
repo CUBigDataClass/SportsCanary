@@ -1,6 +1,6 @@
 [![Build Status](https://travis-ci.org/CUBigDataClass/SportsCanary.svg?branch=master)](https://travis-ci.org/CUBigDataClass/SportsCanary)  [![Coverage Status](https://coveralls.io/repos/github/CUBigDataClass/SportsCanary/badge.svg?branch=master)](https://coveralls.io/github/CUBigDataClass/SportsCanary?branch=master)
 
-Uses data from Twitter to generate "crowd-sourced" gambling odds for major sporting events.
+Uses data from Twitter to generate "crowd-sourced" gambling odds for major sporting events.  Currently supports MLB, NHL and NBA.
 
 Website: [Sports Canary](http://sportscanary.com/)
 

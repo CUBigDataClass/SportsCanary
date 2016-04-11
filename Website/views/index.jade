@@ -11,27 +11,40 @@ block content
                   br.light-blue-text.accent-3
                   | Predictions!
                 p.white-text
-                  | Do you know what team will win? SportsCanary is a service that analyzes twitts in order to predict match results.
-                form.register(action='/leads', accept-charset='UTF-8', data-remote='true', method='post')
-                  input(name='utf8', type='hidden', value='✓')
-                  span.error.hide Please try that again.
-                  input#search-bar-home(type='text', name='searchbar' placeholder='Start Here' class='white-text')
-                  button.btn.waves-effect.waves-light(onclick='goToSearchTerm()', type='submit', name='action')
-                    | Search
-                    i.material-icons.right send
-                    script.
-                      function goToSearchTerm(){
-                        var value = document.getElementById("search-bar").value
-                        window.location = "http://sportscanary.com/search?category=" + value;
-                      }
+                  | Do you know what team will win? SportsCanary is a service that analyzes tweets in order to predict match results.
+                div
+                  div
+                    input#search-bar-home(type='text', name='searchbar' placeholder='Search Terms' class='white-text')
+                  div
+                    button.btn.waves-effect.waves-light(onclick='goToSearchTerm()', type='submit', name='action')
+                      | Search
+                      i.material-icons.right send
+                      script.
+                        function goToSearchTerm() {
+                          var value = document.getElementById("search-bar-home").value
+                          window.location = "http://sportscanary.com/search?category=" + value;
+                        }
+
               .col.m6.s11.offset-s1.offset-m1.center-align.multi-device-mockup
-                img(src='images/home/main.png', alt='SportsCanary - Homepage image')
+                img.img-responsive.main-image(src='images/home/main.png', alt='SportsCanary - Homepage image')
     section#NBA
       .container
         h3.header.light-blue-text.accent-3 Recent NBA Predictions
+        - each result, i in nba_results
+          .container.center
+          b.team-name
+            = result.event_name
     section#NHL
       .container
         h3.header.light-blue-text.accent-3 Recent NHL Predictions
+        - each result, i in nhl_results
+          .container.center
+          b.team-name
+            = result.event_name
     section#MLB
       .container
         h3.header.light-blue-text.accent-3 Recent MLB Predictions
+        - each result, i in mlb_results
+          .container.center
+          b.team-name
+            = result.event_name

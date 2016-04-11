@@ -31,9 +31,9 @@
     margin: 20px 20px 20px 20px;
     display: inline-flex;
 }
-.team-type {
-    
-}
+/*.team-type {*/
+    /**/
+/*}*/
 .team-name {
     text-align: center;
     display: block;
@@ -42,4 +42,12 @@
     text-align: center;
     display: block;
     font-size: 40px;
+}
+
+.programmer-team-image {
+    height: 200px;
+    width: 200px;
+}
+.sport-type {
+    text-transform: uppercase;
 }

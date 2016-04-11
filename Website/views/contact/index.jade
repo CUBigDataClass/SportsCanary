@@ -4,7 +4,6 @@ block content
   br
   .container
     #team.section.scrollspy
-      .row
         h2.header.light-blue-text.accent-3 Contact Information
         h5.caption
             .row
@@ -12,52 +11,74 @@ block content
               span  contact@sportscanary.com 
               br
               br
-              a.twitter-follow-button(href='https://twitter.com/SportsCanary', data-show-count='false', data-size='large') Follow @SportsCanary
+              a.twitter-follow-button(href='https://twitter.com/SportsCanary', data-show-count='false', data-size='large')
+                Follow @SportsCanary
               script.
-                !function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');
+                !function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';
+                    if(!d.getElementById(id)){js=d.createElement(s);js.id=id;
+                        js.src=p+'://platform.twitter.com/widgets.js';
+                        fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');
 
         br
-        h2.header.light-blue-text.accent-3 Meet our Team
-        h5.caption We are a team of students from the University of Colorado at Boulder. 
-      br
-      .row
-        .col.s12.m3.center-on-small-only
-          .image-container
-            img(src='images/team/notfound.jpg')
-        .col.s12.m9
-          h4 Frederik Lohner
-          p
-            | About FL.
-      .row
-        .col.s12.m3.center-on-small-only
-          .image-container
-            img(src='images/team/notfound.jpg')
-        .col.s12.m9
-          h4 Athithyaapanchapakesa
-          p
-              | About A.
-       .row
-        .col.s12.m3.center-on-small-only
-          .image-container
-            img(src='images/team/notfound.jpg')
-        .col.s12.m9
-          h4 Juan Carlos Herrera
-          p
-            | About JCH.
-       .row
-        .col.s12.m3.center-on-small-only
-          .image-container
-            img(src='images/team/notfound.jpg')
-        .col.s12.m9
-          h4 Daniel Maxson
-          p
-              | About DM.
-       .row
-        .col.s12.m3.center-on-small-only
-          .image-container
-            img(src='images/team/notfound.jpg')
-        .col.s12.m9
-          h4 Shyamsundar Ramamoorthy
-          p
-              | About SR.
-  
+        h2.header.light-blue-text.accent-3 Meet the Team
+        h5.caption We are a team of undergraduate and graduate students from the University of Colorado at Boulder.
+          |  This project was built for our Big Data class at CU.
+        br
+        div.row
+          div.col-md-6
+            .col.s12.m3.center-on-small-only
+              .image-container
+                img.programmer-team-image.responsive-img.circle(src='images/team/FredLoh.png')
+            .col.s12.m9
+              h4 Fred Löhner
+              p
+                | Fred is a senior majoring in Computer Science and minoring in Economics at CU.
+              div.col-md-2
+                a(target='_blank', title='Follow me on Twitter', href='http://www.twitter.com/FredLohner')
+                  img.social-media-image(alt='follow me on Twitter', src='images/team/twitter-logo.png', border='0')
+              div.col-md-2
+                a(target='_blank', title='Follow me on Github', href='http://www.github.com/FredLoh')
+                  img.social-media-image(alt='Follow me on Twitter', src='images/team/github-logo.png', border='0')
+              div.col-md-2
+                a(target='_blank', title='Connect with me on LinkedIn', href='https://www.linkedin.com/in/FredLoh')
+                  img.social-media-image(alt='Connect with me on LinkedIn', src='images/team/linkedin-logo.png', border='0')
+              div.col-md-2
+                a(target='_blank', title='Email Me', href='mailto:frederik.loehner@colorado.edu')
+                  img.social-media-image(alt='Email Me', src='images/team/email-logo.png', border='0')
+
+          div.col-md-6
+            .col.s12.m3.center-on-small-only
+              .image-container
+                img.programmer-team-image.responsive-img.circle(src='images/team/notfound.jpg')
+            .col.s12.m9
+              h4 Athithyaapanchapakesa
+              p
+                  | About A.
+        div.row
+          div.col-md-6
+            .col.s12.m3.center-on-small-only
+                .image-container
+                    img.programmer-team-image.responsive-img.circle(src='images/team/notfound.jpg')
+            .col.s12.m9
+                h4 Juan Carlos Herrera
+                p
+                    | About JC.
+          div.col-md-6
+            .col.s12.m3.center-on-small-only
+                .image-container
+                    img.programmer-team-image.responsive-img.circle(src='images/team/notfound.jpg')
+            .col.s12.m9
+                h4 Daniel Maxson
+                p
+                    | About Dm.
+
+        div.row
+          div.col-md-6
+            .col.s12.m3.center-on-small-only
+                .image-container
+                    img.programmer-team-image.responsive-img.circle(src='images/team/notfound.jpg')
+            .col.s12.m9
+                h4 Shyamsundar Ramamoorthy
+                p
+                    | About SR.
+          div.col-md-6

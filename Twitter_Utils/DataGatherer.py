@@ -44,7 +44,7 @@ class DataGatherer(StreamListener):
                                        self.key_array[index]['oauth_token_secret'])
             return index
         else:
-            raise Exception
+            self.logger.info('No key found, stream not started.')
 
     def on_error(self, status_code):
         self.logger.error('Error: ' + str(status_code))
