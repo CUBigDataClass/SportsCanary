@@ -1,6 +1,15 @@
 body {
 
 }
+
+.navbar-brand {
+  padding: 7px 15px;
+}
+.navbar-brand>img {
+  height: 100%;
+  padding: 7px 15px;
+  width: auto;
+}
 #search-bar-home {
 }
 .main-image {

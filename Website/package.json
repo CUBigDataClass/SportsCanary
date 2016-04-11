@@ -26,13 +26,14 @@
     "serve-favicon": "~2.3.0"
   },
   "devDependencies": {
+    "ember-cli-materialize": "^0.18.8",
     "grunt": "~0.4.4",
-    "grunt-contrib-jshint": "latest",
-    "jshint-stylish": "latest",
-    "grunt-contrib-uglify": "latest",
-    "grunt-contrib-less": "latest",
     "grunt-contrib-cssmin": "latest",
+    "grunt-contrib-jshint": "latest",
+    "grunt-contrib-less": "latest",
+    "grunt-contrib-uglify": "latest",
     "grunt-contrib-watch": "latest",
-    "istanbul": "^0.4.2"
+    "istanbul": "^0.4.2",
+    "jshint-stylish": "latest"
   }
 }
