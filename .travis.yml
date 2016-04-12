@@ -9,7 +9,7 @@ python:
     - "2.7"
 
 addons:
-  ssh_known_hosts: 198.199.127.204
+  ssh_known_hosts: 146.185.151.158
 before_install:
     - pip install pytest pytest-cov
     - pip install -r requirements.txt
@@ -20,7 +20,7 @@ before_install:
     - sudo apt-get install sshpass
 
 before_script:
-  - sshpass -e ssh -D 8123 -f -C -q -N root@198.199.127.204
+  - sshpass -e ssh -D 8123 -f -C -q -N pserver@146.185.151.158
   - sleep 5
   - mongo mydb_test --eval 'db.addUser("travis", "test");'
 script:
