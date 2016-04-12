@@ -10,6 +10,7 @@ from subprocess import Popen, PIPE
 from SportsData import SportsData
 from DataGatherer import DataGatherer
 from KeywordGenerator import KeywordGenerator
+from TwitterClient import TwitterClient
 from Eternal_Utils.CommonUtils import CommonUtils
 from Eternal_Utils.WebsiteInteraction import WebsiteInteraction
 from sys import platform as _platform
@@ -22,6 +23,7 @@ class EternalProcess:
         self.keyword_generator = KeywordGenerator()
         self.march_madness = MarchMadness()
         self.website_interaction = WebsiteInteraction()
+        self.twitter_client = TwitterClient()
         self.tick_time_in_seconds = 60.0
         self.time_prior_to_game_to_start_stream = 180
         self.time_to_check_games_for_the_day = '02:00'
@@ -286,6 +288,13 @@ class EternalProcess:
                 team_1_percentage_win=team_tweet_percentages[0],
                 team_2_percentage_win=team_tweet_percentages[1]
             )
+            teams_tuple = self.get_teams_in_game_tuple(i)
+            if team_tweet_percentages[0] > team_tweet_percentages[1]:
+                self.twitter_client.tweet('We predict that in ' + self.get_game_name_in_team1_vs_team2_format(i) +
+                                          ', ' + teams_tuple[0] + ' will be victorious.')
+            else:
+                self.twitter_client.tweet('We predict that in ' + self.get_game_name_in_team1_vs_team2_format(i) +
+                                          ', ' + teams_tuple[1] + ' will be victorious.')
 
         # map_reduced_tweets_game = self.map_reduce_tweets_after_disconnect(game_path, i)
         # map_reduced_tweets_team1 = self.map_reduce_tweets_after_disconnect(team_path_tuple[0], i)
@@ -306,12 +315,23 @@ class EternalProcess:
 
     @staticmethod
     def get_percentage_from_two_inputs(team_1_tweet_count, team_2_tweet_count):
+        """
+        Given two counts returns tuple of percentages
+        :param team_1_tweet_count: Int of tweet amount
+        :param team_2_tweet_count: Int of tweet amount
+        :return: Tuple of two ints in % form
+        """
         total_tweet_count = team_1_tweet_count + team_2_tweet_count
         team_1_percentage = int(float((float(team_1_tweet_count) / float(total_tweet_count)) * 100))
         team_2_percentage = int(float((float(team_2_tweet_count) / float(total_tweet_count)) * 100))
         return team_1_percentage, team_2_percentage
 
     def get_tweet_count_per_team(self, i):
+        """
+        Gets number of tweets for each team
+        :param i: index
+        :return: tuple of counts
+        """
         try:
             team_path_tuple = self.get_team_name_base_file_path(i)
             with open(team_path_tuple[0]) as f:
@@ -462,11 +482,28 @@ class EternalProcess:
         return path + '/Twitter_Utils/data/tweets/' + game_name + '/' + game_name + '.txt'
 
     def get_game_name_in_team1_vs_team2_format(self, index):
+        """
+        Creates Team_1 vs Team_2 string from ex. 2016-03-01-Hawks-vs-Warriors
+        :param index: index at game_name_list
+        :return: concatenated string
+        """
         game_name = self.game_name_list[index]
         split_str = game_name.split('-')
         vs_index = split_str.index('vs')
         team1_name, team2_name = split_str[vs_index - 1], split_str[vs_index + 1]
         return str(team1_name) + ' vs ' + str(team2_name)
+
+    def get_teams_in_game_tuple(self, index):
+        """
+        Given a Team_1 vs Team_2 returns a tuple of Team_1, Team_2
+        :param index: index at game_name_list
+        :return: tuple of team names in string format
+        """
+        game_name = self.game_name_list[index]
+        split_str = game_name.split('-')
+        vs_index = split_str.index('vs')
+        team1_name, team2_name = split_str[vs_index - 1], split_str[vs_index + 1]
+        return str(team1_name), str(team2_name)
 
     def get_team_name_base_file_path(self, index):
         try:

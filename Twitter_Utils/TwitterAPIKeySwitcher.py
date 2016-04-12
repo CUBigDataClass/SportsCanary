@@ -75,6 +75,8 @@ class TwitterAPIKeyHandler:
         except IOError:
             print 'File not found while clearing key for use in TwitterAPIKeys'
             raise IOError
+        except:
+            self.logger.info('Error clearing key for use.')
 
     def update_json_file(self, json_file, index):
         """
@@ -124,5 +126,6 @@ class TwitterAPIKeyHandler:
             return 0
         except IOError:
             self.logger.exception(IOError)
-            self.logger.error('IOError while writing initial key state to disk in TwitterAPIKeys at ' + self.key_check_write_path)
+            self.logger.error('IOError while writing initial key state to disk in TwitterAPIKeys at ' +
+                              self.key_check_write_path)
             return None
