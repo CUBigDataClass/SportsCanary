@@ -15,6 +15,7 @@ from Eternal_Utils.CommonUtils import CommonUtils
 from Eternal_Utils.WebsiteInteraction import WebsiteInteraction
 from sys import platform as _platform
 from MarchMadness import MarchMadness
+from Eternal_Utils.ScoreUpdater import ScoreUpdater
 
 
 class EternalProcess:
@@ -22,11 +23,13 @@ class EternalProcess:
         self.sports_data = SportsData()
         self.keyword_generator = KeywordGenerator()
         self.march_madness = MarchMadness()
+        self.score_updater = ScoreUpdater()
         self.website_interaction = WebsiteInteraction()
         self.twitter_client = TwitterClient()
         self.tick_time_in_seconds = 60.0
         self.time_prior_to_game_to_start_stream = 180
         self.time_to_check_games_for_the_day = '02:00'
+        self.time_to_update_scores_for_the_day = '23:00'
         self.data_gatherer = DataGatherer()
         wd = os.getcwd()
         pos = wd.find("BigDataMonsters")
@@ -71,6 +74,9 @@ class EternalProcess:
                 self.write_days_games_data_for_nba()
                 self.write_days_games_data_for_nhl()
                 self.write_days_games_data_for_mlb()
+
+            if self.is_time_to_update_scores_for_day():
+                self.score_updater.get_scores_for_list_of_slugs()
 
             # Read in file to see if it is time to analyze twitter
             read_path = self.get_write_path_for_days_games()
@@ -392,6 +398,15 @@ class EternalProcess:
         :return: checks if its time to get data and returns BOOL
         """
         if self.time_to_check_games_for_the_day == datetime.datetime.now().strftime('%H:%M'):
+            return True
+        else:
+            return False
+
+    def is_time_to_update_scores_for_day(self):
+        """
+        :return: checks if its time to get data and returns BOOL
+        """
+        if self.time_to_update_scores_for_the_day == datetime.datetime.now().strftime('%H:%M'):
             return True
         else:
             return False

@@ -11,7 +11,11 @@ class ScoreUpdater:
         self.STAT_CLIENT_SECRET = CommonUtils.get_environ_variable('STAT_CLIENT_SECRET')
         self.STAT_ACCESS_TOKEN = CommonUtils.get_environ_variable('STAT_ACCESS_TOKEN')
         self.logger = logging.getLogger(__name__)
-
+        self.headers = {
+            'Authorization': str(self.STAT_ACCESS_TOKEN),
+            'Accept': 'application/vnd.stattleship.com; version=1',
+            'Content-Type': 'application/json'
+        }
 
     @staticmethod
     def get_aws_mongo_db():
@@ -44,18 +48,13 @@ class ScoreUpdater:
 
         return list_of_documents
 
-    def get_scores_for_list_of_slugs(self, list_of_documents):
+    def get_scores_for_list_of_slugs(self):
         list_of_documents = self.get_slugs_of_games_that_need_updating()
-        headers = {
-            'Authorization': str(self.STAT_ACCESS_TOKEN),
-            'Accept': 'application/vnd.stattleship.com; version=1',
-            'Content-Type': 'application/json'
-        }
         try:
             for document in list_of_documents:
                 url = self.get_url_for_sport(document['stattleship_slug'][:3]) + 'game_logs?game_id=' + document['stattleship_slug']
                 self.logger.info('Getting games for ' + document['stattleship_slug'])
-                res = requests.get(url, headers=headers)
+                res = requests.get(url, headers=self.headers)
                 content = json.loads(res.content)
                 print(content['games'][0]['away_team_score'])
                 print(content['games'][0]['home_team_score'])
