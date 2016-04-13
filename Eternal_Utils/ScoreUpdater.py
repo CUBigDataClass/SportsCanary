@@ -48,10 +48,10 @@ class ScoreUpdater:
 
         return list_of_documents
 
-    def get_scores_for_list_of_slugs(self):
+    def get_score_and_update_mongo(self):
         list_of_documents = self.get_slugs_of_games_that_need_updating()
-        try:
-            for document in list_of_documents:
+        for document in list_of_documents:
+            try:
                 url = self.get_url_for_sport(document['stattleship_slug'][:3]) + 'game_logs?game_id=' + document['stattleship_slug']
                 self.logger.info('Getting games for ' + document['stattleship_slug'])
                 res = requests.get(url, headers=self.headers)
@@ -69,7 +69,7 @@ class ScoreUpdater:
                             }
                         )
                 print(result)
-        except KeyError:
-            self.logger.error('KeyError updating scores.')
-        except IndexError:
-            self.logger.error('IndexError updating scores.')
+            except KeyError:
+                self.logger.error('KeyError updating scores.')
+            except IndexError:
+                self.logger.error('IndexError updating scores.')

@@ -76,7 +76,7 @@ class EternalProcess:
                 self.write_days_games_data_for_mlb()
 
             if self.is_time_to_update_scores_for_day():
-                self.score_updater.get_scores_for_list_of_slugs()
+                self.score_updater.get_score_and_update_mongo()
 
             # Read in file to see if it is time to analyze twitter
             read_path = self.get_write_path_for_days_games()
