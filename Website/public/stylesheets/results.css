@@ -1,8 +1,8 @@
-.results-card-outer {
+.results-card-wrong {
     background-color: #f8215a;
 }
-.results-card-inner {
-    background-color: #868686;
+.results-card-right {
+    background-color: #1ab715;
 }
 
 .sport-logo {

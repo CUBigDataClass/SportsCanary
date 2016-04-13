@@ -23,6 +23,9 @@ block content
                      div.row
                        div.col.s5
                            .col
+                           if result.event_name == 'Giants vs Rockies'
+                             img.circle.responsive-img(src="images/nba_logos/denver-nuggets.png", alt='Denver Nuggets')
+                           else
                              img.circle.responsive-img(src="images/nba_logos/denver-nuggets.png", alt='Denver Nuggets')
                            .col.right
                              span.black-text

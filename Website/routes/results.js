@@ -80,6 +80,8 @@ router.route('/')
         var score_applicable = req.body.score_applicable;
         var score_1 = req.body.score_1;
         var score_2 = req.body.score_2;
+        var team_1_name = req.body.team_1_name;
+        var team_2_name = req.body.team_1_name;
         var event_date = req.body.event_date;
         var team_1_percentage_win = req.body.team_1_percentage_win;
         var team_2_percentage_win = req.body.team_2_percentage_win;
@@ -92,6 +94,8 @@ router.route('/')
             score_applicable : score_applicable,
             team_1_percentage_win: team_1_percentage_win,
             team_2_percentage_win: team_2_percentage_win,
+            team_1_name: team_1_name,
+            team_2_name: team_2_name,
             score_1 : score_1,
             score_2 : score_2,
             event_date : event_date,
