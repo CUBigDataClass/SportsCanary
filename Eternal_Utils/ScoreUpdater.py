@@ -73,3 +73,55 @@ class ScoreUpdater:
                 self.logger.error('KeyError updating scores.')
             except IndexError:
                 self.logger.error('IndexError updating scores.')
+
+    def retroactive_team_name_updater(self):
+        list_of_documents = self.get_documents_that_are_missing_team_names()
+        for document in list_of_documents:
+            try:
+                game_name = document['event_name']
+                print(game_name)
+                teams_tuple = self.get_teams_in_game_tuple(game_name)
+                db = self.get_aws_mongo_db()
+                result = db.results.update_one(
+                    {'event_name': document['event_name']},
+                    {
+                        "$set": {
+                            'team_1_name': teams_tuple[0],
+                            'team_2_name': teams_tuple[1]
+                        }
+                    }
+                )
+                print(result)
+
+            except KeyError:
+                self.logger.error('KeyError updating team names.')
+            except IndexError:
+                self.logger.error('IndexError updating team names.')
+
+    def get_documents_that_are_missing_team_names(self):
+        db = self.get_aws_mongo_db()
+        cursor = db.results.find({'team_1_name': {'$exists': False}, 'team_2_name': {'$exists': False}})
+        list_of_documents = []
+        for document in cursor:
+            # print(document)
+            list_of_documents.append(document)
+
+        return list_of_documents
+
+    @staticmethod
+    def get_teams_in_game_tuple(game_name):
+        """
+        Given a Team_1 vs Team_2 returns a tuple of Team_1, Team_2
+        :param game_name: Game name in Team_1 vs Team_2
+        :return: tuple of team names in string format
+        """
+        try:
+            split_str = game_name.split(' ')
+            vs_index = split_str.index('vs')
+            team1_name, team2_name = split_str[vs_index - 1], split_str[vs_index + 1]
+            return str(team1_name), str(team2_name)
+        except ValueError:
+            print('Error getting team names.')
+
+s = ScoreUpdater()
+s.retroactive_team_name_updater()
