@@ -1,14 +1,13 @@
-function switch_team(team_logo) {
-
-  var team_logo = 'atlanta-hawks';
+function get_logo(team_logo) {
   var photo_src = 'images/nba_logos/';
+  console.log(team_logo);
   switch (team_logo) {
     case "atlanta-hawks":
       photo_src += 'atlanta-hawks' + '.png';
       console.log(photo_src);
       break;
     case "milwaukee-bucks":
-      console.log("Hello 👍milwaukee-bucks");
+      console.log("milwaukee-bucks");
       break;
     case "boston-celtics":
       console.log("boston-celtics.");
@@ -97,7 +96,6 @@ function switch_team(team_logo) {
     case "test":
       console.log("switch called");
       break;
-
     default:
       console.log("in switch team_logo: " + team_logo + " was Not Found.");
   }

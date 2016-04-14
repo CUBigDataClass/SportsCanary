@@ -282,6 +282,7 @@ class EternalProcess:
         team_tweet_counts = self.get_tweet_count_per_team(i)
 
         if team_tweet_counts:
+            teams_tuple = self.get_teams_in_game_tuple(i)
             team_tweet_percentages = self.get_percentage_from_two_inputs(team_tweet_counts[0], team_tweet_counts[1])
 
             self.website_interaction.post_request_to_sports_canary(
@@ -292,9 +293,11 @@ class EternalProcess:
                 stattleship_slug=self.slug_list[i],
                 sport_type=str(self.slug_list[i])[:3],
                 team_1_percentage_win=team_tweet_percentages[0],
-                team_2_percentage_win=team_tweet_percentages[1]
+                team_2_percentage_win=team_tweet_percentages[1],
+                team_1_name=teams_tuple[0],
+                team_2_name=teams_tuple[1]
             )
-            teams_tuple = self.get_teams_in_game_tuple(i)
+
             if team_tweet_percentages[0] > team_tweet_percentages[1]:
                 self.twitter_client.tweet('We predict that in ' + self.get_game_name_in_team1_vs_team2_format(i) +
                                           ', ' + teams_tuple[0] + ' will be victorious.')

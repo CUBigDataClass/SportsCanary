@@ -6,6 +6,8 @@ var resultSchema = new mongoose.Schema({
     score_applicable: Boolean,
     score_1: Number,
     score_2: Number,
+    team_1_name: String,
+    team_2_name: String,
     team_1_percentage_win: Number,
     team_2_percentage_win: Number,
     stattleship_slug: String,

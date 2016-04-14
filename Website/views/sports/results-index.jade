@@ -7,21 +7,28 @@ block content
   body(onload="switch_team('milwaukee-bucks')")
   br
   - each result, i in results
-          .container.center
-               .row
-                 .col.s12
-                   .card-panel
+          div.container.center
+               div.row
+                 div.col.s6.m4.l8
+                   div.card-panel
                      span.black-text
+                       if result.sport_type == 'nba'
+                         img.responsive-img(src = "images/nba_logos/nba.svg", alt='NBA', height='40', width='40')
+                       else if result.sport_type == 'mlb'
+                         img.responsive-img(src = "images/mlb_logos/mlb.svg", alt='MLB', height='75', width='75')
+                       else if result.sport_type == 'nhl'
+                         img.responsive-img(src = "images/nhl_logos/nhl.svg", alt='NHL', height='50', width='50')
                        b.sport-type= result.sport_type
                        b.team-name
                        = result.event_name
-                     .row
-                       .col.s5
-                           .col.left
-                             br
-                             img.circle.responsive-img(src = "images/nba_logos/denver-nuggets.png", alt='Denver Nuggets')
+                     div.row
+                       div.col.s5
+                           .col
+                           if result.event_name == 'Giants vs Rockies'
+                             img.circle.responsive-img(src="images/nba_logos/denver-nuggets.png", alt='Denver Nuggets')
+                           else
+                             img.circle.responsive-img(src="images/nba_logos/denver-nuggets.png", alt='Denver Nuggets')
                            .col.right
-                            document.write #{photo_src}
                              span.black-text
                                | 
                                br

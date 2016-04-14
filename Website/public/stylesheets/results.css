@@ -1,24 +1,20 @@
-.results-card-outer {
-    padding: 30px;
-    /*background-color: #f8215a;*/
-    height: 320px;
-    /*width:*/
-    /*margin: 0 auto;*/
-    /*width: 100px;*/
+.results-card-wrong {
+    background-color: #f8215a;
 }
-.results-card-inner {
-    margin: 0 auto;
-    width: 600px;
-    padding: 20px;
-    background-color: #868686;
+.results-card-right {
+    background-color: #1ab715;
 }
 
+.sport-logo {
+
+}
 .team-1-card {
     vertical-align: top;
     display: inline-block;
     text-align: center;
     width: 250px;
 }
+
 .team-2-card {
     vertical-align: top;
     display: inline-block;
