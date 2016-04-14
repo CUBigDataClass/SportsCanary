@@ -11,7 +11,8 @@ class TestWebsiteInteraction(unittest.TestCase):
         r = website_interaction.post_request_to_sports_canary(event_name='Test vs Game', score_1=0, score_2=0,
                                                               score_applicable=True, stattleship_slug='mlb-test-123',
                                                               sport_type='mlb',
-                                                              team_1_percentage_win=34, team_2_percentage_win=66)
+                                                              team_1_percentage_win=34, team_2_percentage_win=66,
+                                                              team_1_name='Test_1', team_2_name='Test_2')
         self.id = website_interaction.id
         t = website_interaction.delete_request_to_sports_canary()
         self.assertEqual(200, r)
