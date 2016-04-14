@@ -123,5 +123,34 @@ class ScoreUpdater:
         except ValueError:
             print('Error getting team names.')
 
-s = ScoreUpdater()
-s.retroactive_team_name_updater()
+    def get_all_documents(self):
+        db = self.get_aws_mongo_db()
+        cursor = db.results.find()
+        list_of_documents = []
+        for document in cursor:
+            list_of_documents.append(document)
+
+        return list_of_documents
+
+    def count_number_of_right_and_wrong_predictions(self):
+        correct_count = 0
+        wrong_count = 0
+        list_of_documents = self.get_all_documents()
+        for document in list_of_documents:
+            # if document['score_1'] != 0 and document['score_2'] != 0:
+            if document['score_1'] > document['score_2']:
+                if document['team_1_percentage_win'] > document['team_2_percentage_win']:
+                    correct_count += 1
+                elif document['team_1_percentage_win'] < document['team_2_percentage_win']:
+                    wrong_count += 1
+            elif document['score_1'] < document['score_2']:
+                if document['team_1_percentage_win'] < document['team_2_percentage_win']:
+                    wrong_count += 1
+                elif document['team_1_percentage_win'] > document['team_2_percentage_win']:
+                    correct_count += 1
+
+        print(self.get_success_percentage(correct_count, wrong_count))
+
+    @staticmethod
+    def get_success_percentage(correct, wrong):
+        return (float(correct) / float(correct + wrong)) * 100
