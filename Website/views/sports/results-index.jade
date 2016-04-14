@@ -4,11 +4,12 @@ script(src='/components/d3/d3.min.js', type='text/javascript')
 script(src='/components/c3/c3.min.js', type='text/javascript')
 script(src='../js/logos.js', type='text/javascript')
 block content
+  body(onload="switch_team('milwaukee-bucks')")
   br
   - each result, i in results
           .container.center
                .row
-                 .col.s6.m4.l8
+                 .col.s12
                    .card-panel
                      span.black-text
                        b.sport-type= result.sport_type
@@ -16,22 +17,27 @@ block content
                        = result.event_name
                      .row
                        .col.s5
-                           .col
+                           .col.left
+                             br
                              img.circle.responsive-img(src = "images/nba_logos/denver-nuggets.png", alt='Denver Nuggets')
                            .col.right
                             document.write #{photo_src}
                              span.black-text
                                | 
                                br
-                               br
-                               b Score 
+                               b Final Score 
                                b.team-score
                                = result.score_1
                                br
-                               br
-                               b Win (%)
+                               //Should be with NLP
+                               b Win Prediction (%)
                                br
                                = result.team_1_percentage_win
+                               br
+                               //For use when NLP is ready instead 
+                               //b Twitter Mentions (%)
+                               //br
+                               //= result.team_1_percentage_win
                                br
                          .col.s2
                            span.black-text
@@ -43,17 +49,21 @@ block content
                          span.black-text
                                | 
                                br
-                               br
-                               b Score
+                               b Final Score 
                                b.team-score
                                = result.score_2
                                br
-                               br
-                               b Win (%)
+                               //Should be with NLP
+                               b Win Prediction (%)
                                br
                                = result.team_2_percentage_win
                                br
-                        .col
+                               //For use when NLP is ready instead 
+                               //b Twitter Mentions (%)
+                               //br
+                               //= result.team_2_percentage_win
+                               br
+                        .col.right
                          img.circle.responsive-img(src='images/nba_logos/toronto-raptors.png', alt='Golden State Warriors')
                      br
                      span.black-text.right
