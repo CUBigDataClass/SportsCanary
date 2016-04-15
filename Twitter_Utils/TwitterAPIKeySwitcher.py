@@ -129,3 +129,13 @@ class TwitterAPIKeyHandler:
             self.logger.error('IOError while writing initial key state to disk in TwitterAPIKeys at ' +
                               self.key_check_write_path)
             return None
+
+    def delete_api_keys_file(self):
+        try:
+            os.remove(self.key_check_write_path)
+        except OSError:
+            print('No file to delete.')
+
+t = TwitterAPIKeyHandler()
+# t.write_initial_keys_state_to_disk()
+t.delete_api_keys_file()

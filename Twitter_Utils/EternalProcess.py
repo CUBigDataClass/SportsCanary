@@ -30,6 +30,7 @@ class EternalProcess:
         self.time_prior_to_game_to_start_stream = 180
         self.time_to_check_games_for_the_day = '02:00'
         self.time_to_update_scores_for_the_day = '23:00'
+        self.time_to_clear_api_keys = '02:00'
         self.data_gatherer = DataGatherer()
         wd = os.getcwd()
         pos = wd.find("BigDataMonsters")
@@ -60,7 +61,7 @@ class EternalProcess:
         It has to check if a game is starting and if that is the case, fork the process,
         And in that new process check for game data during the time period assigned to it.
         """
-        self.wait_till_five_seconds_into_minute()
+        # self.wait_till_five_seconds_into_minute()
         start_time = time.time()
         print(50 * '*' + '\n' + 10 * '*' + '  STARTING SCANNING PROCESS   ' + 10 * '*' + '\n' + 50 * '*')
         while True:
@@ -77,6 +78,9 @@ class EternalProcess:
 
             if self.is_time_to_update_scores_for_day():
                 self.score_updater.get_score_and_update_mongo()
+
+            if self.is_time_to_clear_api_keys():
+                self.data_gatherer.key_handler.delete_api_keys_file()
 
             # Read in file to see if it is time to analyze twitter
             read_path = self.get_write_path_for_days_games()
@@ -118,9 +122,9 @@ class EternalProcess:
 
             except IOError:
                 self.logger.error('File not found at ' + read_path)
-                self.write_days_games_data_for_nba()
                 self.write_days_games_data_for_nhl()
                 self.write_days_games_data_for_mlb()
+                self.write_days_games_data_for_nba()
                 continue
 
             self.sleep_for(self.tick_time_in_seconds, start_time)
@@ -153,6 +157,7 @@ class EternalProcess:
 
     def iterate_through_daily_games_and_start_stream(self, data, current_time, sport):
         for idx, game in enumerate(data):
+            # print(game[''])
             game_time = self.generate_stream_start_time(game)
             self.logger.info(sport.upper() + ' Game Time: ' + game_time)
             # if game_time == current_time and not game['being_streamed']:
@@ -407,9 +412,18 @@ class EternalProcess:
 
     def is_time_to_update_scores_for_day(self):
         """
-        :return: checks if its time to get data and returns BOOL
+        :return: checks if its time to update our mongodb with scores for the day and returns BOOL
         """
         if self.time_to_update_scores_for_the_day == datetime.datetime.now().strftime('%H:%M'):
+            return True
+        else:
+            return False
+
+    def is_time_to_clear_api_keys(self):
+        """
+        :return: checks if its time to clear api keys and returns BOOL
+        """
+        if self.time_to_clear_api_keys == datetime.datetime.now().strftime('%H:%M'):
             return True
         else:
             return False

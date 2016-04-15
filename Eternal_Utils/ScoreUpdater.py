@@ -154,3 +154,9 @@ class ScoreUpdater:
     @staticmethod
     def get_success_percentage(correct, wrong):
         return (float(correct) / float(correct + wrong)) * 100
+
+    def get_results_for_date(self):
+        list_of_documents = self.get_all_documents()
+        for document in list_of_documents:
+            if str(document['event_date'])[:10] == '2016-04-14':
+                print document['event_name']

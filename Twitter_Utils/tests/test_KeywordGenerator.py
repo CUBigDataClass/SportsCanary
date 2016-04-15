@@ -36,7 +36,7 @@ class TestKeywordGenerator(unittest.TestCase):
         keyword_generator = KeywordGenerator()
         team_id = '84eb19ca-1e66-416f-9e00-90b20fe4bb5e'
         sport = 'nba'
-        self.assertGreater(len(keyword_generator.generate_search_terms(team_id, sport)),35)
+        self.assertGreater(len(keyword_generator.generate_search_terms(team_id, sport)), 5)
 
     def test_get_team_data_path_nba(self):
         keyword_generator = KeywordGenerator()
