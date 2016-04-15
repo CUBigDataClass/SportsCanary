@@ -12,8 +12,8 @@ class TestTwitterAPIKeyHandler(unittest.TestCase):
         self.addCleanup(os.remove, path)
 
     def test___init__(self):
-        # twitter_api_key_handler = TwitterAPIKeyHandler()
-        assert True
+        twitter_api_key_handler = TwitterAPIKeySwitcher.TwitterAPIKeyHandler()
+        self.assertIs(twitter_api_key_handler.number_of_keys, 9)
 
     def test_get_api_keys_from_environment_number_of_keys(self):
         twitter_api_key_handler = TwitterAPIKeySwitcher.TwitterAPIKeyHandler()

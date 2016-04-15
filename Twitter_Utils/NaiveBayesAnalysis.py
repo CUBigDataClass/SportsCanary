@@ -17,7 +17,7 @@ class NaiveBayesAnalysis:
         self.logger = logging.getLogger(__name__)
 
     # @profile
-    def create_tweets_list_with_sentiment(self):
+    def create_tweets_list_with_sentiment(self): # pragma: No cover
         input_tweets = csv.reader(open(self.get_base_training_file_path(), 'rb'), delimiter=',')
         tweets = []
         for row in input_tweets:

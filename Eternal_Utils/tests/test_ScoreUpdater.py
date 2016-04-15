@@ -21,5 +21,31 @@ class TestScoreUpdater(unittest.TestCase):
         self.assertEqual('https://www.stattleship.com/hockey/nhl/', score_updater.get_url_for_sport('nhl'))
         self.assertEqual('https://www.stattleship.com/baseball/mlb/', score_updater.get_url_for_sport('mlb'))
 
-if __name__ == '__main__':
+    def test_count_number_of_right_and_wrong_predictions(self):
+        score_updater = ScoreUpdater()
+        self.assertGreater(40, score_updater.count_number_of_right_and_wrong_predictions())
+
+    def test_get_all_documents(self):
+        score_updater = ScoreUpdater()
+        self.assertGreaterEqual(61, len(score_updater.get_all_documents()))
+
+    def test_get_documents_that_are_missing_team_names(self):
+        score_updater = ScoreUpdater()
+        self.assertEqual([], score_updater.get_documents_that_are_missing_team_names())
+
+    def test_get_results_for_date(self):
+        score_updater = ScoreUpdater()
+        self.assertEqual(21, len(score_updater.get_results_for_date('2016-04-13')))
+
+    def test_get_success_percentage(self):
+        score_updater = ScoreUpdater()
+        self.assertEqual(50, score_updater.get_success_percentage(50, 50))
+
+    def test_get_teams_in_game_tuple(self):
+        score_updater = ScoreUpdater()
+        expected = 'Team_1', 'Team_2'
+        self.assertEqual(expected, score_updater.get_teams_in_game_tuple('Team_1 vs Team_2'))
+
+
+if __name__ == '__main__':  # pragma: no cover
     unittest.main()
