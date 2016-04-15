@@ -303,12 +303,9 @@ class EternalProcess:
                 team_2_name=teams_tuple[1]
             )
 
-            if team_tweet_percentages[0] > team_tweet_percentages[1]:
-                self.twitter_client.tweet('We predict that in ' + self.get_game_name_in_team1_vs_team2_format(i) +
-                                          ', ' + teams_tuple[0] + ' will be victorious.')
-            else:
-                self.twitter_client.tweet('We predict that in ' + self.get_game_name_in_team1_vs_team2_format(i) +
-                                          ', ' + teams_tuple[1] + ' will be victorious.')
+            self.twitter_client.take_data_gathering_input(tweet_percentage_tuple=team_tweet_percentages,
+                                                          game_name=self.get_game_name_in_team1_vs_team2_format(i),
+                                                          teams_tuple=teams_tuple, slug=self.slug_list[i])
 
         # map_reduced_tweets_game = self.map_reduce_tweets_after_disconnect(game_path, i)
         # map_reduced_tweets_team1 = self.map_reduce_tweets_after_disconnect(team_path_tuple[0], i)

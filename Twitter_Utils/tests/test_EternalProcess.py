@@ -289,5 +289,23 @@ class TestEternalProcess(unittest.TestCase):
         eternal_process = EternalProcess()
         self.assertEqual((25, 75), eternal_process.get_percentage_from_two_inputs(10, 30))
 
+    def test_get_teams_in_game_tuple(self):
+        eternal_process = EternalProcess()
+        eternal_process.game_name_list.append('2016-04-13-Test-vs-Game')
+        self.assertEqual(('Test','Game'), eternal_process.get_teams_in_game_tuple(0))
+
+    def test_is_time_to_clear_api_keys(self):
+        eternal_process = EternalProcess()
+        if datetime.datetime.now().strftime('%H:%M') == '02:00':
+            self.assertEqual(True, eternal_process.is_time_to_clear_api_keys())
+        else:
+            self.assertEqual(False, eternal_process.is_time_to_clear_api_keys())
+
+    def test_is_time_to_update_scores_for_day(self):
+        eternal_process = EternalProcess()
+        if datetime.datetime.now().strftime('%H:%M') == '02:00':
+            self.assertEqual(True, eternal_process.is_time_to_update_scores_for_day())
+        else:
+            self.assertEqual(False, eternal_process.is_time_to_update_scores_for_day())
 if __name__ == '__main__':  # pragma: no cover
     unittest.main()

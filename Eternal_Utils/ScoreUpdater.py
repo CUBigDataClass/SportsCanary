@@ -150,6 +150,7 @@ class ScoreUpdater:
                     correct_count += 1
 
         print(self.get_success_percentage(correct_count, wrong_count))
+        return self.get_success_percentage(correct_count, wrong_count)
 
     @staticmethod
     def get_success_percentage(correct, wrong):
@@ -164,6 +165,3 @@ class ScoreUpdater:
                 print document['event_name']
 
         return result_list
-
-s = ScoreUpdater()
-s.get_results_for_date('2016-04-13')

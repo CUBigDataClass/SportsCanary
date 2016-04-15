@@ -26,3 +26,14 @@ class TwitterClient:
         timeline = self.api.user_timeline(count=1)
         for t in timeline:
             self.api.destroy_status(t.id)
+
+    def take_data_gathering_input(self, tweet_percentage_tuple, game_name, teams_tuple, slug):
+        pass
+
+
+# if team_tweet_percentages[0] > team_tweet_percentages[1]:
+#     self.twitter_client.tweet('We predict that in ' + self.get_game_name_in_team1_vs_team2_format(i) +
+#                               ', ' + teams_tuple[0] + ' will be victorious.')
+# else:
+#     self.twitter_client.tweet('We predict that in ' + self.get_game_name_in_team1_vs_team2_format(i) +
+#                               ', ' + teams_tuple[1] + ' will be victorious.')

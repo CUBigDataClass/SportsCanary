@@ -23,11 +23,11 @@ class TestScoreUpdater(unittest.TestCase):
 
     def test_count_number_of_right_and_wrong_predictions(self):
         score_updater = ScoreUpdater()
-        self.assertGreater(40, score_updater.count_number_of_right_and_wrong_predictions())
+        self.assertGreater(score_updater.count_number_of_right_and_wrong_predictions(), 40)
 
     def test_get_all_documents(self):
         score_updater = ScoreUpdater()
-        self.assertGreaterEqual(61, len(score_updater.get_all_documents()))
+        self.assertGreaterEqual(len(score_updater.get_all_documents()), 61)
 
     def test_get_documents_that_are_missing_team_names(self):
         score_updater = ScoreUpdater()
