@@ -42,7 +42,7 @@ class TestSportsData(unittest.TestCase):
     def test_get_nba_players_for_today(self):
         sports_data = SportsData()
         result = sports_data.get_players_for_today_for_sport('nba-dal', '35ded680-b7b1-4cd9-a223-7bc4ab0b77ed', "nba")
-        self.assertIsNot(False, result)
+        self.assertIsNotNone(result)
 
     def test_get_nhl_games_for_today(self):
         sports_data = SportsData()
@@ -64,7 +64,7 @@ class TestSportsData(unittest.TestCase):
     def test_get_mlb_players_for_today(self):
         sports_data = SportsData()
         result = sports_data.get_players_for_today_for_sport('mlb-bos', '4c2ad3df-a7fd-458d-a412-6e31574a0b7b', "mlb")
-        self.assertIsNot(False, result)
+        self.assertIsNotNone(result)
 
     def test_get_url_for_sport(self):
         sports_data = SportsData()
