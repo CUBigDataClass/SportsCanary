@@ -89,3 +89,26 @@ class KeywordGenerator:
             return self.sports_data.get_players_for_today_for_sport(team_slug_name, team_id, "nba")
         else:
             return []
+
+    def get_hashtags_for_team(self, team_id, sport):
+        try:
+            with open(self.get_team_data_path(sport), 'r') as f:
+                data = json.loads(f.read())
+            f.close()
+
+            hashtag_list = []
+            team_data = data['teams']
+            for team in team_data:
+                if team['id'] == team_id:
+                    if team['hashtag']:
+                        hashtag_list.append(team['hashtag'])
+
+                    for hashtag in team['hashtags']:
+                        hashtag_list.append(hashtag)
+
+            return hashtag_list
+
+        except IOError:
+            self.logger.exception(IOError)
+            self.logger.error('Search terms not found at ' + self.team_data_path)
+            raise IOError

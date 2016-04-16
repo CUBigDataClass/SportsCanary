@@ -9,7 +9,7 @@ class TestScoreUpdater(unittest.TestCase):
 
     def test_get_aws_mongo_db(self):
         score_updater = ScoreUpdater()
-        self.assertIsNotNone(score_updater.get_aws_mongo_db())
+        self.assertIsNotNone(score_updater.get_aws_mongo_db_admin())
 
     def test_get_slugs_of_games_that_need_updating(self):
         score_updater = ScoreUpdater()
