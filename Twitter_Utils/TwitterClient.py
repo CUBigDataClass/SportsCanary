@@ -31,14 +31,25 @@ class TwitterClient:
         for t in timeline:
             self.api.destroy_status(t.id)
 
-    def take_data_gathering_input(self, tweet_percentage_tuple, game_name, teams_tuple, slug, sport):
-        'We predict that the TEAM1 will be victorious today against the TEAM2. #SPORT #hashtags'
-        pass
-
-
-# if team_tweet_percentages[0] > team_tweet_percentages[1]:
-#     self.twitter_client.tweet('We predict that in ' + self.get_game_name_in_team1_vs_team2_format(i) +
-#                               ', ' + teams_tuple[0] + ' will be victorious.')
-# else:
-#     self.twitter_client.tweet('We predict that in ' + self.get_game_name_in_team1_vs_team2_format(i) +
-#                               ', ' + teams_tuple[1] + ' will be victorious.')
+    def take_data_gathering_input(self, tweet_percentage_tuple, teams_tuple, slug, sport):
+        home_away_id_tuple = self.score_updater.get_team_ids_for_game(slug, sport)
+        home_hashtags = self.keyword_generator.get_hashtags_for_team(team_id=home_away_id_tuple[0])
+        home_hashtags = ['#' + hashtag for hashtag in home_hashtags]
+        home_hashtags = ' '.join(home_hashtags)
+        away_hashtags = self.keyword_generator.get_hashtags_for_team(team_id=home_away_id_tuple[1])
+        away_hashtags = ['#' + hashtag for hashtag in away_hashtags]
+        away_hashtags = ' '.join(away_hashtags)
+        if tweet_percentage_tuple[0] > tweet_percentage_tuple[1]:
+            if abs(tweet_percentage_tuple[0] - tweet_percentage_tuple[1]) <= 15:
+                self.tweet('We predict that the' + teams_tuple[0] + ' will be victorious today against the ' +
+                           teams_tuple[1] + '. #' + sport.upper() + ' ' + home_hashtags + ' ' + away_hashtags)
+            else:
+                self.tweet('We feel confident that the' + teams_tuple[0] + ' will be victorious today against the ' +
+                           teams_tuple[1] + '. #' + sport.upper() + ' ' + home_hashtags + ' ' + away_hashtags)
+        else:
+            if abs(tweet_percentage_tuple[1] - tweet_percentage_tuple[0]) <= 15:
+                self.tweet('We predict that the' + teams_tuple[1] + ' will be victorious today against the ' +
+                           teams_tuple[0] + '. #' + sport.upper() + ' ' + home_hashtags + ' ' + away_hashtags)
+            else:
+                self.tweet('We feel confident that the' + teams_tuple[1] + ' will be victorious today against the ' +
+                           teams_tuple[0] + '. #' + sport.upper() + ' ' + home_hashtags + ' ' + away_hashtags)
