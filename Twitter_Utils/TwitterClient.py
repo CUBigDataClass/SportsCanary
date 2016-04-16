@@ -1,4 +1,6 @@
 from Eternal_Utils.CommonUtils import CommonUtils
+from Eternal_Utils.ScoreUpdater import ScoreUpdater
+from Twitter_Utils.KeywordGenerator import KeywordGenerator
 import tweepy
 
 
@@ -14,6 +16,8 @@ class TwitterClient:
         self.auth = tweepy.OAuthHandler(self.APP_KEY, self.APP_SECRET)
         self.auth.set_access_token(self.OAUTH_TOKEN, self.OAUTH_TOKEN_SECRET)
         self.api = tweepy.API(self.auth)
+        self.keyword_generator = KeywordGenerator()
+        self.score_updater = ScoreUpdater()
 
     def tweet(self, tweet):
         """
@@ -27,7 +31,8 @@ class TwitterClient:
         for t in timeline:
             self.api.destroy_status(t.id)
 
-    def take_data_gathering_input(self, tweet_percentage_tuple, game_name, teams_tuple, slug):
+    def take_data_gathering_input(self, tweet_percentage_tuple, game_name, teams_tuple, slug, sport):
+        'We predict that the TEAM1 will be victorious today against the TEAM2. #SPORT #hashtags'
         pass
 
 
