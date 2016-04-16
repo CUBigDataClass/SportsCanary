@@ -18,7 +18,7 @@ class ScoreUpdater:
         }
 
     @staticmethod
-    def get_aws_mongo_db():
+    def get_aws_mongo_db_admin():
         """
         Connects to AWS hosted MongoDB
         :return: MongoDB instance with database
@@ -30,6 +30,18 @@ class ScoreUpdater:
         return client.admin
 
     @staticmethod
+    def get_aws_mongo_db_events():
+        """
+        Connects to AWS hosted MongoDB
+        :return: MongoDB instance with database
+        """
+        uri = 'mongodb://' + CommonUtils.get_environ_variable('AWS_MONGO_USER') + ':' \
+              + CommonUtils.get_environ_variable('AWS_MONGO_PASS') + '@' \
+              + CommonUtils.get_environ_variable('AWS_ADDRESS')
+        client = MongoClient(uri)
+        return client.eventsDB
+
+    @staticmethod
     def get_url_for_sport(sport):
         if sport == "nba":
             return 'https://www.stattleship.com/basketball/nba/'
@@ -39,7 +51,7 @@ class ScoreUpdater:
             return 'https://www.stattleship.com/baseball/mlb/'
 
     def get_slugs_of_games_that_need_updating(self):
-        db = self.get_aws_mongo_db()
+        db = self.get_aws_mongo_db_admin()
         cursor = db.results.find({'score_1': 0, 'score_2': 0})
         list_of_documents = []
         for document in cursor:
@@ -58,7 +70,7 @@ class ScoreUpdater:
                 content = json.loads(res.content)
                 print(content['games'][0]['away_team_score'])
                 print(content['games'][0]['home_team_score'])
-                db = self.get_aws_mongo_db()
+                db = self.get_aws_mongo_db_admin()
                 result = db.results.update_one(
                             {'stattleship_slug': document['stattleship_slug']},
                             {
@@ -81,7 +93,7 @@ class ScoreUpdater:
                 game_name = document['event_name']
                 print(game_name)
                 teams_tuple = self.get_teams_in_game_tuple(game_name)
-                db = self.get_aws_mongo_db()
+                db = self.get_aws_mongo_db_admin()
                 result = db.results.update_one(
                     {'event_name': document['event_name']},
                     {
@@ -99,7 +111,7 @@ class ScoreUpdater:
                 self.logger.error('IndexError updating team names.')
 
     def get_documents_that_are_missing_team_names(self):
-        db = self.get_aws_mongo_db()
+        db = self.get_aws_mongo_db_admin()
         cursor = db.results.find({'team_1_name': {'$exists': False}, 'team_2_name': {'$exists': False}})
         list_of_documents = []
         for document in cursor:
@@ -124,7 +136,7 @@ class ScoreUpdater:
             print('Error getting team names.')
 
     def get_all_documents(self):
-        db = self.get_aws_mongo_db()
+        db = self.get_aws_mongo_db_admin()
         cursor = db.results.find()
         list_of_documents = []
         for document in cursor:
@@ -165,3 +177,26 @@ class ScoreUpdater:
                 print document['event_name']
 
         return result_list
+
+    def get_team_ids_for_game(self, slug, sport):
+        """
+        Gets tuple of home and away teams for game
+        :param slug: Stattleship slug
+        :param sport: Sport being played, currently nba, nhl and mlb
+        :return: Tuple of ID's
+        """
+        db = self.get_aws_mongo_db_events()
+        if sport == 'nba':
+            cursor = db.nba_logs.find({'slug': slug})
+            for document in cursor:
+                return document['home_team_id'], document['away_team_id']
+
+        elif sport == 'nhl':
+            cursor = db.nhl_logs.find({'slug': slug})
+            for document in cursor:
+                return document['home_team_id'], document['away_team_id']
+
+        elif sport == 'mlb':
+            cursor = db.mlb_logs.find({'slug': slug})
+            for document in cursor:
+                return document['home_team_id'], document['away_team_id']

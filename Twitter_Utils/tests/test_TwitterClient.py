@@ -20,5 +20,11 @@ class TestTwitterClient(unittest.TestCase):
         twitter_client.delete_latest_tweet()
         assert True
 
+    def test_create_space_separated_hashtags(self):
+        twitter_client = TwitterClient()
+        list_of_hashtags = ['a', 'b', 'c']
+        expected = '#a #b #c'
+        self.assertEqual(expected, twitter_client.create_space_separated_hashtags(list_of_hashtags))
+
 if __name__ == '__main__':  # pragma: no cover
     unittest.main()
