@@ -37,11 +37,22 @@ class TestKeywordGenerator(unittest.TestCase):
         team_id = '84eb19ca-1e66-416f-9e00-90b20fe4bb5e'
         sport = 'nba'
         self.assertGreater(len(keyword_generator.generate_search_terms(team_id, sport)), 5)
+        team_id = 'b6bc24e7-bd37-461e-a7b2-af79f68b2438'
+        sport = 'nhl'
+        self.assertGreater(len(keyword_generator.generate_search_terms(team_id, sport)), 5)
+        team_id = '94acb560-6d9c-4b89-a32c-7fb817ad7aa7'
+        sport = 'mlb'
+        self.assertGreater(len(keyword_generator.generate_search_terms(team_id, sport)), 5)
 
     def test_get_team_data_path_nba(self):
         keyword_generator = KeywordGenerator()
         expected = os.getcwd() + '/Twitter_Utils/data/nba-teams-data.json'
         self.assertEqual(expected, keyword_generator.get_team_data_path("nba"))
+
+    def test_get_team_data_path_mlb(self):
+        keyword_generator = KeywordGenerator()
+        expected = os.getcwd() + '/Twitter_Utils/data/mlb-teams-data.json'
+        self.assertEqual(expected, keyword_generator.get_team_data_path("mlb"))
 
     def test_get_team_data_path_nhl(self):
         keyword_generator = KeywordGenerator()

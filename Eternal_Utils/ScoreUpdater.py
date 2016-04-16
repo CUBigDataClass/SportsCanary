@@ -150,13 +150,18 @@ class ScoreUpdater:
                     correct_count += 1
 
         print(self.get_success_percentage(correct_count, wrong_count))
+        return self.get_success_percentage(correct_count, wrong_count)
 
     @staticmethod
     def get_success_percentage(correct, wrong):
         return (float(correct) / float(correct + wrong)) * 100
 
-    def get_results_for_date(self):
+    def get_results_for_date(self, date):
         list_of_documents = self.get_all_documents()
+        result_list = []
         for document in list_of_documents:
-            if str(document['event_date'])[:10] == '2016-04-14':
+            if str(document['event_date'])[:10] == date:
+                result_list.append(document['event_name'])
                 print document['event_name']
+
+        return result_list
