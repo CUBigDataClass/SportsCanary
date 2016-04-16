@@ -13,10 +13,11 @@ class TestTweetProcessor(unittest.TestCase):
                          tweet_processor.standardize_tweet('RT So I justttt Wanted to @FReD'
                                                            ' www.google.com tellll people that www.google.com'))
 
-    def test_remove_emoji(self):
+    #def test_remove_emoji(self):
         # tweet_processor = TweetProcessor()
         # self.assertEqual('', tweet_processor.remove_emoji(''))
-        assert True # TODO - Figure out how to test this
+        #assert True # TODO - Figure out how to test this
+        #removed because standardize_tweet removes emojis
 
     def test_check_words_in_tweet(self):
         tweet_processor = TweetProcessor()
