@@ -90,9 +90,9 @@ class KeywordGenerator:
         else:
             return []
 
-    def get_hashtags_for_team(self, team_id):
+    def get_hashtags_for_team(self, team_id, sport):
         try:
-            with open(self.team_data_path, 'r') as f:
+            with open(self.get_team_data_path(sport), 'r') as f:
                 data = json.loads(f.read())
             f.close()
 

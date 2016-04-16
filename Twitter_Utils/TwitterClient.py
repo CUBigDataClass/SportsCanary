@@ -33,12 +33,8 @@ class TwitterClient:
 
     def take_data_gathering_input(self, tweet_percentage_tuple, teams_tuple, slug, sport):
         home_away_id_tuple = self.score_updater.get_team_ids_for_game(slug, sport)
-        home_hashtags = self.keyword_generator.get_hashtags_for_team(team_id=home_away_id_tuple[0])
-        home_hashtags = ['#' + hashtag for hashtag in home_hashtags]
-        home_hashtags = ' '.join(home_hashtags)
-        away_hashtags = self.keyword_generator.get_hashtags_for_team(team_id=home_away_id_tuple[1])
-        away_hashtags = ['#' + hashtag for hashtag in away_hashtags]
-        away_hashtags = ' '.join(away_hashtags)
+        home_hashtags = self.create_space_separated_hashtags(self.keyword_generator.get_hashtags_for_team(team_id=home_away_id_tuple[0], sport=sport))
+        away_hashtags = self.create_space_separated_hashtags(self.keyword_generator.get_hashtags_for_team(team_id=home_away_id_tuple[1], sport=sport))
         if tweet_percentage_tuple[0] > tweet_percentage_tuple[1]:
             if abs(tweet_percentage_tuple[0] - tweet_percentage_tuple[1]) <= 15:
                 self.tweet('We predict that the' + teams_tuple[0] + ' will be victorious today against the ' +
@@ -53,3 +49,8 @@ class TwitterClient:
             else:
                 self.tweet('We feel confident that the' + teams_tuple[1] + ' will be victorious today against the ' +
                            teams_tuple[0] + '. #' + sport.upper() + ' ' + home_hashtags + ' ' + away_hashtags)
+
+    @staticmethod
+    def create_space_separated_hashtags(list_of_hashtags):
+        list_of_hashtags = ['#' + hashtag for hashtag in list_of_hashtags]
+        return ' '.join(list_of_hashtags)
