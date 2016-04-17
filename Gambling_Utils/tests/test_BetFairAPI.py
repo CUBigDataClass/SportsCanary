@@ -83,10 +83,5 @@ class TestOddsGeneration(unittest.TestCase):
         odds_generation.BET_FAIR_USERNAME = 'NotARealUsername'
         self.assertFalse(odds_generation.get_session_key_and_set_headers())
 
-    def test_get_list_events_filtered(self):
-        odds_generation = BetFairAPI.OddsGeneration()
-        expected = [{u'jsonrpc': u'2.0', u'result': [{u'eventType': {u'id': u'7522', u'name': u'Basketball'}, u'marketCount': 132}], u'id': 1}]
-        self.assertEqual(expected, odds_generation.get_list_events_filtered('basketball'))
-
 if __name__ == '__main__':  # pragma: no cover
     unittest.main()
