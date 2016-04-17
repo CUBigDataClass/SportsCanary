@@ -14,10 +14,10 @@ class GnipSearchClient:
 
     # Date is done by UTC, which is a five hour difference to EST.
     # Kobe's last game was 10:30 EST, so 2:30 AM UTC on the 14
+    # from_date = '201604140230'
+    # to_date = '201604140530'
+    # max_results = 500
     def initial_search(self, query, max_results, from_date, to_date, number_of_pages):
-        from_date = '201604140230'
-        to_date = '201604140530'
-        max_results = 500
         next_token = ''
         query = '?query=' + str(query) + '&maxResults=' + str(max_results)
         date = '&fromDate=' + str(from_date) + '&toDate=' + str(to_date)

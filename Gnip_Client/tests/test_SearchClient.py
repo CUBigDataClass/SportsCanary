@@ -1,0 +1,47 @@
+import json
+import unittest
+import os
+from datetime import datetime
+from Gnip_Client.SearchClient import GnipSearchClient
+
+
+class TestGnipSearchClient(unittest.TestCase):
+    def test___init__(self):
+        gnip_search_client = GnipSearchClient()
+        self.assertEqual(gnip_search_client.counter, 0)
+        self.assertIsNotNone(gnip_search_client.username)
+        self.assertIsNotNone(gnip_search_client.url)
+
+    def test_convert_date_to_gnip_format(self):
+        gnip_search_client = GnipSearchClient()
+        date = datetime(2016, 04, 14, 02, 30)
+        expected = '201604140230'
+        self.assertEqual(expected, gnip_search_client.convert_date_to_gnip_format(date))
+
+    def test_create_start_time(self):
+        gnip_search_client = GnipSearchClient()
+        expected = datetime(2016, 04, 14, 02, 30)
+        self.assertEqual(expected, gnip_search_client.create_start_time())
+
+    def test_get_file_path(self):
+        gnip_search_client = GnipSearchClient()
+        expected = os.getcwd() + '/Gnip_Client/Gnip_Search_1.txt'
+        self.assertEqual(expected, gnip_search_client.get_file_path(1))
+
+    def test_save_json_blog_to_disk(self):
+        gnip_search_client = GnipSearchClient()
+        content = '{"results": [{"id": 123}]}'
+        json_blob = json.loads(content)
+        gnip_search_client.save_json_blog_to_disk(json_blob, 2)
+        loaded_json_blob = gnip_search_client.load_json_blob(2)
+        self.assertEqual(json_blob, loaded_json_blob)
+        os.remove(gnip_search_client.get_file_path(2))
+
+    def test_move_date_forward_by(self):
+        gnip_search_client = GnipSearchClient()
+        date = datetime(2016, 04, 14, 02, 30)
+        expected_date = datetime(2016, 04, 15, 03, 40)
+        self.assertEqual(expected_date, gnip_search_client.move_date_forward_by(date, 1, 1, 10))
+
+if __name__ == '__main__':  # pragma: no cover
+    unittest.main()
