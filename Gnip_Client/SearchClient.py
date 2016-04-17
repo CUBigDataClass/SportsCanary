@@ -14,10 +14,18 @@ class GnipSearchClient:
 
     # Date is done by UTC, which is a five hour difference to EST.
     # Kobe's last game was 10:30 EST, so 2:30 AM UTC on the 14
+    # from_date = '201604140230'
+    # to_date = '201604140530'
+    # max_results = 500
     def initial_search(self, query, max_results, from_date, to_date, number_of_pages):
-        from_date = '201604140230'
-        to_date = '201604140530'
-        max_results = 500
+        """
+        Uses Gnip's Search-API
+        :param query: words to query
+        :param max_results: 10-500, defaults to 100
+        :param from_date: UTC timestamp to minute
+        :param to_date: UTC timestamp to minute
+        :param number_of_pages: How many pages to obtain, pages come in max results sizes, ie max of 500 tweets per page
+        """
         next_token = ''
         query = '?query=' + str(query) + '&maxResults=' + str(max_results)
         date = '&fromDate=' + str(from_date) + '&toDate=' + str(to_date)
@@ -32,7 +40,11 @@ class GnipSearchClient:
 
             self.save_json_blog_to_disk(content, self.counter)
             self.counter += 1
-            next_token = content['next']
+            try:
+                next_token = content['next']
+            except KeyError:
+                print('No next found.')
+                break
 
     def save_json_blog_to_disk(self, json_blob, counter):
         file_path = self.get_file_path(counter)

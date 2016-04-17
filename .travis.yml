@@ -24,7 +24,7 @@ before_script:
   - sleep 5
   - mongo mydb_test --eval 'db.addUser("travis", "test");'
 script:
-    - py.test --cov=Twitter_Utils --cov=Gambling_Utils --cov=Eternal_Utils --cov-report=term-missing --cov-report=html
+    - py.test --cov=Twitter_Utils --cov=Gambling_Utils --cov=Eternal_Utils --cov=Gnip_Client --cov-report=term-missing --cov-report=html
     - coveralls
 #    - cd Website && npm install && npm run coverage
 #after_success:

@@ -24,3 +24,4 @@ elastic2-doc-manager
 mongo-connector
 msgpack-python
 kafka-python
+httmock

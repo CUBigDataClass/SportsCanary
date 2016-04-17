@@ -67,7 +67,7 @@ class TestEternalProcess(unittest.TestCase):
 
         stream = self.data_gatherer.get_tweet_stream(keywords, '123', '2016-03-05-Pacers-vs-Wizards')
         self.eternalProcess.stream_list.append(stream)
-        self.eternalProcess.slug_list.append('fake-slugerino-123')
+        self.eternalProcess.slug_list.append('nbae-slugerino-123')
         self.assertEqual(True, self.eternalProcess.check_if_stream_should_end())
 
     def test_check_if_stream_should_end_should_return_false_if_none(self):
@@ -128,7 +128,7 @@ class TestEternalProcess(unittest.TestCase):
         eternal_process.stream_list.append('Stream Test')
         eternal_process.end_times_list.append('End Time Test')
         eternal_process.game_name_list.append('Game Test')
-        eternal_process.slug_list.append('Fake-Slug-mlb-123')
+        eternal_process.slug_list.append('nbae-Slug-mlb-123')
         self.assertIs(len(eternal_process.stream_list), 1)
         self.assertIs(len(eternal_process.end_times_list), 1)
         self.assertIs(len(eternal_process.game_name_list), 1)
@@ -262,7 +262,7 @@ class TestEternalProcess(unittest.TestCase):
                  'title': 'Cavaliers vs Mavericks',
                  'home_team_id': 'a9abb922-3a47-4d37-9250-2e5224a2b58a',
                  'away_team_id': '35ded680-b7b1-4cd9-a223-7bc4ab0b77ed',
-                 'slug': 'fake-slug-mlb-123'}]
+                 'slug': 'nba-slug-mlb-123'}]
         current_time = eternal_process.get_time_as_hour_minute()
         eternal_process.iterate_through_daily_games_and_start_stream(data, current_time, "nba")
         self.assertEqual(1, len(eternal_process.game_name_list))
