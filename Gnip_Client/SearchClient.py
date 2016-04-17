@@ -1,6 +1,7 @@
 import os
 import json
 import requests
+from datetime import datetime, timedelta
 from requests.auth import HTTPBasicAuth
 
 
@@ -47,3 +48,15 @@ class GnipSearchClient:
         file_path = self.get_file_path(counter)
         with open(file_path) as data_file:
             return json.load(data_file)
+
+    @staticmethod
+    def create_start_time():
+        return datetime(2016, 04, 14, 02, 30)
+
+    @staticmethod
+    def convert_date_to_gnip_format(date):
+        return date.strftime('%Y%m%d%H%M')
+
+    @staticmethod
+    def move_date_forward_by(date, days, hours, minutes):
+        return date + timedelta(days=days, hours=hours, minutes=minutes)
