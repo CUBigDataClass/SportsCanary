@@ -175,6 +175,7 @@ node_modules
 *.csv
 *.pickle
 .gnip
+Gnip_Search_*.txt
 # User-specific stuff:
 # .idea/workspace.xml
 # .idea/tasks.xml
