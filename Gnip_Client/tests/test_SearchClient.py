@@ -3,6 +3,7 @@ import unittest
 import os
 from datetime import datetime
 from Gnip_Client.SearchClient import GnipSearchClient
+from httmock import urlmatch, HTTMock
 
 
 class TestGnipSearchClient(unittest.TestCase):
@@ -36,6 +37,28 @@ class TestGnipSearchClient(unittest.TestCase):
         loaded_json_blob = gnip_search_client.load_json_blob(2)
         self.assertEqual(json_blob, loaded_json_blob)
         os.remove(gnip_search_client.get_file_path(2))
+
+    @urlmatch(netloc=r'(.*\.)?gnip-api\.twitter\.com(.*)')
+    def google_mock(self, url, request):
+        return '{"results": [{"id": 123}],"next": "fake_next_token"}'
+
+    # Full integration test for search
+    def test_initial_search(self):
+        gnip_search_client = GnipSearchClient()
+
+        from_date = gnip_search_client.create_start_time()
+        to_date = gnip_search_client.move_date_forward_by(from_date, 01, 01, 01)
+
+        from_date = gnip_search_client.convert_date_to_gnip_format(from_date)
+        to_date = gnip_search_client.convert_date_to_gnip_format(to_date)
+
+        # open context to patch
+        with HTTMock(self.google_mock):
+            gnip_search_client.initial_search('Fake_Query', 10, from_date, to_date, 1)
+
+        saved_json_blob = gnip_search_client.load_json_blob(0)
+        expected_json_blob = json.loads('{"results": [{"id": 123}],"next": "fake_next_token"}')
+        self.assertEqual(saved_json_blob, expected_json_blob)
 
     def test_move_date_forward_by(self):
         gnip_search_client = GnipSearchClient()

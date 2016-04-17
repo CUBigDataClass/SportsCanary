@@ -32,7 +32,11 @@ class GnipSearchClient:
 
             self.save_json_blog_to_disk(content, self.counter)
             self.counter += 1
-            next_token = content['next']
+            try:
+                next_token = content['next']
+            except KeyError:
+                print('No next found.')
+                break
 
     def save_json_blog_to_disk(self, json_blob, counter):
         file_path = self.get_file_path(counter)
