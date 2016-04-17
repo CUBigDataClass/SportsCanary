@@ -2,6 +2,7 @@ from Eternal_Utils.CommonUtils import CommonUtils
 from Eternal_Utils.ScoreUpdater import ScoreUpdater
 from Twitter_Utils.KeywordGenerator import KeywordGenerator
 import tweepy
+import logging
 
 
 class TwitterClient:
@@ -16,6 +17,7 @@ class TwitterClient:
         self.auth = tweepy.OAuthHandler(self.APP_KEY, self.APP_SECRET)
         self.auth.set_access_token(self.OAUTH_TOKEN, self.OAUTH_TOKEN_SECRET)
         self.api = tweepy.API(self.auth)
+        self.logger = logging.getLogger(__name__)
         self.keyword_generator = KeywordGenerator()
         self.score_updater = ScoreUpdater()
 
@@ -24,7 +26,10 @@ class TwitterClient:
         Tweets out content
         :param tweet: message to be tweeted
         """
-        self.api.update_status(tweet)
+        try:
+            self.api.update_status(tweet)
+        except:
+            self.logger.error('Error sending: ' + tweet)
 
     def delete_latest_tweet(self):
         timeline = self.api.user_timeline(count=1)
