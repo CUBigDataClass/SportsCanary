@@ -66,5 +66,17 @@ class TestKeywordGenerator(unittest.TestCase):
         self.assertEqual(expected_nba, keyword_generator.get_team_data_path("nba"))
         self.assertEqual(expected_nhl, keyword_generator.get_team_data_path("nhl"))
 
+    def test_get_hashtags_for_team(self):
+        keyword_generator = KeywordGenerator()
+        team_id = 'eeb2db44-7894-483e-a9a7-373fb80d8e91'
+        sport = 'mlb'
+        expected = ['Mariners', 'Mariners']
+        self.assertEqual(expected, keyword_generator.get_hashtags_for_team(team_id, sport))
+
+        # Test exception
+        team_id = 'fake-team-id-123'
+        sport = 'test'
+        self.assertEqual(False, keyword_generator.get_hashtags_for_team(team_id, sport))
+
 if __name__ == '__main__':  # pragma: no cover
     unittest.main()

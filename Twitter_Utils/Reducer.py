@@ -30,7 +30,7 @@ try:
                 print '%s\t%s' % (current_count, current_line)
             current_count = count
             current_line = word
-except ValueError:
+except ValueError:  # pragma: no cover
     print('Value error.')
 
 # do not forget to output the last word if needed!
