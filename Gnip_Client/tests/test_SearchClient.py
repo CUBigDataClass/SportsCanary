@@ -60,6 +60,9 @@ class TestGnipSearchClient(unittest.TestCase):
         expected_json_blob = json.loads('{"results": [{"id": 123}],"next": "fake_next_token"}')
         self.assertEqual(saved_json_blob, expected_json_blob)
 
+        file_to_remove = os.getcwd() + '/Gnip_Client/Gnip_Search_0.txt'
+        os.remove(file_to_remove)
+
     def test_move_date_forward_by(self):
         gnip_search_client = GnipSearchClient()
         date = datetime(2016, 04, 14, 02, 30)

@@ -18,6 +18,14 @@ class GnipSearchClient:
     # to_date = '201604140530'
     # max_results = 500
     def initial_search(self, query, max_results, from_date, to_date, number_of_pages):
+        """
+        Uses Gnip's Search-API
+        :param query: words to query
+        :param max_results: 10-500, defaults to 100
+        :param from_date: UTC timestamp to minute
+        :param to_date: UTC timestamp to minute
+        :param number_of_pages: How many pages to obtain, pages come in max results sizes, ie max of 500 tweets per page
+        """
         next_token = ''
         query = '?query=' + str(query) + '&maxResults=' + str(max_results)
         date = '&fromDate=' + str(from_date) + '&toDate=' + str(to_date)
