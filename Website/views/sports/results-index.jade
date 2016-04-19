@@ -4,79 +4,9 @@ script(src='/components/d3/d3.min.js', type='text/javascript')
 script(src='/components/c3/c3.min.js', type='text/javascript')
 script(src='../js/logos.js', type='text/javascript')
 block content
-  body(onload="switch_team('milwaukee-bucks')")
   br
   - each result, i in results
-          div.container.center
-               div.row
-                 div.col.s6.m4.l8
-                   div.card-panel
-                     span.black-text
-                       if result.sport_type == 'nba'
-                         img.responsive-img(src = "images/nba_logos/nba.svg", alt='NBA', height='40', width='40')
-                       else if result.sport_type == 'mlb'
-                         img.responsive-img(src = "images/mlb_logos/mlb.svg", alt='MLB', height='75', width='75')
-                       else if result.sport_type == 'nhl'
-                         img.responsive-img(src = "images/nhl_logos/nhl.svg", alt='NHL', height='50', width='50')
-                       b.sport-type= result.sport_type
-                       b.team-name
-                       = result.event_name
-                     div.row
-                       div.col.s5
-                           .col
-                           if result.event_name == 'Giants vs Rockies'
-                             img.circle.responsive-img(src="images/nba_logos/denver-nuggets.png", alt='Denver Nuggets')
-                           else
-                             img.circle.responsive-img(src="images/nba_logos/denver-nuggets.png", alt='Denver Nuggets')
-                           .col.right
-                             span.black-text
-                               | 
-                               br
-                               b Final Score 
-                               b.team-score
-                               = result.score_1
-                               br
-                               //Should be with NLP
-                               b Win Prediction (%)
-                               br
-                               = result.team_1_percentage_win
-                               br
-                               //For use when NLP is ready instead 
-                               //b Twitter Mentions (%)
-                               //br
-                               //= result.team_1_percentage_win
-                               br
-                         .col.s2
-                           span.black-text
-                            br
-                            br
-                            h5.b vs
-                         .col.s5
-                       .col.left
-                         span.black-text
-                               | 
-                               br
-                               b Final Score 
-                               b.team-score
-                               = result.score_2
-                               br
-                               //Should be with NLP
-                               b Win Prediction (%)
-                               br
-                               = result.team_2_percentage_win
-                               br
-                               //For use when NLP is ready instead 
-                               //b Twitter Mentions (%)
-                               //br
-                               //= result.team_2_percentage_win
-                               br
-                        .col.right
-                         img.circle.responsive-img(src='images/nba_logos/toronto-raptors.png', alt='Golden State Warriors')
-                     br
-                     span.black-text.right
-                       b Last updated: 
-                       b.team-date
-                       = result.event_date 
+                 include ../card-matchup.jade
 
   br
 

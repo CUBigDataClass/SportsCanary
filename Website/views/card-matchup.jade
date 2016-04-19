@@ -1,0 +1,431 @@
+div.container.center
+               div.row
+                 div.col.s12
+                   div.card-panel
+                     span.black-text
+                       if result.sport_type == 'nba'
+                         img.responsive-img(src = "images/nba_logos/nba.svg", alt='NBA', height='40', width='40')
+                       else if result.sport_type == 'mlb'
+                         img.responsive-img(src = "images/mlb_logos/mlb.svg", alt='MLB', height='75', width='75')
+                       else if result.sport_type == 'nhl'
+                         img.responsive-img(src = "images/nhl_logos/nhl.svg", alt='NHL', height='50', width='50')
+                       //b.sport-type= result.sport_type
+                       b.team-name
+                       = result.event_name
+                     div.row
+                       div.col.s5
+                           .col
+                           //Switch Team Logo Image
+                           if result.team_1_name == 'Hawks'
+                             img.circle.responsive-img(src='images/nba_logos/vectors/atlanta-hawks.svg', alt='', height='140', width='140')
+                           else if result.team_1_name == 'Celtics'
+                             img.circle.responsive-img(src='images/nba_logos/vectors/boston-celtics.svg', alt='', height='140', width='140')
+                           else if result.team_1_name == 'Nets'
+                             img.circle.responsive-img(src='images/nba_logos/vectors/brooklyn-nets.svg', alt='', height='140', width='140')
+                           else if result.team_1_name == 'Bobcats'
+                             img.circle.responsive-img(src='images/nba_logos/vectors/charlotte-bobcats.svg', alt='', height='140', width='140')
+                           else if result.team_1_name == 'Bulls'
+                             img.circle.responsive-img(src='images/nba_logos/vectors/chicago-bulls.svg', alt='', height='140', width='140')
+                           else if result.team_1_name == 'Cavaliers'
+                             img.circle.responsive-img(src='images/nba_logos/vectors/cleveland-cavaliers.svg', alt='', height='140', width='140')
+                           else if result.team_1_name == 'Mavericks'
+                             img.circle.responsive-img(src='images/nba_logos/vectors/dallas-mavericks.svg', alt='', height='140', width='140')
+                           else if result.team_1_name == 'Nuggets'
+                             img.circle.responsive-img(src='images/nba_logos/vectors/denver-nuggets.svg', alt='', height='140', width='140')
+                           else if result.team_1_name == 'Pistons'
+                             img.circle.responsive-img(src='images/nba_logos/vectors/detroit-pistons.svg', alt='', height='140', width='140')
+                           else if result.team_1_name == 'Warriors'
+                             img.circle.responsive-img(src='images/nba_logos/vectors/golden-state-warriors.svg', alt='', height='140', width='140')
+                           else if result.team_1_name == 'Rockets'
+                             img.circle.responsive-img(src='images/nba_logos/vectors/houston-rockets.svg', alt='', height='140', width='140')
+                           else if result.team_1_name == 'Pacers'
+                             img.circle.responsive-img(src='images/nba_logos/vectors/indiana-pacers.svg', alt='', height='140', width='140')
+                           else if result.team_1_name == 'Clippers'
+                             img.circle.responsive-img(src='images/nba_logos/vectors/los-angeles-clippers.svg', alt='', height='140', width='140')
+                           else if result.team_1_name == 'Lakers'
+                             img.circle.responsive-img(src='images/nba_logos/vectors/los-angeles-lakers.svg', alt='', height='140', width='140')
+                           else if result.team_1_name == 'Grizzlies'
+                             img.circle.responsive-img(src='images/nba_logos/vectors/memphis-grizzlies.svg', alt='', height='140', width='140')
+                           else if result.team_1_name == 'Heat'
+                             img.circle.responsive-img(src='images/nba_logos/vectors/miami-heat.svg', alt='', height='140', width='140')
+                           else if result.team_1_name == 'Bucks'
+                             img.circle.responsive-img(src='images/nba_logos/vectors/milwaukee-bucks.svg', alt='', height='140', width='140')
+                           else if result.team_1_name == 'Timberwolves'
+                             img.circle.responsive-img(src='images/nba_logos/vectors/minnesota-timberwolves.svg', alt='', height='140', width='140')
+                           else if result.team_1_name == 'Hornets'
+                             img.circle.responsive-img(src='images/nba_logos/vectors/new-orleans-hornets.svg', alt='', height='140', width='140')
+                           else if result.team_1_name == 'Knicks'
+                             img.circle.responsive-img(src='images/nba_logos/vectors/new-york-knicks.svg', alt='', height='140', width='140')
+                           else if result.team_1_name == 'Thunder'
+                             img.circle.responsive-img(src='images/nba_logos/vectors/oklahoma-city-thunder.svg', alt='', height='140', width='140')
+                           else if result.team_1_name == 'Magic'
+                             img.circle.responsive-img(src='images/nba_logos/vectors/orlando-magic.svg', alt='', height='140', width='140')
+                           else if result.team_1_name == '76ers'
+                             img.circle.responsive-img(src='images/nba_logos/vectors/philadelphia-76ers.svg', alt='', height='140', width='140')
+                           else if result.team_1_name == 'Suns'
+                             img.circle.responsive-img(src='images/nba_logos/vectors/phoenix-suns.svg', alt='', height='140', width='140')
+                           else if result.team_1_name == 'Blazers'
+                             img.circle.responsive-img(src='images/nba_logos/vectors/portland-trail-blazers.svg', alt='', height='140', width='140')
+                           else if result.team_1_name == 'Kings'
+                             img.circle.responsive-img(src='images/nba_logos/vectors/sacramento-kings.svg', alt='', height='140', width='140')
+                           else if result.team_1_name == 'Spurs'
+                             img.circle.responsive-img(src='images/nba_logos/vectors/san-antonio-spurs.svg', alt='', height='140', width='140')
+                           else if result.team_1_name == 'Raptors'
+                             img.circle.responsive-img(src='images/nba_logos/vectors/toronto-raptors.svg', alt='', height='140', width='140')
+                           else if result.team_1_name == 'Jazz'
+                             img.circle.responsive-img(src='images/nba_logos/vectors/utah-jazz.svg', alt='', height='140', width='140')
+                           else if result.team_1_name == 'Wizards'
+                             img.circle.responsive-img(src='images/nba_logos/vectors/washington-wizards.svg', alt='', height='140', width='140')
+                           else if result.team_1_name == 'Pelicans'
+                             img.circle.responsive-img(src='images/nba_logos/new-orleans-pelicans.jpg', alt='', height='160', width='160')
+                           else if result.team_1_name == 'Diamondbacks'
+                             img.circle.responsive-img(src='images/mlb_logos/Arizona_Diamondbacks_logo.svg', alt='', height='140', width='140')
+                           else if result.team_1_name == 'Braves'
+                             img.circle.responsive-img(src='images/mlb_logos/Atlanta_Braves.svg', alt='', height='140', width='140')
+                           else if result.team_1_name == 'Orioles'
+                             img.circle.responsive-img(src='images/mlb_logos/Baltimore_Orioles_Script.svg', alt='', height='140', width='140')
+                           else if result.team_1_name == 'Cubs'
+                             img.circle.responsive-img(src='images/mlb_logos/Chicago_Cubs_Logo.svg', alt='', height='140', width='140')
+                           else if result.team_1_name == 'White Sox'
+                             img.circle.responsive-img(src='images/mlb_logos/Chicago_White_Sox.svg', alt='', height='140', width='140')
+                           else if result.team_1_name == 'Reds'
+                             img.circle.responsive-img(src='images/mlb_logos/Cincinnati_Reds_Logo.svg', alt='', height='140', width='140')
+                           else if result.team_1_name == 'Indians'
+                             img.circle.responsive-img(src='images/mlb_logos/Cleveland_Indians_logo.svg', alt='', height='140', width='140')
+                           else if result.team_1_name == 'Rockies'
+                             img.circle.responsive-img(src='images/mlb_logos/Colorado_Rockies_logo.svg', alt='', height='140', width='140')
+                           else if result.team_1_name == 'Tigers'
+                             img.circle.responsive-img(src='images/mlb_logos/Detroit_Tigers_Insignia.svg', alt='', height='140', width='140')
+                           else if result.team_1_name == 'Astros'
+                             img.circle.responsive-img(src='images/mlb_logos/Houston-Astros-Logo.svg', alt='', height='140', width='140')
+                           else if result.team_1_name == 'Royals'
+                             img.circle.responsive-img(src='images/mlb_logos/Kansas_City_Royals.svg', alt='', height='140', width='140')
+                           else if result.team_1_name == 'Angels'
+                             img.circle.responsive-img(src='images/mlb_logos/Los_Angeles_Angels_of_Anaheim.svg', alt='', height='140', width='140')
+                           else if result.team_1_name == 'Dodgers'
+                             img.circle.responsive-img(src='images/mlb_logos/Los_Angeles_Dodgers_Logo.svg', alt='', height='140', width='140')
+                           else if result.team_1_name == 'Marlins'
+                             img.circle.responsive-img(src='images/mlb_logos/MiamiMarlins.svg', alt='', height='140', width='140')
+                           else if result.team_1_name == 'Brewers'
+                             img.circle.responsive-img(src='images/mlb_logos/Milwaukee_Brewers_Logo.svg', alt='', height='140', width='140')
+                           else if result.team_1_name == 'Twins'
+                             img.circle.responsive-img(src='images/mlb_logos/Minnesota_Twins_Logo.svg', alt='', height='140', width='140')
+                           else if result.team_1_name == 'Mets'
+                             img.circle.responsive-img(src='images/mlb_logos/New_York_Mets.svg', alt='', height='140', width='140')
+                           else if result.team_1_name == 'Yankees'
+                             img.circle.responsive-img(src='images/mlb_logos/NewYorkYankees_PrimaryLogo.svg', alt='', height='140', width='140')
+                           else if result.team_1_name == 'Athletics'
+                             img.circle.responsive-img(src='images/mlb_logos/Oakland_athl_primlogo.svg', alt='', height='140', width='140')
+                           else if result.team_1_name == 'Phillies'
+                             img.circle.responsive-img(src='images/mlb_logos/Philadelphia_Phillies.svg', alt='', height='140', width='140')
+                           else if result.team_1_name == 'Pirates'
+                             img.circle.responsive-img(src='images/mlb_logos/Pittsburgh_Pirates_Cap_Insignia.svg', alt='', height='140', width='140')
+                           else if result.team_1_name == 'Red Sox'
+                             img.circle.responsive-img(src='images/mlb_logos/RedSoxPrimary_HangingSocks.svg', alt='', height='140', width='140')
+                           else if result.team_1_name == 'Padres'
+                             img.circle.responsive-img(src='images/mlb_logos/San_Diego_Padres_logo.svg', alt='', height='140', width='140')
+                           else if result.team_1_name == 'Giants'
+                             img.circle.responsive-img(src='images/mlb_logos/San_Francisco_Giants_Logo.svg', alt='', height='140', width='140')
+                           else if result.team_1_name == 'Mariners'
+                             img.circle.responsive-img(src='images/mlb_logos/Seattle_Mariners_logo.svg', alt='', height='140', width='140')
+                           else if result.team_1_name == 'Cardinals'
+                             img.circle.responsive-img(src='images/mlb_logos/St._Louis_Cardinals_Logo.svg', alt='', height='140', width='140')
+                           else if result.team_1_name == 'Rays'
+                             img.circle.responsive-img(src='images/mlb_logos/Tampa_Bay_Rays.svg', alt='', height='140', width='140')
+                           else if result.team_1_name == 'Rangers'
+                             img.circle.responsive-img(src='images/mlb_logos/Texas_Rangers.svg', alt='', height='140', width='140')
+                           else if result.team_1_name == 'Blue Jays'
+                             img.circle.responsive-img(src='images/mlb_logos/Toronto_Blue_Jays_logo.svg', alt='', height='140', width='140')
+                           else if result.team_1_name == 'Nationals'
+                             img.circle.responsive-img(src='images/mlb_logos/Washington_Nationals_logo.svg', alt='', height='140', width='140')
+                           else if result.team_1_name == 'Blackhawks'
+                             img.circle.responsive-img(src='images/nhl_logos/blackhawks.svg', alt='', height='140', width='140')
+                           else if result.team_1_name == 'Bruins'
+                             img.circle.responsive-img(src='images/nhl_logos/boston-bruins.svg', alt='', height='140', width='140')
+                           else if result.team_1_name == 'Flames'
+                             img.circle.responsive-img(src='images/nhl_logos/clubflames-x.svg', alt='', height='140', width='140')
+                           else if result.team_1_name == 'Avalanche'
+                             img.circle.responsive-img(src='images/nhl_logos/Colorado_Avalanche_logo.svg', alt='', height='140', width='140')
+                           else if result.team_1_name == 'BlueJackets'
+                             img.circle.responsive-img(src='images/nhl_logos/Columbus_BlueJackets.svg', alt='', height='140', width='140')
+                           else if result.team_1_name == 'Coyotes'
+                             img.circle.responsive-img(src='images/nhl_logos/coyotes.svg', alt='', height='140', width='140')
+                           else if result.team_1_name == 'Panthers'
+                             img.circle.responsive-img(src='images/nhl_logos/panthers.svg', alt='', height='140', width='140')
+                           else if result.team_1_name == 'Stars'
+                             img.circle.responsive-img(src='images/nhl_logos/Dallas_Stars_2013_crest.svg', alt='', height='140', width='140')
+                           else if result.team_1_name == 'Hurricanes'
+                             img.circle.responsive-img(src='images/nhl_logos/hurricanes.svg', alt='', height='140', width='140')
+                           else if result.team_1_name == 'Ducks'
+                             img.circle.responsive-img(src='images/nhl_logos/Logo_Anaheim_Ducks.svg', alt='', height='140', width='140')
+                           else if result.team_1_name == 'Red Wings'
+                             img.circle.responsive-img(src='images/nhl_logos/Logo_Detroit_Red_Wings.svg', alt='', height='140', width='140')
+                           else if result.team_1_name == 'Oilers'
+                             img.circle.responsive-img(src='images/nhl_logos/Logo_Edmonton_Oilers.svg', alt='', height='140', width='140')
+                           else if result.team_1_name == 'LA Kings'
+                             img.circle.responsive-img(src='images/nhl_logos/Los_Angeles_Kings_Logo_(2011).svg', alt='', height='140', width='140')
+                           else if result.team_1_name == 'Wild'
+                             img.circle.responsive-img(src='images/nhl_logos/Minnesota_Wild_alternate_logo.svg', alt='', height='140', width='140')
+                           else if result.team_1_name == 'Predators'
+                             img.circle.responsive-img(src='images/nhl_logos/Nashville_Predators_Logo_(2011).svg', alt='', height='140', width='140')
+                           else if result.team_1_name == 'Devils'
+                             img.circle.responsive-img(src='images/nhl_logos/New_Jersey_Devils_old_logo.svg', alt='', height='140', width='140')
+                           else if result.team_1_name == 'Islanders'
+                             img.circle.responsive-img(src='images/nhl_logos/new_york_islanders.svg', alt='', height='140', width='140')
+                           else if result.team_1_name == 'Rangers'
+                             img.circle.responsive-img(src='images/nhl_logos/New_York_Rangers.svg', alt='', height='140', width='140')
+                           else if result.team_1_name == 'Senators'
+                             img.circle.responsive-img(src='images/nhl_logos/Ottawa_Senators.svg', alt='', height='140', width='140')
+                           else if result.team_1_name == 'Flyers'
+                             img.circle.responsive-img(src='images/nhl_logos/Philadelphia_Flyers.svg', alt='', height='140', width='140')
+                           else if result.team_1_name == 'Penguins'
+                             img.circle.responsive-img(src='images/nhl_logos/Pittsburgh_Penguins_logo.svg', alt='', height='140', width='140')
+                           else if result.team_1_name == 'Sabres'
+                             img.circle.responsive-img(src='images/nhl_logos/sabres.svg', alt='', height='140', width='140')
+                           else if result.team_1_name == 'Sharks'
+                             img.circle.responsive-img(src='images/nhl_logos/san_jose_sharks.svg', alt='', height='140', width='140')
+                           else if result.team_1_name == 'Blues'
+                             img.circle.responsive-img(src='images/nhl_logos/StLouisBlues1967.svg', alt='', height='140', width='140')
+                           else if result.team_1_name == 'Lightning'
+                             img.circle.responsive-img(src='images/nhl_logos/Tampa_Bay_Lightning_Logo_2011.svg', alt='', height='140', width='140')
+                           else if result.team_1_name == 'Leafs'
+                             img.circle.responsive-img(src='images/nhl_logos/Toronto_Maple_Leafs_Logo_1939_-_1967.svg', alt='', height='140', width='140')
+                           else if result.team_1_name == 'Canucks'
+                             img.circle.responsive-img(src='images/nhl_logos/Vancouver_Canucks_logo.svg', alt='', height='140', width='140')
+                           else if result.team_1_name == 'Capitals'
+                             img.circle.responsive-img(src='images/nhl_logos/WashingtonCapitals1980s.svg', alt='', height='140', width='140')
+                           else if result.team_1_name == 'Jets'
+                             img.circle.responsive-img(src='images/nhl_logos/Winnipeg_Jets_Logo_2011.svg', alt='', height='140', width='140')
+                           else
+                             img.circle.responsive-img(src='images/sportscanary/not-found.jpg', alt='', height= '150', width='150')
+                           .col.right
+                             span.black-text
+                               | 
+                               br
+                               b Final Score 
+                               b.team-score
+                               = result.score_1
+                               br
+                               //Should be with NLP
+                               b Win Prediction (%)
+                               br
+                               = result.team_1_percentage_win
+                               br
+                               //For use when NLP is ready instead 
+                               //b Twitter Mentions (%)
+                               //br
+                               //= result.team_1_percentage_win
+                               br
+                         .col.s2
+                           span.black-text
+                            br
+                            br
+                            h5.b vs
+                         .col.s5
+                       .col.left
+                         span.black-text
+                               | 
+                               br
+                               b Final Score 
+                               b.team-score
+                               = result.score_2
+                               br
+                               //Should be with NLP
+                               b Win Prediction (%)
+                               br
+                               = result.team_2_percentage_win
+                               br
+                               //For use when NLP is ready instead 
+                               //b Twitter Mentions (%)
+                               //br
+                               //= result.team_2_percentage_win
+                               br
+                        .col.right
+                         //Switch Team 2 Logo Image
+                         if result.team_2_name == 'Hawks'
+                           img.circle.responsive-img(src='images/nba_logos/vectors/atlanta-hawks.svg', alt='', height='140', width='140')
+                         else if result.team_2_name == 'Celtics'
+                           img.circle.responsive-img(src='images/nba_logos/vectors/boston-celtics.svg', alt='', height='140', width='140')
+                         else if result.team_2_name == 'Nets'
+                           img.circle.responsive-img(src='images/nba_logos/vectors/brooklyn-nets.svg', alt='', height='140', width='140')
+                         else if result.team_2_name == 'Bobcats'
+                           img.circle.responsive-img(src='images/nba_logos/vectors/charlotte-bobcats.svg', alt='', height='140', width='140')
+                         else if result.team_2_name == 'Bulls'
+                           img.circle.responsive-img(src='images/nba_logos/vectors/chicago-bulls.svg', alt='', height='140', width='140')
+                         else if result.team_2_name == 'Cavaliers'
+                           img.circle.responsive-img(src='images/nba_logos/vectors/cleveland-cavaliers.svg', alt='', height='140', width='140')
+                         else if result.team_2_name == 'Mavericks'
+                           img.circle.responsive-img(src='images/nba_logos/vectors/dallas-mavericks.svg', alt='', height='140', width='140')
+                         else if result.team_2_name == 'Nuggets'
+                           img.circle.responsive-img(src='images/nba_logos/vectors/denver-nuggets.svg', alt='', height='140', width='140')
+                         else if result.team_2_name == 'Pistons'
+                           img.circle.responsive-img(src='images/nba_logos/vectors/detroit-pistons.svg', alt='', height='140', width='140')
+                         else if result.team_2_name == 'Warriors'
+                           img.circle.responsive-img(src='images/nba_logos/vectors/golden-state-warriors.svg', alt='', height='140', width='140')
+                         else if result.team_2_name == 'Rockets'
+                           img.circle.responsive-img(src='images/nba_logos/vectors/houston-rockets.svg', alt='', height='140', width='140')
+                         else if result.team_2_name == 'Pacers'
+                           img.circle.responsive-img(src='images/nba_logos/vectors/indiana-pacers.svg', alt='', height='140', width='140')
+                         else if result.team_2_name == 'Clippers'
+                           img.circle.responsive-img(src='images/nba_logos/vectors/los-angeles-clippers.svg', alt='', height='140', width='140')
+                         else if result.team_2_name == 'Lakers'
+                           img.circle.responsive-img(src='images/nba_logos/vectors/los-angeles-lakers.svg', alt='', height='140', width='140')
+                         else if result.team_2_name == 'Grizzlies'
+                           img.circle.responsive-img(src='images/nba_logos/vectors/memphis-grizzlies.svg', alt='', height='140', width='140')
+                         else if result.team_2_name == 'Heat'
+                           img.circle.responsive-img(src='images/nba_logos/vectors/miami-heat.svg', alt='', height='140', width='140')
+                         else if result.team_2_name == 'Bucks'
+                           img.circle.responsive-img(src='images/nba_logos/vectors/milwaukee-bucks.svg', alt='', height='140', width='140')
+                         else if result.team_2_name == 'Timberwolves'
+                           img.circle.responsive-img(src='images/nba_logos/vectors/minnesota-timberwolves.svg', alt='', height='140', width='140')
+                         else if result.team_2_name == 'Hornets'
+                           img.circle.responsive-img(src='images/nba_logos/vectors/new-orleans-hornets.svg', alt='', height='140', width='140')
+                         else if result.team_2_name == 'Knicks'
+                           img.circle.responsive-img(src='images/nba_logos/vectors/new-york-knicks.svg', alt='', height='140', width='140')
+                         else if result.team_2_name == 'Thunder'
+                           img.circle.responsive-img(src='images/nba_logos/vectors/oklahoma-city-thunder.svg', alt='', height='140', width='140')
+                         else if result.team_2_name == 'Magic'
+                           img.circle.responsive-img(src='images/nba_logos/vectors/orlando-magic.svg', alt='', height='140', width='140')
+                         else if result.team_2_name == '76ers'
+                           img.circle.responsive-img(src='images/nba_logos/vectors/philadelphia-76ers.svg', alt='', height='140', width='140')
+                         else if result.team_2_name == 'Suns'
+                           img.circle.responsive-img(src='images/nba_logos/vectors/phoenix-suns.svg', alt='', height='140', width='140')
+                         else if result.team_2_name == 'Trail Blazers' 
+                           img.circle.responsive-img(src='images/nba_logos/vectors/portland-trail-blazers.svg', alt='', height='140', width='140')
+                         else if result.team_2_name == 'Kings'
+                           img.circle.responsive-img(src='images/nba_logos/vectors/sacramento-kings.svg', alt='', height='140', width='140')
+                         else if result.team_2_name == 'Spurs'
+                           img.circle.responsive-img(src='images/nba_logos/vectors/san-antonio-spurs.svg', alt='', height='140', width='140')
+                         else if result.team_2_name == 'Raptors'
+                           img.circle.responsive-img(src='images/nba_logos/vectors/toronto-raptors.svg', alt='', height='140', width='140')
+                         else if result.team_2_name == 'Jazz'
+                           img.circle.responsive-img(src='images/nba_logos/vectors/utah-jazz.svg', alt='', height='140', width='140')
+                         else if result.team_2_name == 'Wizards'
+                           img.circle.responsive-img(src='images/nba_logos/vectors/washington-wizards.svg', alt='', height='140', width='140')
+                         else if result.team_2_name == 'Pelicans'
+                           img.circle.responsive-img(src='images/nba_logos/new-orleans-pelicans.jpg', alt='', height='140', width='140')
+                         else if result.team_2_name == 'Diamondbacks'
+                           img.circle.responsive-img(src='images/mlb_logos/Arizona_Diamondbacks_logo.svg', alt='', height='140', width='140')
+                         else if result.team_2_name == 'Braves'
+                           img.circle.responsive-img(src='images/mlb_logos/Atlanta_Braves.svg', alt='', height='140', width='140')
+                         else if result.team_2_name == 'Orioles'
+                           img.circle.responsive-img(src='images/mlb_logos/Baltimore_Orioles_Script.svg', alt='', height='140', width='140')
+                         else if result.team_2_name == 'Cubs'
+                           img.circle.responsive-img(src='images/mlb_logos/Chicago_Cubs_Logo.svg', alt='', height='140', width='140')
+                         else if result.team_2_name == 'White Sox'
+                           img.circle.responsive-img(src='images/mlb_logos/Chicago_White_Sox.svg', alt='', height='140', width='140')
+                         else if result.team_2_name == 'Reds'
+                           img.circle.responsive-img(src='images/mlb_logos/Cincinnati_Reds_Logo.svg', alt='', height='140', width='140')
+                         else if result.team_2_name == 'Indians'
+                           img.circle.responsive-img(src='images/mlb_logos/Cleveland_Indians_logo.svg', alt='', height='140', width='140')
+                         else if result.team_2_name == 'Rockies'
+                           img.circle.responsive-img(src='images/mlb_logos/Colorado_Rockies_logo.svg', alt='', height='140', width='140')
+                         else if result.team_2_name == 'Tigers'
+                           img.circle.responsive-img(src='images/mlb_logos/Detroit_Tigers_Insignia.svg', alt='', height='140', width='140')
+                         else if result.team_2_name == 'Astros'
+                           img.circle.responsive-img(src='images/mlb_logos/Houston-Astros-Logo.svg', alt='', height='140', width='140')
+                         else if result.team_2_name == 'Royals'
+                           img.circle.responsive-img(src='images/mlb_logos/Kansas_City_Royals.svg', alt='', height='140', width='140')
+                         else if result.team_2_name == 'Angels'
+                           img.circle.responsive-img(src='images/mlb_logos/Los_Angeles_Angels_of_Anaheim.svg', alt='', height='140', width='140')
+                         else if result.team_2_name == 'Dodgers'
+                           img.circle.responsive-img(src='images/mlb_logos/Los_Angeles_Dodgers_Logo.svg', alt='', height='140', width='140')
+                         else if result.team_2_name == 'Marlins'
+                           img.circle.responsive-img(src='images/mlb_logos/MiamiMarlins.svg', alt='', height='140', width='140')
+                         else if result.team_2_name == 'Brewers'
+                           img.circle.responsive-img(src='images/mlb_logos/Milwaukee_Brewers_Logo.svg', alt='', height='140', width='140')
+                         else if result.team_2_name == 'Twins'
+                           img.circle.responsive-img(src='images/mlb_logos/Minnesota_Twins_Logo.svg', alt='', height='140', width='140')
+                         else if result.team_2_name == 'Mets'
+                           img.circle.responsive-img(src='images/mlb_logos/New_York_Mets.svg', alt='', height='140', width='140')
+                         else if result.team_2_name == 'Yankees'
+                           img.circle.responsive-img(src='images/mlb_logos/NewYorkYankees_PrimaryLogo.svg', alt='', height='140', width='140')
+                         else if result.team_2_name == 'Athletics'
+                           img.circle.responsive-img(src='images/mlb_logos/Oakland_athl_primlogo.svg', alt='', height='140', width='140')
+                         else if result.team_2_name == 'Phillies'
+                           img.circle.responsive-img(src='images/mlb_logos/Philadelphia_Phillies.svg', alt='', height='140', width='140')
+                         else if result.team_2_name == 'Pirates'
+                           img.circle.responsive-img(src='images/mlb_logos/Pittsburgh_Pirates_Cap_Insignia.svg', alt='', height='140', width='140')
+                         else if result.team_2_name == 'Red Sox'
+                           img.circle.responsive-img(src='images/mlb_logos/RedSoxPrimary_HangingSocks.svg', alt='', height='140', width='140')
+                         else if result.team_2_name == 'Padres'
+                           img.circle.responsive-img(src='images/mlb_logos/San_Diego_Padres_logo.svg', alt='', height='140', width='140')
+                         else if result.team_2_name == 'Giants'
+                           img.circle.responsive-img(src='images/mlb_logos/San_Francisco_Giants_Logo.svg', alt='', height='140', width='140')
+                         else if result.team_2_name == 'Mariners'
+                           img.circle.responsive-img(src='images/mlb_logos/Seattle_Mariners_logo.svg', alt='', height='140', width='140')
+                         else if result.team_2_name == 'Cardinals'
+                           img.circle.responsive-img(src='images/mlb_logos/St._Louis_Cardinals_Logo.svg', alt='', height='140', width='140')
+                         else if result.team_2_name == 'Rays'
+                           img.circle.responsive-img(src='images/mlb_logos/Tampa_Bay_Rays.svg', alt='', height='140', width='140')
+                         else if result.team_2_name == 'Rangers'
+                           img.circle.responsive-img(src='images/mlb_logos/Texas_Rangers.svg', alt='', height='140', width='140')
+                         else if result.team_2_name == 'Blue Jays'
+                           img.circle.responsive-img(src='images/mlb_logos/Toronto_Blue_Jays_logo.svg', alt='', height='140', width='140')
+                         else if result.team_2_name == 'Nationals'
+                           img.circle.responsive-img(src='images/mlb_logos/Washington_Nationals_logo.svg', alt='', height='140', width='140')
+                         else if result.team_2_name == 'Blackhawks'
+                           img.circle.responsive-img(src='images/nhl_logos/blackhawks.svg', alt='', height='140', width='140')
+                         else if result.team_2_name == 'Bruins'
+                           img.circle.responsive-img(src='images/nhl_logos/boston-bruins.svg', alt='', height='140', width='140')
+                         else if result.team_2_name == 'Flames'
+                           img.circle.responsive-img(src='images/nhl_logos/clubflames-x.svg', alt='', height='140', width='140')
+                         else if result.team_2_name == 'Avalanche'
+                           img.circle.responsive-img(src='images/nhl_logos/Colorado_Avalanche_logo.svg', alt='', height='140', width='140')
+                         else if result.team_2_name == 'BlueJackets'
+                           img.circle.responsive-img(src='images/nhl_logos/Columbus_BlueJackets.svg', alt='', height='140', width='140')
+                         else if result.team_2_name == 'Coyotes'
+                           img.circle.responsive-img(src='images/nhl_logos/coyotes.svg', alt='', height='140', width='140')
+                         else if result.team_2_name == 'Panthers'
+                           img.circle.responsive-img(src='images/nhl_logos/panthers.svg', alt='', height='140', width='140')
+                         else if result.team_2_name == 'Stars'
+                           img.circle.responsive-img(src='images/nhl_logos/Dallas_Stars_2013_crest.svg', alt='', height='140', width='140')
+                         else if result.team_2_name == 'Hurricanes'
+                           img.circle.responsive-img(src='images/nhl_logos/hurricanes.svg', alt='', height='140', width='140')
+                         else if result.team_2_name == 'Ducks'
+                           img.circle.responsive-img(src='images/nhl_logos/Logo_Anaheim_Ducks.svg', alt='', height='140', width='140')
+                         else if result.team_2_name == 'Red Wings'
+                           img.circle.responsive-img(src='images/nhl_logos/Logo_Detroit_Red_Wings.svg', alt='', height='140', width='140')
+                         else if result.team_2_name == 'Oilers'
+                           img.circle.responsive-img(src='images/nhl_logos/Logo_Edmonton_Oilers.svg', alt='', height='140', width='140')
+                         else if result.team_2_name == 'LA Kings'
+                           img.circle.responsive-img(src='images/nhl_logos/Los_Angeles_Kings_Logo_(2011).svg', alt='', height='140', width='140')
+                         else if result.team_2_name == 'Wild'
+                           img.circle.responsive-img(src='images/nhl_logos/Minnesota_Wild_alternate_logo.svg', alt='', height='140', width='140')
+                         else if result.team_2_name == 'Predators'
+                           img.circle.responsive-img(src='images/nhl_logos/Nashville_Predators_Logo_(2011).svg', alt='', height='140', width='140')
+                         else if result.team_2_name == 'Devils'
+                           img.circle.responsive-img(src='images/nhl_logos/New_Jersey_Devils_old_logo.svg', alt='', height='140', width='140')
+                         else if result.team_2_name == 'Islanders'
+                           img.circle.responsive-img(src='images/nhl_logos/new_york_islanders.svg', alt='', height='140', width='140')
+                         else if result.team_2_name == 'Rangers'
+                           img.circle.responsive-img(src='images/nhl_logos/New_York_Rangers.svg', alt='', height='140', width='140')
+                         else if result.team_2_name == 'Senators'
+                           img.circle.responsive-img(src='images/nhl_logos/Ottawa_Senators.svg', alt='', height='140', width='140')
+                         else if result.team_2_name == 'Flyers'
+                           img.circle.responsive-img(src='images/nhl_logos/Philadelphia_Flyers.svg', alt='', height='140', width='140')
+                         else if result.team_2_name == 'Penguins'
+                           img.circle.responsive-img(src='images/nhl_logos/Pittsburgh_Penguins_logo.svg', alt='', height='140', width='140')
+                         else if result.team_2_name == 'Sabres'
+                           img.circle.responsive-img(src='images/nhl_logos/sabres.svg', alt='', height='140', width='140')
+                         else if result.team_2_name == 'Sharks'
+                           img.circle.responsive-img(src='images/nhl_logos/san_jose_sharks.svg', alt='', height='140', width='140')
+                         else if result.team_2_name == 'Blues'
+                           img.circle.responsive-img(src='images/nhl_logos/StLouisBlues1967.svg', alt='', height='140', width='140')
+                         else if result.team_2_name == 'Lightning'
+                           img.circle.responsive-img(src='images/nhl_logos/Tampa_Bay_Lightning_Logo_2011.svg', alt='', height='140', width='140')
+                         else if result.team_2_name == 'Leafs'
+                           img.circle.responsive-img(src='images/nhl_logos/Toronto_Maple_Leafs_Logo_1939_-_1967.svg', alt='', height='140', width='140')
+                         else if result.team_2_name == 'Canucks'
+                           img.circle.responsive-img(src='images/nhl_logos/Vancouver_Canucks_logo.svg', alt='', height='140', width='140')
+                         else if result.team_2_name == 'Capitals'
+                           img.circle.responsive-img(src='images/nhl_logos/WashingtonCapitals1980s.svg', alt='', height='140', width='140')
+                         else if result.team_2_name == 'Jets'
+                           img.circle.responsive-img(src='images/nhl_logos/Winnipeg_Jets_Logo_2011.svg', alt='', height='140', width='140')
+                         else
+                           img.circle.responsive-img(src='images/sportscanary/not-found.jpg', alt='', height= '150', width='150')
+                     br
+                     span.black-text.right
+                       b Last updated: 
+                       b.team-date
+                       = result.event_date 

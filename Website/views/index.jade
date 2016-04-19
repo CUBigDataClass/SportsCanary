@@ -26,25 +26,13 @@ block content
                         }
 
               .col.m6.s11.offset-s1.offset-m1.center-align.multi-device-mockup
-                img.img-responsive.main-image(src='images/home/main.png', alt='SportsCanary - Homepage image')
+                img(src='images/home/main.png', alt='SportsCanary - Homepage image')
+                //Need to fix image before using responsive class --> img.img-responsive.main-image(src='images/home/main.png', alt='SportsCanary - Homepage image',)
     section#NBA
-      .container
-        h3.header.light-blue-text.accent-3 Recent NBA Predictions
-        - each result, i in nba_results
-          .container.center
-          b.team-name
-            = result.event_name
+      include card-matchup-nba.jade
     section#NHL
-      .container
-        h3.header.light-blue-text.accent-3 Recent NHL Predictions
-        - each result, i in nhl_results
-          .container.center
-          b.team-name
-            = result.event_name
+      include card-matchup-nhl.jade
     section#MLB
-      .container
-        h3.header.light-blue-text.accent-3 Recent MLB Predictions
-        - each result, i in mlb_results
-          .container.center
-          b.team-name
-            = result.event_name
+      include card-matchup-mlb.jade
+
+                           
