@@ -20,7 +20,7 @@ Twitter_Utils/data/Active_API_Log.json
 # C extensions
 *.so
 Eternal_Utils/utils.env
-
+*.json
 # Distribution / packaging
 .Python
 env/

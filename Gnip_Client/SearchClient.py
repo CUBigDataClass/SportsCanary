@@ -54,7 +54,7 @@ class GnipSearchClient:
     @staticmethod
     def get_file_path(counter):
         wd = os.getcwd()
-        return wd + '/Gnip_Client/Gnip_Search_' + str(counter) + '.txt'
+        return wd + '/Gnip_Client/Gnip_Search_' + str(counter) + '.json'
 
     def load_json_blob(self, counter):
         file_path = self.get_file_path(counter)
@@ -70,5 +70,21 @@ class GnipSearchClient:
         return date.strftime('%Y%m%d%H%M')
 
     @staticmethod
-    def move_date_forward_by(date, days, hours, minutes):
+    def move_date_forward_by(date, days=0, hours=0, minutes=0):
         return date + timedelta(days=days, hours=hours, minutes=minutes)
+
+    def iterate_through_game_at_minute_intervals(self):
+        from_date = datetime(2016, 04, 14, 02, 30)
+        to_date = datetime(2016, 04, 14, 02, 31)
+        max_results = 500
+        query = 'Kobe'
+        number_of_pages = 5
+        while to_date != datetime(2016, 04, 14, 05, 31):
+            print(self.convert_date_to_gnip_format(from_date))
+            print(self.convert_date_to_gnip_format(to_date))
+            # self.initial_search(query=query, max_results=max_results,
+            #                     from_date=self.convert_date_to_gnip_format(from_date),
+            #                     to_date=self.convert_date_to_gnip_format(to_date),
+            #                     number_of_pages=number_of_pages)
+            from_date = self.move_date_forward_by(from_date, minutes=1)
+            to_date = self.move_date_forward_by(to_date, minutes=1)

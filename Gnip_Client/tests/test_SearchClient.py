@@ -26,7 +26,7 @@ class TestGnipSearchClient(unittest.TestCase):
 
     def test_get_file_path(self):
         gnip_search_client = GnipSearchClient()
-        expected = os.getcwd() + '/Gnip_Client/Gnip_Search_1.txt'
+        expected = os.getcwd() + '/Gnip_Client/Gnip_Search_1.json'
         self.assertEqual(expected, gnip_search_client.get_file_path(1))
 
     def test_save_json_blog_to_disk(self):
@@ -67,8 +67,8 @@ class TestGnipSearchClient(unittest.TestCase):
         self.assertEqual(saved_json_blob_1, expected_json_blob_1)
         self.assertEqual(saved_json_blob_2, expected_json_blob_2)
 
-        file_to_remove_1 = os.getcwd() + '/Gnip_Client/Gnip_Search_0.txt'
-        file_to_remove_2 = os.getcwd() + '/Gnip_Client/Gnip_Search_1.txt'
+        file_to_remove_1 = os.getcwd() + '/Gnip_Client/Gnip_Search_0.json'
+        file_to_remove_2 = os.getcwd() + '/Gnip_Client/Gnip_Search_1.json'
         os.remove(file_to_remove_1)
         os.remove(file_to_remove_2)
 
@@ -79,7 +79,7 @@ class TestGnipSearchClient(unittest.TestCase):
         expected_json_blob_1 = json.loads('{"results": [{"id": 123}]}')
         self.assertEqual(saved_json_blob_1, expected_json_blob_1)
 
-        file_to_remove_3 = os.getcwd() + '/Gnip_Client/Gnip_Search_2.txt'
+        file_to_remove_3 = os.getcwd() + '/Gnip_Client/Gnip_Search_2.json'
         os.remove(file_to_remove_3)
 
     def test_move_date_forward_by(self):
