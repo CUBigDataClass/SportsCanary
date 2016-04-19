@@ -86,7 +86,7 @@ class ScoreUpdater:
             except IndexError:
                 self.logger.error('IndexError updating scores.')
 
-    def retroactive_team_name_updater(self):
+    def retroactive_team_name_updater(self):  # pragma: no cover
         list_of_documents = self.get_documents_that_are_missing_team_names()
         for document in list_of_documents:
             try:
@@ -133,7 +133,9 @@ class ScoreUpdater:
             team1_name, team2_name = split_str[vs_index - 1], split_str[vs_index + 1]
             return str(team1_name), str(team2_name)
         except ValueError:
-            print('Error getting team names.')
+            print('ValueError getting team names.')
+        except IndexError:
+            print('IndexError getting team names.')
 
     def get_all_documents(self):
         db = self.get_aws_mongo_db_admin()
@@ -144,10 +146,22 @@ class ScoreUpdater:
 
         return list_of_documents
 
-    def count_number_of_right_and_wrong_predictions(self):
+    def get_sport_documents(self, sport):
+        db = self.get_aws_mongo_db_admin()
+        cursor = db.results.find({'sport_type': sport})
+        list_of_documents = []
+        for document in cursor:
+            list_of_documents.append(document)
+
+        return list_of_documents
+
+    def count_number_of_right_and_wrong_predictions(self, sport):
         correct_count = 0
         wrong_count = 0
-        list_of_documents = self.get_all_documents()
+        if sport == '':
+            list_of_documents = self.get_all_documents()
+        else:
+            list_of_documents = self.get_sport_documents(sport)
         for document in list_of_documents:
             # if document['score_1'] != 0 and document['score_2'] != 0:
             if document['score_1'] > document['score_2']:

@@ -26,7 +26,7 @@ class TestGnipSearchClient(unittest.TestCase):
 
     def test_get_file_path(self):
         gnip_search_client = GnipSearchClient()
-        expected = os.getcwd() + '/Gnip_Client/Gnip_Search_1.txt'
+        expected = os.getcwd() + '/Gnip_Client/Gnip_Search_1.json'
         self.assertEqual(expected, gnip_search_client.get_file_path(1))
 
     def test_save_json_blog_to_disk(self):
@@ -39,8 +39,12 @@ class TestGnipSearchClient(unittest.TestCase):
         os.remove(gnip_search_client.get_file_path(2))
 
     @urlmatch(netloc=r'(.*\.)?gnip-api\.twitter\.com(.*)')
-    def google_mock(self, url, request):
+    def gnip_mock(self, url, request):
         return '{"results": [{"id": 123}],"next": "fake_next_token"}'
+
+    @urlmatch(netloc=r'(.*\.)?gnip-api\.twitter\.com(.*)')
+    def gnip_mock_no_next(self, url, request):
+        return '{"results": [{"id": 123}]}'
 
     # Full integration test for search
     def test_initial_search(self):
@@ -53,15 +57,30 @@ class TestGnipSearchClient(unittest.TestCase):
         to_date = gnip_search_client.convert_date_to_gnip_format(to_date)
 
         # open context to patch
-        with HTTMock(self.google_mock):
+        with HTTMock(self.gnip_mock):
+            gnip_search_client.initial_search('Fake_Query', 10, from_date, to_date, 2)
+
+        saved_json_blob_1 = gnip_search_client.load_json_blob(0)
+        saved_json_blob_2 = gnip_search_client.load_json_blob(1)
+        expected_json_blob_1 = json.loads('{"results": [{"id": 123}],"next": "fake_next_token"}')
+        expected_json_blob_2 = json.loads('{"results": [{"id": 123}],"next": "fake_next_token"}')
+        self.assertEqual(saved_json_blob_1, expected_json_blob_1)
+        self.assertEqual(saved_json_blob_2, expected_json_blob_2)
+
+        file_to_remove_1 = os.getcwd() + '/Gnip_Client/Gnip_Search_0.json'
+        file_to_remove_2 = os.getcwd() + '/Gnip_Client/Gnip_Search_1.json'
+        os.remove(file_to_remove_1)
+        os.remove(file_to_remove_2)
+
+        with HTTMock(self.gnip_mock_no_next):
             gnip_search_client.initial_search('Fake_Query', 10, from_date, to_date, 1)
 
-        saved_json_blob = gnip_search_client.load_json_blob(0)
-        expected_json_blob = json.loads('{"results": [{"id": 123}],"next": "fake_next_token"}')
-        self.assertEqual(saved_json_blob, expected_json_blob)
+        saved_json_blob_1 = gnip_search_client.load_json_blob(2)
+        expected_json_blob_1 = json.loads('{"results": [{"id": 123}]}')
+        self.assertEqual(saved_json_blob_1, expected_json_blob_1)
 
-        file_to_remove = os.getcwd() + '/Gnip_Client/Gnip_Search_0.txt'
-        os.remove(file_to_remove)
+        file_to_remove_3 = os.getcwd() + '/Gnip_Client/Gnip_Search_2.json'
+        os.remove(file_to_remove_3)
 
     def test_move_date_forward_by(self):
         gnip_search_client = GnipSearchClient()

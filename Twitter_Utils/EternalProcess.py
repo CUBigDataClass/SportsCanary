@@ -303,9 +303,9 @@ class EternalProcess:
                 team_2_name=teams_tuple[1]
             )
 
-            self.twitter_client.take_data_gathering_input(tweet_percentage_tuple=team_tweet_percentages,
-                                                          teams_tuple=teams_tuple, slug=self.slug_list[i],
-                                                          sport=str(self.slug_list[i])[:3])
+            self.twitter_client.enriched_tweet_based_on_confidence(tweet_percentage_tuple=team_tweet_percentages,
+                                                                   teams_tuple=teams_tuple, slug=self.slug_list[i],
+                                                                   sport=str(self.slug_list[i])[:3])
 
         # map_reduced_tweets_game = self.map_reduce_tweets_after_disconnect(game_path, i)
         # map_reduced_tweets_team1 = self.map_reduce_tweets_after_disconnect(team_path_tuple[0], i)

@@ -96,19 +96,19 @@ class KeywordGenerator:
                 data = json.loads(f.read())
             f.close()
 
-            hashtag_list = []
+            hashtag_list = set([])
             team_data = data['teams']
             for team in team_data:
                 if team['id'] == team_id:
                     if team['hashtag']:
-                        hashtag_list.append(team['hashtag'])
+                        hashtag_list.add(team['hashtag'])
 
                     for hashtag in team['hashtags']:
-                        hashtag_list.append(hashtag)
+                        hashtag_list.add(hashtag)
 
             return hashtag_list
 
         except IOError:
             self.logger.exception(IOError)
             self.logger.error('Search terms not found at ' + self.team_data_path)
-            raise IOError
+            return False

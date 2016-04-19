@@ -119,7 +119,7 @@ class OddsGeneration:
         try:
             event_list = event_list_json[0]['result']
             return event_list
-        except KeyError:
+        except KeyError:  # pragma: no cover
             print 'Error while trying to get event types: ' + str(event_list_json['error'])
 
     def get_games(self, game_name, start_time, end_time):
@@ -142,5 +142,5 @@ class OddsGeneration:
                     g.add_games(game_detail)
 
             return game_events
-        except KeyError:
+        except KeyError:  # pragma: no cover
             print 'Error accumulating games' + str(response['error'])

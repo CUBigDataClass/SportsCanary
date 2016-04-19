@@ -52,7 +52,7 @@ class TestOddsGeneration(unittest.TestCase):
 
     def test_get_session_key_and_set_headers(self):
         odds_generation = BetFairAPI.OddsGeneration()
-        odds_generation.set_session_key_url
+        odds_generation.set_session_key_url()
         result = odds_generation.get_session_key_and_set_headers()
         self.assertIsNot(False, result)
 
@@ -76,11 +76,6 @@ class TestOddsGeneration(unittest.TestCase):
         odds_generation = BetFairAPI.OddsGeneration()
         expected = 'https://identitysso.betfair.com/api/login'
         self.assertEqual(expected, odds_generation.set_session_key_url())
-
-    def test_get_list_events_filtered(self):
-        # odds_generation = OddsGeneration()
-        # self.assertEqual(expected, odds_generation.get_list_events_filtered(game))
-        assert True  # TODO: implement your test here
 
     def test_set_session_token_and_api_call_headers_exception(self):
         odds_generation = BetFairAPI.OddsGeneration()
