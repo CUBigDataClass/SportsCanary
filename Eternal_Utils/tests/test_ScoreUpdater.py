@@ -19,7 +19,7 @@ class TestScoreUpdater(unittest.TestCase):
 
     def test_count_number_of_right_and_wrong_predictions(self):
         score_updater = ScoreUpdater()
-        self.assertGreater(score_updater.count_number_of_right_and_wrong_predictions(), 40)
+        self.assertGreater(score_updater.count_number_of_right_and_wrong_predictions('nba'), 40)
 
     def test_get_all_documents(self):
         score_updater = ScoreUpdater()
@@ -66,6 +66,11 @@ class TestScoreUpdater(unittest.TestCase):
         self.assertEqual(expected_nba, score_updater.get_team_ids_for_game(nba_slug, 'nba'))
         self.assertEqual(expected_mlb, score_updater.get_team_ids_for_game(mlb_slug, 'mlb'))
         self.assertEqual(expected_nhl, score_updater.get_team_ids_for_game(nhl_slug, 'nhl'))
+
+    def test_get_sport_documents(self):
+        score_updater = ScoreUpdater()
+        scores = score_updater.get_sport_documents('nba')
+        self.assertGreater(len(scores), 5)
 
 if __name__ == '__main__':  # pragma: no cover
     unittest.main()

@@ -70,7 +70,7 @@ class TestKeywordGenerator(unittest.TestCase):
         keyword_generator = KeywordGenerator()
         team_id = 'eeb2db44-7894-483e-a9a7-373fb80d8e91'
         sport = 'mlb'
-        expected = ['Mariners', 'Mariners']
+        expected = set(['Mariners'])
         self.assertEqual(expected, keyword_generator.get_hashtags_for_team(team_id, sport))
 
         # Test exception

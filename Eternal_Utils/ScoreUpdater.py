@@ -146,10 +146,22 @@ class ScoreUpdater:
 
         return list_of_documents
 
-    def count_number_of_right_and_wrong_predictions(self):
+    def get_sport_documents(self, sport):
+        db = self.get_aws_mongo_db_admin()
+        cursor = db.results.find({'sport_type': sport})
+        list_of_documents = []
+        for document in cursor:
+            list_of_documents.append(document)
+
+        return list_of_documents
+
+    def count_number_of_right_and_wrong_predictions(self, sport):
         correct_count = 0
         wrong_count = 0
-        list_of_documents = self.get_all_documents()
+        if sport == '':
+            list_of_documents = self.get_all_documents()
+        else:
+            list_of_documents = self.get_sport_documents(sport)
         for document in list_of_documents:
             # if document['score_1'] != 0 and document['score_2'] != 0:
             if document['score_1'] > document['score_2']:
