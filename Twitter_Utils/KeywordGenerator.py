@@ -56,12 +56,14 @@ class KeywordGenerator:
 
                     if team['slug']:
                         players_list = self.append_players_name(team['slug'], team_id, sport)
-                        for name in players_list:
-                            search_terms_list.append(name.replace(" ", ""))
+                        if players_list is not None:
+                            for name in players_list:
+                                search_terms_list.append(name.replace(" ", ""))
 
             search_terms_list = self.append_word_with_go_to_list(search_terms_list)
-            for name in players_list:
-                search_terms_list.append(name)
+            if players_list is not None:
+                for name in players_list:
+                    search_terms_list.append(name)
             return search_terms_list
 
         except IOError:
@@ -85,11 +87,17 @@ class KeywordGenerator:
 
     def append_players_name(self, team_slug_name, team_id, sport):
         if sport == 'nba':
-            return self.sports_data.get_players_for_today_for_sport(team_slug_name, team_id, 'nba')
+            players = self.sports_data.get_players_for_today_for_sport(team_slug_name, team_id, 'nba')
+            if players:
+                return players
         elif sport == 'mlb':
-            return self.sports_data.get_players_for_today_for_sport(team_slug_name, team_id, 'mlb')
+            players = self.sports_data.get_players_for_today_for_sport(team_slug_name, team_id, 'mlb')
+            if players:
+                return players
         elif sport == 'nhl':
-            return self.sports_data.get_players_for_today_for_sport(team_slug_name, team_id, 'nhl')
+            players = self.sports_data.get_players_for_today_for_sport(team_slug_name, team_id, 'nhl')
+            if players:
+                return players
         else:
             return []
 
