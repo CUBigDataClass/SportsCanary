@@ -62,6 +62,7 @@ router.route('/')
             } else {
                 res.format({
                     html: function(){
+                        results = results.reverse();
                         res.render('results/index', {
                             title: 'Results',
                             "results" : results

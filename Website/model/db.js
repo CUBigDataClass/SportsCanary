@@ -5,5 +5,4 @@ var aws_address = process.env['AWS_ADDRESS'];
 
 var mongoose = require('mongoose');
 
-console.log('mongodb://' + aws_user + ':' + aws_pass + '@' + aws_address);
 mongoose.connect('mongodb://' + aws_user + ':' + aws_pass + '@' + aws_address);
