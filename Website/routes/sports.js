@@ -3,14 +3,14 @@ var express = require('express'),
     mongoose = require('mongoose'),
     result = mongoose.model('Result');
 
-router.route('/')
-.get(function(req, res, next) {
+router.route('/').get(function(req, res, next) {
     mongoose.model('Result').find({}, function (err, results) {
         if (err) {
             return console.error(err);
         } else {
             res.format({
                 html: function() {
+                    results = results.reverse();
                     res.render('sports/results-index', {
                         title: 'SportsCanary - Predictions for Basketball, Hockey and Basketball',
                         "results" : results
