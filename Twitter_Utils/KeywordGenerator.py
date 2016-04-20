@@ -55,7 +55,7 @@ class KeywordGenerator:
                         search_terms_list.append(team['nickname'])
 
                     if team['slug']:
-                        players_list = self.append_players_name(team['slug'], team_id)
+                        players_list = self.append_players_name(team['slug'], team_id, sport)
                         for name in players_list:
                             search_terms_list.append(name.replace(" ", ""))
 
