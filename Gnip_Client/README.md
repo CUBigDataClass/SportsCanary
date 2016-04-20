@@ -15,3 +15,9 @@ export GNIP_PASSWORD='your-password'
 export GNIP_URL='your-url'
 ```
 
+To utilize IBM's tone analyzer.
+```
+export IBM_USERNAME='your-username'
+export IBM_PASSWORD='your-password'
+```
+

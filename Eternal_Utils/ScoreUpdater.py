@@ -20,7 +20,7 @@ class ScoreUpdater:
     @staticmethod
     def get_aws_mongo_db_admin():
         """
-        Connects to AWS hosted MongoDB
+        Connects to AWS hosted MongoDB admin database
         :return: MongoDB instance with database
         """
         uri = 'mongodb://' + CommonUtils.get_environ_variable('AWS_MONGO_USER') + ':' \
@@ -32,7 +32,7 @@ class ScoreUpdater:
     @staticmethod
     def get_aws_mongo_db_events():
         """
-        Connects to AWS hosted MongoDB
+        Connects to AWS hosted MongoDB events database
         :return: MongoDB instance with database
         """
         uri = 'mongodb://' + CommonUtils.get_environ_variable('AWS_MONGO_USER') + ':' \
@@ -61,6 +61,9 @@ class ScoreUpdater:
         return list_of_documents
 
     def get_score_and_update_mongo(self):
+        """
+        Runs at 2 AM every morning to update all scores for the day.
+        """
         list_of_documents = self.get_slugs_of_games_that_need_updating()
         for document in list_of_documents:
             try:
@@ -115,7 +118,6 @@ class ScoreUpdater:
         cursor = db.results.find({'team_1_name': {'$exists': False}, 'team_2_name': {'$exists': False}})
         list_of_documents = []
         for document in cursor:
-            # print(document)
             list_of_documents.append(document)
 
         return list_of_documents
@@ -132,10 +134,8 @@ class ScoreUpdater:
             vs_index = split_str.index('vs')
             team1_name, team2_name = split_str[vs_index - 1], split_str[vs_index + 1]
             return str(team1_name), str(team2_name)
-        except ValueError:
-            print('ValueError getting team names.')
-        except IndexError:
-            print('IndexError getting team names.')
+        except:
+            print('Error getting team names for game ' + game_name)
 
     def get_all_documents(self):
         db = self.get_aws_mongo_db_admin()
@@ -156,6 +156,11 @@ class ScoreUpdater:
         return list_of_documents
 
     def count_number_of_right_and_wrong_predictions(self, sport):
+        """
+        Gets % of correct predictions for sport
+        :param sport: Currently nba, mlb and nhl.
+        :return: % correct as float
+        """
         correct_count = 0
         wrong_count = 0
         if sport == '':
@@ -169,12 +174,15 @@ class ScoreUpdater:
                     correct_count += 1
                 elif document['team_1_percentage_win'] < document['team_2_percentage_win']:
                     wrong_count += 1
+
             elif document['score_1'] < document['score_2']:
-                if document['team_1_percentage_win'] < document['team_2_percentage_win']:
+                if document['team_1_percentage_win'] > document['team_2_percentage_win']:
                     wrong_count += 1
-                elif document['team_1_percentage_win'] > document['team_2_percentage_win']:
+                elif document['team_1_percentage_win'] < document['team_2_percentage_win']:
                     correct_count += 1
 
+        print(correct_count)
+        print(wrong_count)
         print(self.get_success_percentage(correct_count, wrong_count))
         return self.get_success_percentage(correct_count, wrong_count)
 
@@ -214,3 +222,15 @@ class ScoreUpdater:
             cursor = db.mlb_logs.find({'slug': slug})
             for document in cursor:
                 return document['home_team_id'], document['away_team_id']
+
+    def get_correct_percentages_and_write_to_mongo(self):
+        db = self.get_aws_mongo_db_admin()
+        nba_percent = self.count_number_of_right_and_wrong_predictions('nba')
+        mlb_percent = self.count_number_of_right_and_wrong_predictions('mlb')
+        nhl_percent = self.count_number_of_right_and_wrong_predictions('nhl')
+        full_percent = self.count_number_of_right_and_wrong_predictions('')
+
+        db.cumulative_results.update_one({'sport_type': 'all'}, {"$set": {'predicted_percent': full_percent}})
+        db.cumulative_results.update_one({'sport_type': 'mlb'}, {"$set": {'predicted_percent': mlb_percent}})
+        db.cumulative_results.update_one({'sport_type': 'nba'}, {"$set": {'predicted_percent': nba_percent}})
+        db.cumulative_results.update_one({'sport_type': 'nhl'}, {"$set": {'predicted_percent': nhl_percent}})
