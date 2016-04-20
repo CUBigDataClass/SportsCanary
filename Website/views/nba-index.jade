@@ -1,0 +1,36 @@
+extends layout
+block content
+  #wrapper
+    #hero
+      .header
+        .container
+            .row
+              .col.m5.s12
+                h1.light-blue-text.accent-3
+                  | Search for
+                  br.light-blue-text.accent-3
+                  | Predictions!
+                p.white-text
+                  | Do you know what team will win? SportsCanary is a service that analyzes tweets in order to predict match results.
+                div
+                  div
+                    input#search-bar-home(type='text', name='searchbar' placeholder='Search Terms' class='white-text')
+                  div
+                    button.btn.waves-effect.waves-light(onclick='goToSearchTerm()', type='submit', name='action')
+                      | Search
+                      i.material-icons.right send
+                      script.
+                        function goToSearchTerm() {
+                          var value = document.getElementById("search-bar-home").value
+                          window.location = "http://sportscanary.com/search?category=" + value;
+                        }
+
+              .col.m6.s11.offset-s1.offset-m1.center-align.multi-device-mockup
+                img(src='images/home/main.png', alt='SportsCanary - Homepage image')
+                //Need to fix image before using responsive class --> img.img-responsive.main-image(src='images/home/main.png', alt='SportsCanary - Homepage image',)
+    section#NBA
+      include card-matchup-nba.jade
+    section#NHL
+      include card-matchup-nhl.jade
+    section#MLB
+      include card-matchup-mlb.jade

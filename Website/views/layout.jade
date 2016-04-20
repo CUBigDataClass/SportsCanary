@@ -15,7 +15,7 @@ html
     link(href='https://fonts.googleapis.com/icon?family=Material+Icons', rel='stylesheet')
     link(rel='stylesheet', href='/components/Materialize/dist/css/materialize.min.css')
     link(rel='stylesheet', href='/stylesheets/style.min.css')
-    link(rel='stylesheet', type='text/css', href='components/bootstrap/dist/css/bootstrap.css')
+    link(rel='stylesheet', type='text/css', href='/components/bootstrap/dist/css/bootstrap.css')
     script(type='text/javascript', src='/components/jquery/dist/jquery.min.js')
     script(type='text/javascript', src='/components/Materialize/dist/js/materialize.min.js')
     script(type='text/javascript', src='/js/switch.js')
@@ -42,24 +42,36 @@ html
     nav
       .nav-wrapper.light-blue.accent-3
         a(href="/")
-          img.navbar-brand(src='images/sportscanary/sc-logo-text.svg' alt="Sports Canary logo")
+          img.navbar-brand(src='/images/sportscanary/sc-logo-text.svg' alt="Sports Canary logo")
         a.button-collapse(href='#', data-activates='mobile-demo')
           i.material-icons menu
         ul.right.hide-on-med-and-down
           li
             a(href='/') Home
           li
-            a(href='/sports') All Predictions
+            a(href='/sports/nba') NBA
           li
-            a(href='/about') About
+            a(href='/sports/mlb') MLB
+          li
+            a(href='/sports/nhl') NHL
+          li
+            a(href='/sports') ALL
+          li
+            a(href='/about') More
           li
         ul#mobile-demo.side-nav
           li
             a(href='/') Home
           li
-            a(href='/sports') All Predictions
+            a(href='/sports/nba') NBA
           li
-            a(href='/about') About
+            a(href='/sports/mlb') MLB
+          li
+            a(href='/sports/nhl') NHL
+          li
+            a(href='/sports') ALL
+          li
+            a(href='/about') More
           li
     
 
