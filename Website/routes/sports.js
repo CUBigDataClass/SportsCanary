@@ -80,4 +80,30 @@ router.route('/mlb').get(function(req, res, next) {
         }
     });
 });
+router.route('/kobe').get(function(req, res, next) {
+    mongoose.model('Result').find({'sport_type': 'mlb'}, function (err, results_kobe) {
+        if (err) {
+            return console.error(err);
+        } else {
+            res.format({
+                json: function(){
+                    res.json(results_kobe);
+                }
+            });
+        }
+    });
+});
+router.route('/steph_curry').get(function(req, res, next) {
+    mongoose.model('Result').find({'sport_type': 'mlb'}, function (err, results_steph) {
+        if (err) {
+            return console.error(err);
+        } else {
+            res.format({
+                json: function(){
+                    res.json(results_steph);
+                }
+            });
+        }
+    });
+});
 module.exports = router;
