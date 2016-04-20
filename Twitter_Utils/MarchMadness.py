@@ -39,7 +39,7 @@ class MarchMadness:
         client = MongoClient(uri)
         db = client.eventsDB
         data = []
-        for post in db.mm_games.find():
+        for post in db.mm_games.find():  # pragma: no cover
             if post['normalized_date'] == datetime.datetime.now().strftime('%Y-%m-%d'):
                 data.append(post)
         return data

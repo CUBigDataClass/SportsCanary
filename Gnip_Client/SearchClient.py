@@ -74,17 +74,21 @@ class GnipSearchClient:
         return date + timedelta(days=days, hours=hours, minutes=minutes)
 
     def iterate_through_game_at_minute_intervals(self):
-        from_date = datetime(2016, 04, 14, 02, 30)
-        to_date = datetime(2016, 04, 14, 02, 31)
-        max_results = 500
-        query = 'Kobe'
-        number_of_pages = 5
-        while to_date != datetime(2016, 04, 14, 05, 31):
-            print(self.convert_date_to_gnip_format(from_date))
-            print(self.convert_date_to_gnip_format(to_date))
-            # self.initial_search(query=query, max_results=max_results,
-            #                     from_date=self.convert_date_to_gnip_format(from_date),
-            #                     to_date=self.convert_date_to_gnip_format(to_date),
-            #                     number_of_pages=number_of_pages)
-            from_date = self.move_date_forward_by(from_date, minutes=1)
-            to_date = self.move_date_forward_by(to_date, minutes=1)
+        try:
+            from_date = datetime(2016, 04, 14, 02, 30)
+            to_date = datetime(2016, 04, 14, 02, 31)
+            max_results = 500
+            query = 'Kobe'
+            number_of_pages = 5
+            while to_date != datetime(2016, 04, 14, 05, 31):
+                print(self.convert_date_to_gnip_format(from_date))
+                print(self.convert_date_to_gnip_format(to_date))
+                # self.initial_search(query=query, max_results=max_results,
+                #                     from_date=self.convert_date_to_gnip_format(from_date),
+                #                     to_date=self.convert_date_to_gnip_format(to_date),
+                #                     number_of_pages=number_of_pages)
+                from_date = self.move_date_forward_by(from_date, minutes=1)
+                to_date = self.move_date_forward_by(to_date, minutes=1)
+            return True
+        except:
+            return None

@@ -88,5 +88,9 @@ class TestGnipSearchClient(unittest.TestCase):
         expected_date = datetime(2016, 04, 15, 03, 40)
         self.assertEqual(expected_date, gnip_search_client.move_date_forward_by(date, 1, 1, 10))
 
+    def test_iterate_through_game_at_minute_intervals(self):
+        gnip_search_client = GnipSearchClient()
+        self.assertEqual(True, gnip_search_client.iterate_through_game_at_minute_intervals())
+
 if __name__ == '__main__':  # pragma: no cover
     unittest.main()

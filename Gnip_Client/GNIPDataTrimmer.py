@@ -18,13 +18,15 @@ class DataTrimmer:
 
     def get_tweets(self, r):
         tweet_set = set([])
-        for i in range(r):
-            json_file = self.load_json_blob(i)
-            try:
+        try:
+            for i in range(r):
+                json_file = self.load_json_blob(i)
                 for result in json_file['results']:
                     tweet_set.add(result['body'])
                     print(self.tweet_processor.standardize_tweet(result['body']))
-                return tweet_set
 
-            except KeyError:
-                print('Key "body" not found.')
+            return tweet_set
+
+        except:
+            print('Key "body" not found.')
+            return None

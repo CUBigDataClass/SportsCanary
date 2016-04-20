@@ -32,5 +32,9 @@ class TestDataTrimmer(unittest.TestCase):
         expected = json.loads('{"results": [{"body": "test body tweet"}]}')
         self.assertEqual(expected, data_trimmer.load_json_blob(0))
 
-if __name__ == '__main__':
+    def test_get_tweets_exception(self):
+        data_trimmer = DataTrimmer()
+        self.assertIsNone(data_trimmer.get_tweets(2))
+
+if __name__ == '__main__':  # pragma: no cover
     unittest.main()
