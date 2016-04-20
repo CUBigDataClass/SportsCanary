@@ -20,6 +20,7 @@ class TestScoreUpdater(unittest.TestCase):
     def test_count_number_of_right_and_wrong_predictions(self):
         score_updater = ScoreUpdater()
         self.assertGreater(score_updater.count_number_of_right_and_wrong_predictions('nba'), 40)
+        self.assertGreater(score_updater.count_number_of_right_and_wrong_predictions(''), 30)
 
     def test_get_all_documents(self):
         score_updater = ScoreUpdater()

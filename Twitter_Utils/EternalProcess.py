@@ -29,7 +29,7 @@ class EternalProcess:
         self.tick_time_in_seconds = 60.0
         self.time_prior_to_game_to_start_stream = 180
         self.time_to_check_games_for_the_day = '02:00'
-        self.time_to_update_scores_for_the_day = '23:00'
+        self.time_to_update_scores_for_the_day = '02:00'
         self.time_to_clear_api_keys = '02:00'
         self.data_gatherer = DataGatherer()
         wd = os.getcwd()

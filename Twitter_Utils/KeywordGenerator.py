@@ -83,10 +83,13 @@ class KeywordGenerator:
         word_list += search_terms_list_with_go
         return word_list
 
-    def append_players_name(self, team_slug_name, team_id):
-        players_list = self.sports_data.get_players_for_today_for_sport(team_slug_name, team_id, "nba")
-        if players_list:
-            return self.sports_data.get_players_for_today_for_sport(team_slug_name, team_id, "nba")
+    def append_players_name(self, team_slug_name, team_id, sport):
+        if sport == 'nba':
+            return self.sports_data.get_players_for_today_for_sport(team_slug_name, team_id, 'nba')
+        elif sport == 'mlb':
+            return self.sports_data.get_players_for_today_for_sport(team_slug_name, team_id, 'mlb')
+        elif sport == 'nhl':
+            return self.sports_data.get_players_for_today_for_sport(team_slug_name, team_id, 'nhl')
         else:
             return []
 
