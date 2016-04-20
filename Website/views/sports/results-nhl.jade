@@ -1,0 +1,10 @@
+extends ../layout
+link(rel='stylesheet', href='/components/c3/c3.min.css')
+script(src='/components/d3/d3.min.js', type='text/javascript')
+script(src='/components/c3/c3.min.js', type='text/javascript')
+script(src='../js/logos.js', type='text/javascript')
+block content
+  br
+  - each result, i in results_nhl
+                 include ../card-matchup.jade
+  br
