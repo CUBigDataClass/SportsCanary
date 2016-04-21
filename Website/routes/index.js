@@ -22,9 +22,7 @@ router.get('/', function(req, res, next) {
                 if (err) {
                   return console.error(err);
                 } else {
-                  console.log('kekeke');
                   console.log(cumulative_nhl_result);
-                  console.log(mlb_results);
                   res.format({
                     html: function () {
                       res.render('index', {

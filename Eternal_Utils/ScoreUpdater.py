@@ -252,6 +252,3 @@ class ScoreUpdater:
         db.cumulative_results.update_one({'sport_type': 'nhl'}, {"$set": {'predicted_percent': nhl_percent,
                                                                           'game_count': self.count_number_of_games_predicted('nhl')
                                                                           }})
-
-s = ScoreUpdater()
-s.get_correct_percentages_and_write_to_mongo()
