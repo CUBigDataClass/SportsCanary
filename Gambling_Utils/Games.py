@@ -1,5 +1,4 @@
-
-class Games(object):
+class Games(object):  # pragma: no cover
     def __init__(self, json_game_details):
         data = json_game_details
         try:

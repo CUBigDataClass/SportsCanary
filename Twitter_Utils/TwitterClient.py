@@ -68,7 +68,7 @@ class TwitterClient:
                                teams_tuple[0] + '. #' + sport.upper() + ' ' + home_hashtags + ' ' + away_hashtags)
             return True
 
-        except:
+        except:  #pragma: no cover
             self.logger.error('Error sending enriched tweet.')
             return False
 
