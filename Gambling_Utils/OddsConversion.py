@@ -4,7 +4,6 @@ def american_to_decimal(num):
         num = (num / 100) + 1
     elif num < 0:
         num = (100 / abs(num)) + 1
-
     return float("%.3f" % num)
 
 

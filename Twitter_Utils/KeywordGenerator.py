@@ -98,7 +98,7 @@ class KeywordGenerator:
             players = self.sports_data.get_players_for_today_for_sport(team_slug_name, team_id, 'nhl')
             if players:
                 return players
-        else:
+        else:  # pragma: no cover
             return []
 
     def get_hashtags_for_team(self, team_id, sport):

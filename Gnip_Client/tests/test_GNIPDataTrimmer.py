@@ -2,6 +2,7 @@ import json
 import unittest
 import os
 from Gnip_Client.GNIPDataTrimmer import DataTrimmer
+from httmock import urlmatch, HTTMock
 
 
 class TestDataTrimmer(unittest.TestCase):
@@ -31,6 +32,15 @@ class TestDataTrimmer(unittest.TestCase):
         data_trimmer = DataTrimmer()
         expected = json.loads('{"results": [{"body": "test body tweet"}]}')
         self.assertEqual(expected, data_trimmer.load_json_blob(0))
+
+    @urlmatch(netloc=r'(.*\.)?gateway\.watsonplatform\.net(.*)')
+    def watson_mock(self):  # pragma: no cover
+        return 'Not a real result.'
+
+    def test_get_tweets_exception(self):
+        data_trimmer = DataTrimmer()
+        with HTTMock(self.watson_mock):
+            self.assertIsNone(data_trimmer.get_tweets(0, 1))
 
 if __name__ == '__main__':  # pragma: no cover
     unittest.main()

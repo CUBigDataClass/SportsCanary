@@ -93,7 +93,7 @@ class SportsData:
                 return self.create_players_log_object(content['players'], team_id)
             else:  # pragma: no cover
                 return False
-        except KeyError:
+        except KeyError:  # pragma: no cover
             self.logger.error('Key error creating players log object.')
             return False
 
