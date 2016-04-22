@@ -12,6 +12,24 @@ div.container.center
                        //b.sport-type= result.sport_type
                        b.team-name
                        = result.event_name
+                       if result.score_1 == '0' && result.score_2 == '0'
+                         p
+                           | Game is in Progress...
+                       else if result.score_1 != '0' && result.score_2 != '0' && result.score_1 == result.score_2
+                         p
+                           | Game resulted in a tie.
+                       else if result.score_1 > result.score_2 && result.team_1_percentage_win > result.team_2_percentage_win
+                          p.green-text
+                             = result.team_1_name + " won" + " - Prediction: " + " Correct!"
+                       else if result.score_1 > result.score_2 && result.team_1_percentage_win < result.team_2_percentage_win
+                          p.red-text
+                             = result.team_1_name + " won" + " - Prediction: " + " Incorrect."
+                       else if result.score_1 < result.score_2 && result.team_1_percentage_win < result.team_2_percentage_win
+                          p.green-text
+                             = result.team_2_name + " won" + " - Prediction: " + "Correct!"
+                       else if result.score_1 < result.score_2 && result.team_1_percentage_win > result.team_2_percentage_win
+                          p.red-text
+                             = result.team_2_name + " won" + " - Prediction: " + "Incorrect."
                      div.row
                        div.col.s5
                            .col
