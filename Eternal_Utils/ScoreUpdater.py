@@ -223,6 +223,16 @@ class ScoreUpdater:
             for document in cursor:
                 return document['home_team_id'], document['away_team_id']
 
+    def count_number_of_games_predicted(self, sport):
+        if sport == 'all':
+            return len(self.get_all_documents())
+        elif sport == 'mlb':
+            return len(self.get_sport_documents('mlb'))
+        elif sport == 'nhl':
+            return len(self.get_sport_documents('nhl'))
+        elif sport == 'nba':
+            return len(self.get_sport_documents('nba'))
+
     def get_correct_percentages_and_write_to_mongo(self):
         db = self.get_aws_mongo_db_admin()
         nba_percent = self.count_number_of_right_and_wrong_predictions('nba')
@@ -230,7 +240,15 @@ class ScoreUpdater:
         nhl_percent = self.count_number_of_right_and_wrong_predictions('nhl')
         full_percent = self.count_number_of_right_and_wrong_predictions('')
 
-        db.cumulative_results.update_one({'sport_type': 'all'}, {"$set": {'predicted_percent': full_percent}})
-        db.cumulative_results.update_one({'sport_type': 'mlb'}, {"$set": {'predicted_percent': mlb_percent}})
-        db.cumulative_results.update_one({'sport_type': 'nba'}, {"$set": {'predicted_percent': nba_percent}})
-        db.cumulative_results.update_one({'sport_type': 'nhl'}, {"$set": {'predicted_percent': nhl_percent}})
+        db.cumulative_results.update_one({'sport_type': 'all'}, {"$set": {'predicted_percent': full_percent,
+                                                                          'game_count': self.count_number_of_games_predicted('all')
+                                                                          }})
+        db.cumulative_results.update_one({'sport_type': 'mlb'}, {"$set": {'predicted_percent': mlb_percent,
+                                                                          'game_count': self.count_number_of_games_predicted('mlb')
+                                                                          }})
+        db.cumulative_results.update_one({'sport_type': 'nba'}, {"$set": {'predicted_percent': nba_percent,
+                                                                          'game_count': self.count_number_of_games_predicted('nba')
+                                                                          }})
+        db.cumulative_results.update_one({'sport_type': 'nhl'}, {"$set": {'predicted_percent': nhl_percent,
+                                                                          'game_count': self.count_number_of_games_predicted('nhl')
+                                                                          }})
