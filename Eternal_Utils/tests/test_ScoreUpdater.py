@@ -73,5 +73,26 @@ class TestScoreUpdater(unittest.TestCase):
         scores = score_updater.get_sport_documents('nba')
         self.assertGreater(len(scores), 5)
 
+    def test_count_number_of_games_predicted(self):
+        score_updater = ScoreUpdater()
+        self.assertGreater(score_updater.count_number_of_games_predicted('all'), 151)
+        self.assertGreater(score_updater.count_number_of_games_predicted('nba'), 36)
+        self.assertGreater(score_updater.count_number_of_games_predicted('nhl'), 20)
+        self.assertGreater(score_updater.count_number_of_games_predicted('mlb'), 20)
+
+    def test_get_correct_percentages_and_write_to_mongo(self):
+        score_updater = ScoreUpdater()
+        self.assertEqual(True, score_updater.get_correct_percentages_and_write_to_mongo())
+    #
+    # def test_get_score_and_update_mongo(self):
+    #     # score_updater = ScoreUpdater()
+    #     # self.assertEqual(expected, score_updater.get_score_and_update_mongo())
+    #     assert False # TODO: implement your test here
+    #
+    # def test_retroactive_team_name_updater(self):
+    #     # score_updater = ScoreUpdater()
+    #     # self.assertEqual(expected, score_updater.retroactive_team_name_updater())
+    #     assert False # TODO: implement your test here
+
 if __name__ == '__main__':  # pragma: no cover
     unittest.main()
