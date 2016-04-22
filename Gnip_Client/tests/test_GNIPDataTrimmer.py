@@ -6,7 +6,7 @@ from Gnip_Client.GNIPDataTrimmer import DataTrimmer
 
 class TestDataTrimmer(unittest.TestCase):
     def setUp(self):
-        path = os.getcwd() + '/Gnip_Client/Gnip_Search_0.json'
+        path = os.getcwd() + '/Gnip_Client/Gnip_Searches/Gnip_Search_0.json'
         fo = open(path, 'w+')
         fo.write('{"results": [{"body": "test body tweet"}]}')
         fo.close()
@@ -18,7 +18,7 @@ class TestDataTrimmer(unittest.TestCase):
 
     def test_get_file_location(self):
         data_trimmer = DataTrimmer()
-        expected = os.getcwd() + '/Gnip_Client/Gnip_Search_0.json'
+        expected = os.getcwd() + '/Gnip_Client/Gnip_Searches/Gnip_Search_0.json'
         self.assertEqual(expected, data_trimmer.get_file_location(0))
 
     def test_get_tweets(self):

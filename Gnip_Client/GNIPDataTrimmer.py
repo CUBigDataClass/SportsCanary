@@ -37,6 +37,3 @@ class DataTrimmer:
         # except:
         #     print('Key "body" not found.')
             # return None
-
-d = DataTrimmer()
-d.get_tweets(1, 900)
