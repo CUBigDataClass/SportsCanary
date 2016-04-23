@@ -3,8 +3,13 @@ extends ../layout
 block content
     h1.
         ID #{result._id}
+    p Sport Type: #{result.sport_type}
     p Event Name: #{result.event_name}
     p Score Applicable: #{result.score_applicable}
+    p Team 1: #{result.team_1_name}
+    p Team 2: #{result.team_2_name}
     p Score 1: #{result.score_1}
     p Score 2: #{result.score_2}
+    p Team 1 Confidence: #{result.team_1_percentage_win}
+    p Team 2 Confidence: #{result.team_2_percentage_win}
     p Event Date: #{result.event_date}

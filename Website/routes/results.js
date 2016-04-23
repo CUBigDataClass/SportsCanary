@@ -78,7 +78,7 @@ router.route('/')
     .post(function(req, res) {
         var sport_type = req.body.sport_type;
         var event_name = req.body.event_name;
-        var score_applicable = req.body.score_applicable;
+        var score_applicable = true;
         var score_1 = req.body.score_1;
         var score_2 = req.body.score_2;
         var team_1_name = req.body.team_1_name;
@@ -150,13 +150,14 @@ router.route('/:id')
             if (err) {
                 console.log('GET Error: There was a problem retrieving: ' + err);
             } else {
-                //console.log('GET Retrieving ID: ' + result.event_name);
+                console.log(result);
                 res.format({
-                    //html: function(){
-                    //    res.render('results/show', {
-                    //        "result" : result
-                    //    });
-                    //},
+                    html: function(){
+                        res.render('results/show', {
+                            title: 'Result ' + result._id,
+                            "result" : result
+                        });
+                    },
                     json: function(){
                         res.json(result);
                     }
@@ -186,21 +187,33 @@ router.get('/:id/edit', function(req, res) {
     });
 });
 router.put('/:id/edit', function(req, res) {
+    var sport_type = req.body.sport_type;
     var event_name = req.body.event_name;
-    var score_applicable = req.body.score_applicable;
+    var score_applicable = true;
     var score_1 = req.body.score_1;
     var score_2 = req.body.score_2;
+    var team_1_name = req.body.team_1_name;
+    var team_2_name = req.body.team_2_name;
     var event_date = req.body.event_date;
+    var team_1_percentage_win = req.body.team_1_percentage_win;
+    var team_2_percentage_win = req.body.team_2_percentage_win;
+    var stattleship_slug = req.body.stattleship_slug;
 
     //find the document by ID
     mongoose.model('Result').findById(req.id, function (err, result) {
         //update it
         result.update({
+            sport_type: sport_type,
             event_name : event_name,
             score_applicable : score_applicable,
+            team_1_percentage_win: team_1_percentage_win,
+            team_2_percentage_win: team_2_percentage_win,
+            team_1_name: team_1_name,
+            team_2_name: team_2_name,
             score_1 : score_1,
             score_2 : score_2,
-            event_date : event_date
+            event_date : event_date,
+            stattleship_slug: stattleship_slug
         }, function (err, new_result) {
             if (err) {
                 res.send("There was a problem updating the information to the database: " + err);
