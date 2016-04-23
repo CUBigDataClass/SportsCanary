@@ -29,12 +29,39 @@ class TestTwitterClient(unittest.TestCase):
         expected = '#a #b #c'
         self.assertEqual(expected, twitter_client.create_space_separated_hashtags(list_of_hashtags))
 
-    def test_take_data_gathering_input(self):
+    def test_enriched_tweet_low_confidence(self):
         twitter_client = TwitterClient()
         tweet_percentage_tuple = 55, 45
         teams_tuple = 'Brewers', 'Pirates'
         slug = 'mlb-2016-mil-pit-2016-04-17-1335'
         sport = 'mlb'
+        self.assertEqual(True, twitter_client.enriched_tweet_based_on_confidence(tweet_percentage_tuple, teams_tuple, slug, sport))
+        twitter_client.delete_latest_tweet()
+        tweet_percentage_tuple = 45, 55
+        self.assertEqual(True, twitter_client.enriched_tweet_based_on_confidence(tweet_percentage_tuple, teams_tuple, slug, sport))
+        twitter_client.delete_latest_tweet()
+
+    def test_enriched_tweet_high_confidence(self):
+        twitter_client = TwitterClient()
+        tweet_percentage_tuple = 80, 20
+        teams_tuple = 'Brewers', 'Pirates'
+        slug = 'mlb-2016-mil-pit-2016-04-17-1335'
+        sport = 'mlb'
+        self.assertEqual(True, twitter_client.enriched_tweet_based_on_confidence(tweet_percentage_tuple, teams_tuple, slug, sport))
+        twitter_client.delete_latest_tweet()
+        tweet_percentage_tuple = 20, 80
+        self.assertEqual(True, twitter_client.enriched_tweet_based_on_confidence(tweet_percentage_tuple, teams_tuple, slug, sport))
+        twitter_client.delete_latest_tweet()
+
+    def test_enriched_tweet_exception(self):
+        twitter_client = TwitterClient()
+        tweet_percentage_tuple = 55, 45
+        teams_tuple = 'Brewers', 'Pirates'
+        slug = 'mlb-2016-mil-pit-2016-04-17-1335'
+        sport = 'mlb'
+        self.assertEqual(True, twitter_client.enriched_tweet_based_on_confidence(tweet_percentage_tuple, teams_tuple, slug, sport))
+        twitter_client.delete_latest_tweet()
+        tweet_percentage_tuple = 45, 55
         self.assertEqual(True, twitter_client.enriched_tweet_based_on_confidence(tweet_percentage_tuple, teams_tuple, slug, sport))
         twitter_client.delete_latest_tweet()
 

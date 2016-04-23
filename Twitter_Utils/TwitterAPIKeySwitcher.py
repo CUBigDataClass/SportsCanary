@@ -135,7 +135,3 @@ class TwitterAPIKeyHandler:
             os.remove(self.key_check_write_path)
         except OSError:
             print('No file to delete.')
-
-t = TwitterAPIKeyHandler()
-# t.write_initial_keys_state_to_disk()
-t.delete_api_keys_file()

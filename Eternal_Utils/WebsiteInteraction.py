@@ -30,6 +30,7 @@ class WebsiteInteraction:
 
         except:
             print('Error posting to game.')
+            return False
 
     def delete_request_to_sports_canary(self):
         r = requests.delete('http://sportscanary.com/api/results/' + str(self.id) + '/edit')

@@ -1,6 +1,4 @@
-
-
-class Game(object):
+class Game(object):  # pragma: no cover
     def __init__(self, json_game_type):
         self.data = json_game_type
         self.games = []

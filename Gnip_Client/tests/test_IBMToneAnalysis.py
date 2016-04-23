@@ -14,7 +14,7 @@ class TestToneAnalyzer(unittest.TestCase):
         self.assertIsNotNone(tone_analyzer.query_ibm_for_tone('What is the sentiment of a test tweet?'))
 
     @urlmatch(netloc=r'(.*\.)?gateway\.watsonplatform\.net(.*)')
-    def ibm_mock(self):
+    def ibm_mock(self):  # pragma: no cover
         return 'fake return'
 
     def test_query_ibm_for_tone_exception(self):

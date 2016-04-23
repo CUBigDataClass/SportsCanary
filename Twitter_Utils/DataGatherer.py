@@ -43,7 +43,7 @@ class DataGatherer(StreamListener):
             self.auth.set_access_token(self.key_array[index]['oauth_token'],
                                        self.key_array[index]['oauth_token_secret'])
             return index
-        else:
+        else:  # pragma: no cover
             self.logger.info('No key found, stream not started.')
 
     def on_error(self, status_code):
@@ -130,7 +130,7 @@ class DataGatherer(StreamListener):
         return path + '/Twitter_Utils/data/tweets/' + self.game_name_to_store + '/' + self.game_name_to_store + '.txt'
 
     @staticmethod
-    def save_tweet_to_disk(tweet, file_path):
+    def save_tweet_to_disk(tweet, file_path):  # pragma: no cover
         with open(file_path, 'a+b') as f:
             f.write(tweet)
             f.write('\n')

@@ -143,7 +143,7 @@ class EternalProcess:
                     datetime.timedelta(minutes=self.time_prior_to_game_to_start_stream)
         return game_time.strftime('%H:%M')
 
-    def iterate_through_march_madness_games_and_start_stream(self, data_mm, current_time):
+    def iterate_through_march_madness_games_and_start_stream(self, data_mm, current_time):  # pragma: no cover
         for idx, game in enumerate(data_mm):
             game_time = self.generate_stream_start_time(game)
             self.logger.info('March Madness Game Time: ' + game_time)

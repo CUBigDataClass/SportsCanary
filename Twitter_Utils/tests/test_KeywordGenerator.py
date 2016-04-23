@@ -43,6 +43,8 @@ class TestKeywordGenerator(unittest.TestCase):
         team_id = '94acb560-6d9c-4b89-a32c-7fb817ad7aa7'
         sport = 'mlb'
         self.assertGreater(len(keyword_generator.generate_search_terms(team_id, sport)), 5)
+        with self.assertRaises(IOError):
+            self.assertGreater(len(keyword_generator.generate_search_terms(team_id, '')), 5)
 
     def test_get_team_data_path_nba(self):
         keyword_generator = KeywordGenerator()
@@ -70,7 +72,7 @@ class TestKeywordGenerator(unittest.TestCase):
         keyword_generator = KeywordGenerator()
         team_id = 'eeb2db44-7894-483e-a9a7-373fb80d8e91'
         sport = 'mlb'
-        expected = set(['Mariners'])
+        expected = {'Mariners'}
         self.assertEqual(expected, keyword_generator.get_hashtags_for_team(team_id, sport))
 
         # Test exception

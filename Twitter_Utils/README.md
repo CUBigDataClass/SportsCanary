@@ -25,9 +25,9 @@ If that does not work, copy the all the auth variables to the utils.env file
 ###NLTK Setup
 Make sure you've installed the requirements prior to this step.
 ```
-$ python
-$ import nltk
-$ nltk.download()
+$ python -m nltk.downloader stopwords
+$ python -m nltk.downloader punkt
+$ python -m nltk.downloader wordnet
 ```
 Select the 'Corpora' tab and then download 'twitter_samples'
 
@@ -39,14 +39,14 @@ $ py.test
 **With Coverage**
 ```
 Within Outer Directory
-$ py.test --cov=Twitter_Utils --cov=Gambling_Utils --cov=Eternal_Utils --cov-report=term-missing --cov-report=html
+$ py.test --cov=Twitter_Utils --cov=Gambling_Utils --cov=Eternal_Utils --cov=Gnip_Client --cov-report=term-missing --cov-report=html
 ```
 
 
 ####To test Map and Reduce
 ```
 Within the Twitter_Utils directory
-$ cat AllStarsGameData.txt| python Mapper.py | sort | python Reducer.py | sort -n
+$ cat DATA | python Mapper.py | sort | python Reducer.py | sort -n
 ```
 
 

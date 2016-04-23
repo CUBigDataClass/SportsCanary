@@ -268,12 +268,28 @@ class TestEternalProcess(unittest.TestCase):
         self.assertEqual(1, len(eternal_process.game_name_list))
         self.assertIs(True, eternal_process.end_stream_and_free_api(0))
 
-    def test_update_is_streamed_json(self):
+    def test_update_is_streamed_json_nba(self):
         eternal_process = EternalProcess()
         game = dict(_id='f334b7d4-a1fb-4ed6-ad85-ba75f71f0b1f', being_streamed=False)
         sport = 'nba'
         self.assertEqual(True, eternal_process.update_is_streamed_json(game, sport))
         game = dict(_id='f334b7d4-a1fb-4ed6-ad85-ba75f71f0b1f', being_streamed=True)
+        self.assertEqual(False, eternal_process.update_is_streamed_json(game, sport))
+
+    def test_update_is_streamed_json_nhl(self):
+        eternal_process = EternalProcess()
+        game = dict(_id='91775c7f-fecf-49d1-91ce-400a9975dd8f', being_streamed=False)
+        sport = 'nhl'
+        self.assertEqual(True, eternal_process.update_is_streamed_json(game, sport))
+        game = dict(_id='91775c7f-fecf-49d1-91ce-400a9975dd8f', being_streamed=True)
+        self.assertEqual(False, eternal_process.update_is_streamed_json(game, sport))
+
+    def test_update_is_streamed_json_mlb(self):
+        eternal_process = EternalProcess()
+        game = dict(_id='80a57e73-cf37-47c7-869d-e5fe43983fb3', being_streamed=False)
+        sport = 'mlb'
+        self.assertEqual(True, eternal_process.update_is_streamed_json(game, sport))
+        game = dict(_id='80a57e73-cf37-47c7-869d-e5fe43983fb3', being_streamed=True)
         self.assertEqual(False, eternal_process.update_is_streamed_json(game, sport))
 
     def test_get_game_name_in_team1_vs_team2_format(self):
