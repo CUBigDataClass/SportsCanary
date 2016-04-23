@@ -23,21 +23,21 @@ router.get('/', function(req, res, next) {
                 return console.error(err);
             } else {
                 if (results.length == 0) {
-                    // TODO - Handle no results, we could 404.
-                    res.status(404)
+                    res.render('search/search', {title: 'SportsCanary - Search'});
+                } else {
+                    res.format({
+                        html: function () {
+                            results = results.reverse();
+                            res.render('sports/results-index', {
+                                title: 'SportsCanary - Predictions for Basketball, Hockey and Basketball',
+                                "results": results
+                            });
+                        },
+                        json: function () {
+                            res.json(results);
+                        }
+                    });
                 }
-                res.format({
-                    html: function(){
-                        results = results.reverse();
-                        res.render('sports/results-index', {
-                            title: 'SportsCanary - Predictions for Basketball, Hockey and Basketball',
-                            "results" : results
-                        });
-                    },
-                    json: function(){
-                        res.json(results);
-                    }
-                });
             }
         });
         //client.search({
