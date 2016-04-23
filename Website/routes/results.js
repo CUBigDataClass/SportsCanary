@@ -82,7 +82,7 @@ router.route('/')
         var score_1 = req.body.score_1;
         var score_2 = req.body.score_2;
         var team_1_name = req.body.team_1_name;
-        var team_2_name = req.body.team_1_name;
+        var team_2_name = req.body.team_2_name;
         var event_date = req.body.event_date;
         var team_1_percentage_win = req.body.team_1_percentage_win;
         var team_2_percentage_win = req.body.team_2_percentage_win;
