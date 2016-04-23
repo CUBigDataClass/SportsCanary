@@ -11,38 +11,38 @@ block content
                 p.white-text
                   .row
                     .col.s12.m7
-                      .card-panel.light-blue.darken-4
+                      .card-panel.light-blue.accent-3
                         span.white-text
                           | Tweets Analyzed: 1,938,781
                           br
                           br
                           | NBA Games: 40
                           br
-                          b.green-text
-                            | Correctly Predicted: 65%
+                          b.white-text.
+                             Correctly Predicted: 65%
                           br
                           | MLB Games: 109
                           br
-                          b.green-text
+                          b.white-text
                             | Correctly Predicted: 46.7%
                           br
                           | NHL Games: 25
                           br
-                          b.green-text
+                          b.white-text
                             | Correctly Predicted: 50%
                           br 
                           br
                           | Total Predictions: 174
                           br
-                          b.green-text
+                          b.white-text
                             | Total Correct Predictions: 51.46%
                 div
-                  div
+                  div.col.m8
                     input#search-bar-home(type='text', name='searchbar' placeholder='Start Searching for Sports Matches Here!' class='white-text')
                   div
-                    button.btn.waves-effect.waves-light(onclick='goToSearchTerm()', type='submit', name='action')
+                    button.btn.waves-effect.waves-light.light-blue.accent-3(onclick='goToSearchTerm()', type='submit', name='action')
                       | Search
-                      i.material-icons.right send
+                      i.material-icons.right search
                       script.
                         function goToSearchTerm() {
                           var value = document.getElementById("search-bar-home").value
@@ -58,5 +58,3 @@ block content
       include card-matchup-nhl.jade
     section#MLB
       include card-matchup-mlb.jade
-
-                           
