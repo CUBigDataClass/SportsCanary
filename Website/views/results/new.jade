@@ -13,17 +13,18 @@ block content
         p Team 2 Name:
             input#inputTeam2Name(type="text", placeholder="ex. Rockets", name="team_2_name")
         p Score 1:
-            input#inputScore1(type="number", placeholder="ex. 100", name="score_1")
+            input#inputScore1(type="number", placeholder="ex. 100", name="score_1", min=0)
         p Score 2:
-            input#inputScore2(type="number", placeholder="ex. 100", name="score_2")
+            input#inputScore2(type="number", placeholder="ex. 100", name="score_2", min=0)
         p % Win Team 1:
             input#inputTeam1Win(type="number", placeholder="20%", name="team_1_percentage_win", min=0, max = 100)
         p % Win Team 2:
             input#inputTeam2Win(type="number", placeholder="80%", name="team_2_percentage_win", min=0, max = 100)
         p Event Date:
             input#inputDob(type="date", name="event_date")
-        p Score Applicable:
-            input#inputScoreApplicable(type="checkbox", name="score_applicable")
+
+        br
+        br
         br
         p
             button#btnSubmit(type="submit") submit

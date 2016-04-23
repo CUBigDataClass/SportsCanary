@@ -4,12 +4,22 @@ block content
     h1.
         Result ID #{result._id}
     form(action='/api/results/#{result._id}/edit',method='post',name='updateresult',enctype='application/x-www-form-urlencoded')
-        p Name:
+        p Sport Type:
+            inout#inputSportType(type='text', value='#{result.sport_type}', name='sport_type')
+        p Event Name:
             input#inputEventName(type='text', value='#{result.event_name}', name='event_name')
+        p Team 1 Name:
+            input#inputTeam1Name(type="text", value='#{result.team_1_name}', name="team_1_name")
+        p Team 2 Name:
+            input#inputTeam2Name(type="text", value='#{result.team_2_name}', name="team_2_name")
         p Score 1:
-            input#inputScore_1(type='number', value='#{result.score_1}', name='score_1')
+            input#inputScore_1(type='number', value='#{result.score_1}', name='score_1', min=0)
         p Score 2:
-            input#inputScore_2(type='number', value='#{result.score_2}', name='score_2')
+            input#inputScore_2(type='number', value='#{result.score_2}', name='score_2', min=0)
+        p % Win Team 1:
+            input#inputTeam1Win(type="number", value='#{result.team_1_percentage_win}', name="team_1_percentage_win", min=0, max = 100)
+        p % Win Team 2:
+            input#inputTeam2Win(type="number", value='#{result.team_2_percentage_win}', name="team_2_percentage_win", min=0, max = 100)
         p Event Date:
             input#inputEventDate(type='date', value='#{result.event_date}', name='event_date')
         p Score Applicable?:
