@@ -1,7 +1,7 @@
 div.container.center
                div.row
                  div.col.s12
-                   div.card-panel
+                   div.card-panel.z-depth-2
                      span.black-text 
                        if result.sport_type == 'nba'
                          img.responsive-img(src = "/images/nba_logos/nba.svg", alt='NBA', height='40', width='40')
@@ -150,7 +150,7 @@ div.container.center
                              img.responsive-img(src='/images/mlb_logos/St._Louis_Cardinals_Logo.svg', alt='', height='140', width='140')
                            else if result.team_1_name == 'Rays'
                              img.responsive-img(src='/images/mlb_logos/Tampa_Bay_Rays.svg', alt='', height='140', width='140')
-                           else if result.team_1_name == 'Rangers'
+                           else if result.team_1_name == 'Texas Rangers'
                              img.responsive-img(src='/images/mlb_logos/Texas_Rangers.svg', alt='', height='140', width='140')
                            else if result.team_1_name == 'Blue Jays'
                              img.responsive-img(src='/images/mlb_logos/Toronto_Blue_Jays_logo.svg', alt='', height='140', width='140')
@@ -376,7 +376,7 @@ div.container.center
                            img.responsive-img(src='/images/mlb_logos/St._Louis_Cardinals_Logo.svg', alt='', height='140', width='140')
                          else if result.team_2_name == 'Rays'
                            img.responsive-img(src='/images/mlb_logos/Tampa_Bay_Rays.svg', alt='', height='140', width='140')
-                         else if result.team_2_name == 'Rangers'
+                         else if result.team_2_name == 'Texas Rangers'
                            img.responsive-img(src='/images/mlb_logos/Texas_Rangers.svg', alt='', height='140', width='140')
                          else if result.team_2_name == 'Blue Jays'
                            img.responsive-img(src='/images/mlb_logos/Toronto_Blue_Jays_logo.svg', alt='', height='140', width='140')
