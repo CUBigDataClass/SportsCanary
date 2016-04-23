@@ -5,9 +5,13 @@ block content
         #{title}
     form#formAddResult(name="addresult",method="post",action="/api/results")
         p Sport Type:
-            input#inputSportType(type="text", placeholder="NBA, NHL, etc.", name="sport_type")
+            input#inputSportType(type="text", placeholder="nba, nhl, etc.", name="sport_type")
         p Event Name:
             input#inputEventName(type="text", placeholder="ex. Cavaliers vs Rockets", name="event_name")
+        p Team 1 Name:
+            input#inputTeam1Name(type="text", placeholder="ex. Cavaliers", name="team_1_name")
+        p Team 2 Name:
+            input#inputTeam2Name(type="text", placeholder="ex. Rockets", name="team_2_name")
         p Score 1:
             input#inputScore1(type="number", placeholder="ex. 100", name="score_1")
         p Score 2:
@@ -19,6 +23,7 @@ block content
         p Event Date:
             input#inputDob(type="date", name="event_date")
         p Score Applicable:
-            input#inputIsLoved(type="checkbox", name="score_applicable")
+            input#inputScoreApplicable(type="checkbox", name="score_applicable")
+        br
         p
             button#btnSubmit(type="submit") submit

@@ -11,18 +11,30 @@ block content
                 p
                 = "Score Applicable: " + result.score_applicable
                 p
+                = "Team 1 Name: " + result.team_1_name
+                p
+                = "Team 2 Name: " + result.team_2_name
+                p
                 = "Score 1: " + result.score_1
                 p
                 = "Score 2: " + result.score_2
                 p
+                = "Team 1 Confidence: " + result.team_1_percentage_win
+                p
+                = "Team 2 Confidence: " + result.team_2_percentage_win
+                p
                 = "Event Date: " + result.event_date
                 p
                 = "Event id: " + result._id
-                form(action='/api/results/#{result._id}/edit',method='post',enctype='application/x-www-form-urlencoded')
-                    input(type='hidden',value='DELETE',name='_method')
-                    button(type='submit').
-                        Delete
                 p
                     a(href='/api/results/#{result._id}/edit') Edit
                 p
                     a(href='/api/results/#{result._id}') Show
+
+                form(action='/api/results/#{result._id}/edit',method='post',enctype='application/x-www-form-urlencoded')
+                    input(type='hidden',value='DELETE',name='_method')
+                    button(type='submit').
+                        Delete
+                br
+                br
+                br

@@ -78,7 +78,7 @@ router.route('/')
     .post(function(req, res) {
         var sport_type = req.body.sport_type;
         var event_name = req.body.event_name;
-        var score_applicable = req.body.score_applicable;
+        var score_applicable = true;
         var score_1 = req.body.score_1;
         var score_2 = req.body.score_2;
         var team_1_name = req.body.team_1_name;
