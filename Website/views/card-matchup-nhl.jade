@@ -11,9 +11,25 @@
                          img(src = "images/mlb_logos/mlb.svg", alt='MLB', height='75', width='75')
                        else if result.sport_type == 'nhl'
                          img(src = "images/nhl_logos/nhl.svg", alt='NHL', height='50', width='50')
-                       //b.sport-type= result.sport_type
-                       b.team-name
-                       = result.event_name
+                       h5= result.event_name
+                       if result.score_1 == '0' && result.score_2 == '0'
+                         b
+                           | Game in Progress...
+                       else if result.score_1 != '0' && result.score_2 != '0' && result.score_1 == result.score_2
+                         b
+                           | Game resulted in a tie.
+                       else if result.score_1 > result.score_2 && result.team_1_percentage_win > result.team_2_percentage_win
+                          b.green-text
+                             = result.team_1_name + " won" + " - Prediction: " + " Correct!"
+                       else if result.score_1 > result.score_2 && result.team_1_percentage_win < result.team_2_percentage_win
+                          b.red-text
+                             = result.team_1_name + " won" + " - Prediction: " + " Incorrect."
+                       else if result.score_1 < result.score_2 && result.team_1_percentage_win < result.team_2_percentage_win
+                          b.green-text
+                             = result.team_2_name + " won" + " - Prediction: " + "Correct!"
+                       else if result.score_1 < result.score_2 && result.team_1_percentage_win > result.team_2_percentage_win
+                          b.red-text
+                             = result.team_2_name + " won" + " - Prediction: " + "Incorrect."
                      div.row
                        div.col.s5
                            .col
