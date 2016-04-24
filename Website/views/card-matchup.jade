@@ -9,7 +9,7 @@ div.container.center.grey.lighten-2
                          img.responsive-img(src = "/images/mlb_logos/mlb.svg", alt='MLB', height='75', width='75')
                        else if result.sport_type == 'nhl'
                          img.responsive-img(src = "/images/nhl_logos/nhl.svg", alt='NHL', height='50', width='50')
-                       h4= result.event_name
+                       h5= result.event_name
                        if result.score_1 == '0' && result.score_2 == '0'
                          b
                            | Game is in Progress...
