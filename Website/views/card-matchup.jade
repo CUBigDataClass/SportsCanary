@@ -3,31 +3,30 @@ div.container.center.grey.lighten-2
                  div.col.s12
                    div.card-panel.z-depth-2
                      span.black-text 
-                       //if result.sport_type == 'nba'
-                         //img.responsive-img(src = "/images/nba_logos/nba.svg", alt='NBA', height='40', width='40')
-                       //else if result.sport_type == 'mlb'
-                         //img.responsive-img(src = "/images/mlb_logos/mlb.svg", alt='MLB', height='75', width='75')
-                       //else if result.sport_type == 'nhl'
-                         //img.responsive-img(src = "/images/nhl_logos/nhl.svg", alt='NHL', height='50', width='50')
-                       //b.sport-type= result.sport_type
-                       h4.= result.event_name
+                       if result.sport_type == 'nba'
+                         img.responsive-img(src = "/images/nba_logos/nba.svg", alt='NBA', height='40', width='40')
+                       else if result.sport_type == 'mlb'
+                         img.responsive-img(src = "/images/mlb_logos/mlb.svg", alt='MLB', height='75', width='75')
+                       else if result.sport_type == 'nhl'
+                         img.responsive-img(src = "/images/nhl_logos/nhl.svg", alt='NHL', height='50', width='50')
+                       h4= result.event_name
                        if result.score_1 == '0' && result.score_2 == '0'
-                         h5
+                         b
                            | Game is in Progress...
                        else if result.score_1 != '0' && result.score_2 != '0' && result.score_1 == result.score_2
-                         h5
+                         b
                            | Game resulted in a tie.
                        else if result.score_1 > result.score_2 && result.team_1_percentage_win > result.team_2_percentage_win
-                          h5.green-text
+                          b.green-text
                              = result.team_1_name + " won" + " - Prediction: " + " Correct!"
                        else if result.score_1 > result.score_2 && result.team_1_percentage_win < result.team_2_percentage_win
-                          h5.red-text
+                          b.red-text
                              = result.team_1_name + " won" + " - Prediction: " + " Incorrect."
                        else if result.score_1 < result.score_2 && result.team_1_percentage_win < result.team_2_percentage_win
-                          h5.green-text
+                          b.green-text
                              = result.team_2_name + " won" + " - Prediction: " + "Correct!"
                        else if result.score_1 < result.score_2 && result.team_1_percentage_win > result.team_2_percentage_win
-                          h5.red-text
+                          b.red-text
                              = result.team_2_name + " won" + " - Prediction: " + "Incorrect."
                      div.row
                        div.col.s5
