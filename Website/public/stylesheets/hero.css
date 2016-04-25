@@ -4,3 +4,9 @@
   position:relative;
   height:55vh;
 }
+#hero-kobe{
+  background-image:url(/images/kobe/kobe-header.jpg);
+  background-size:cover;
+  position:relative;
+  height:55vh;
+}
