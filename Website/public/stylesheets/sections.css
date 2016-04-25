@@ -1,5 +1,5 @@
 section#NBA {
-    background-color: #EDEDED;
+    background-color: #E0E0E0;
     color: #5C5C5C;
     padding: 20px 0
 }
@@ -11,6 +11,7 @@ section#NBA h3 {
 }
 
 section#NHL {
+    background-color: #E0E0E0;
     color: #5C5C5C;
     padding: 20px 0
 }
@@ -22,7 +23,7 @@ section#NHL h3 {
 }
 
 section#MLB {
-    background-color: #EDEDED;
+    background-color: #E0E0E0;
     color: #5C5C5C;
     padding: 20px 0
 }
