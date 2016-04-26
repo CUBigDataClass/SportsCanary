@@ -44,7 +44,8 @@ section#Kobe1 h3 {
 }
 
 section#Kobe2 h3 {
+    color: #5C5C5C;
+    padding: 20px 0
     font-size: 2em;
     font-weight: 300;
     padding-top: 10px
-}
