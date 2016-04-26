@@ -1,5 +1,6 @@
 body {
   background-color: #E0E0E0;
+  padding-top: 60px;
 }
 
 .navbar-brand {
@@ -26,4 +27,15 @@ body {
     position:relative;
     top:50%;
     left:50%;
+}
+.element {
+  position: relative;
+  top: 50%;
+  transform: translateY(-15%);
+}
+.parent {display: table;}
+
+.child {
+    display: table-cell;
+    vertical-align: middle;
 }
