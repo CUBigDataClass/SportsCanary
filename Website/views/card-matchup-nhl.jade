@@ -4,35 +4,15 @@
                div.row
                  div.col.s12
                    div.card-panel.z-depth-2
-                     span.black-text
+                     .black-text 
                        if result.sport_type == 'nba'
-                         img(src = "images/nba_logos/nba.svg", alt='NBA', height='40', width='40')
+                         img.responsive-img(src = "/images/nba_logos/nba.svg", alt='NBA', height='40', width='40')
                        else if result.sport_type == 'mlb'
-                         img(src = "images/mlb_logos/mlb.svg", alt='MLB', height='75', width='75')
+                         img.responsive-img(src = "/images/mlb_logos/mlb.svg", alt='MLB', height='75', width='75')
                        else if result.sport_type == 'nhl'
-                         img(src = "images/nhl_logos/nhl.svg", alt='NHL', height='50', width='50')
-                       h5= result.event_name
-                       if result.score_1 == '0' && result.score_2 == '0'
-                         b
-                           | Game in Progress...
-                       else if result.score_1 != '0' && result.score_2 != '0' && result.score_1 == result.score_2
-                         b
-                           | Game resulted in a tie.
-                       else if result.score_1 > result.score_2 && result.team_1_percentage_win > result.team_2_percentage_win
-                          b.green-text
-                             = result.team_1_name + " won" + " - Prediction: " + " Correct!"
-                       else if result.score_1 > result.score_2 && result.team_1_percentage_win < result.team_2_percentage_win
-                          b.red-text
-                             = result.team_1_name + " won" + " - Prediction: " + " Incorrect."
-                       else if result.score_1 < result.score_2 && result.team_1_percentage_win < result.team_2_percentage_win
-                          b.green-text
-                             = result.team_2_name + " won" + " - Prediction: " + "Correct!"
-                       else if result.score_1 < result.score_2 && result.team_1_percentage_win > result.team_2_percentage_win
-                          b.red-text
-                             = result.team_2_name + " won" + " - Prediction: " + "Incorrect."
-                     div.row
-                       div.col.s5
-                           .col
+                         img.responsive-img(src = "/images/nhl_logos/nhl.svg", alt='NHL', height='50', width='50')
+                     .row
+                      .col.s4.m4
                            //Switch Team Logo Image
                            if result.team_1_name == 'Blackhawks'
                              img.responsive-img(src='images/nhl_logos/blackhawks.svg', alt='', height='140', width='140')
@@ -94,49 +74,45 @@
                              img.responsive-img(src='images/nhl_logos/Winnipeg_Jets_Logo_2011.svg', alt='', height='140', width='140')
                            else
                              img.responsive-img(src='images/sportscanary/not-found.jpg', alt='', height= '150', width='150')
-                           .col.right
-                             span.black-text
-                               | 
-                               br
-                               b Final Score 
-                               b.team-score
-                               = result.score_1
-                               br
-                               //Should be with NLP
-                               b Win Prediction (%)
-                               br
-                               = result.team_1_percentage_win
-                               br
-                               //For use when NLP is ready instead 
-                               //b Twitter Mentions (%)
-                               //br
-                               //= result.team_1_percentage_win
-                               br
-                         .col.s2
-                           span.black-text
-                            br
-                            br
-                            h5.b vs
-                         .col.s5
-                       .col.left
-                         span.black-text
-                               | 
-                               br
-                               b Final Score 
-                               b.team-score
-                               = result.score_2
-                               br
-                               //Should be with NLP
-                               b Win Prediction (%)
-                               br
-                               = result.team_2_percentage_win
-                               br
-                               //For use when NLP is ready instead 
-                               //b Twitter Mentions (%)
-                               //br
-                               //= result.team_2_percentage_win
-                               br
-                        .col.offset-m1
+                           .black-text.right
+                             | 
+                             br
+                             b Final Score 
+                             b.team-score
+                             = result.score_1
+                             br
+                             //Should be with NLP
+                             b Win Prediction (%)
+                             br
+                             = result.team_1_percentage_win
+                             br
+                             //For use when NLP is ready instead 
+                             //b Twitter Mentions (%)
+                             //br
+                             //= result.team_1_percentage_win
+                      .col.s4.m4
+                        .black-text
+                          h5= result.event_name
+                          br
+                          if result.score_1 == '0' && result.score_2 == '0'
+                            b
+                              | Game in Progress...
+                          else if result.score_1 != '0' && result.score_2 != '0' && result.score_1 == result.score_2
+                            b
+                              | Game resulted in a tie.
+                          else if result.score_1 > result.score_2 && result.team_1_percentage_win > result.team_2_percentage_win
+                             b.green-text
+                                h5= result.team_1_name + " won" + " - Prediction: " + " Correct!"
+                          else if result.score_1 > result.score_2 && result.team_1_percentage_win < result.team_2_percentage_win
+                             b.red-text
+                                h5= result.team_1_name + " won" + " - Prediction: " + " Incorrect."
+                          else if result.score_1 < result.score_2 && result.team_1_percentage_win < result.team_2_percentage_win
+                             b.green-text
+                                h5= result.team_2_name + " won" + " - Prediction: " + "Correct!"
+                          else if result.score_1 < result.score_2 && result.team_1_percentage_win > result.team_2_percentage_win
+                             b.red-text
+                                h5= result.team_2_name + " won" + " - Prediction: " + "Incorrect."
+                      .col.s4.m4.right
                          //Switch Team 2 Logo Image
                          if result.team_2_name == 'Blackhawks'
                            img.responsive-img(src='images/nhl_logos/blackhawks.svg', alt='', height='140', width='140')
@@ -198,8 +174,24 @@
                            img.responsive-img(src='images/nhl_logos/Winnipeg_Jets_Logo_2011.svg', alt='', height='140', width='140')
                          else
                            img.responsive-img(src='images/sportscanary/not-found.jpg', alt='', height= '150', width='150')
+                         .black-text.left
+                           | 
+                           br
+                           b Final Score 
+                           b.team-score
+                           = result.score_2
+                           br
+                           //Should be with NLP
+                           b Win Prediction (%)
+                           br
+                           = result.team_2_percentage_win
+                           br
+                           //For use when NLP is ready instead 
+                           //b Twitter Mentions (%)
+                           //br
+                           //= result.team_2_percentage_win
                      br
                      span.black-text.right
                        b Last updated: 
                        b.team-date
-                       = result.event_date 
+                       = result.event_date
