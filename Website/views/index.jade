@@ -3,15 +3,16 @@ block content
   #wrapper
     #hero
       .header
-        .container
             .row
-              .col.m5.s12
+              .col.m5.s5.offset-m1
                 h1.light-blue-text.accent-3
                   | Prediction Stats
                 h4.white-text
-                  | Tweets Analyzed: 
-                  #odometer.odometer 
-              .col.m6.s11.offset-m1.offset-s1.center-align.multi-device-mockup
+                  | Tweets Analyzed:
+                  #odometer.odometer.light-blue-text.accent-3
+                h4.white-text
+                  |MLB Games: 109
+              .col.m5.s11.center-align.multi-device-mockup
                 img(src='images/home/main.png', alt='SportsCanary - Homepage image')
                 //- Need to fix image before using responsive class --> img.img-responsive.main-image(src='images/home/main.png', alt='SportsCanary - Homepage image',)
                 br
@@ -19,9 +20,8 @@ block content
                 br
                 br
 
-                div
-                  div.col.m8
-                    input#search-bar-home(type='text', name='searchbar' placeholder='Start Searching for Sports Matches Here!' class='white-text')
+                .col.m8
+                    input#search-bar-home(type='text', name='searchbar' placeholder=' Start Searching for Sports Matches Here!' class='white-text')
                   div
                     button.btn-large.waves-effect.waves-light.light-blue.accent-3(onclick='goToSearchTerm()', type='submit', name='action')
                       | Search

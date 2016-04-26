@@ -2,15 +2,18 @@ extends ../layout
 
 block content
     br
-    h1.center Search
-    div
-        div
-            input#search-bar(type='text', name='searchbar' placeholder='Search Terms')
-        div
-            button(onclick='goToSearchTerm()') Search
+    h1.center.light-blue-text.accent-3 Search
+    div.container
+        div.container
+            input#search-bar(type='text' name='searchbar' placeholder='  Start Searching for Sports Matches Here!')
+        div.container
+            button.btn-large.waves-effect.waves-light.light-blue.accent-3(onclick='goToSearchTerm()') Search
                 script.
                     function goToSearchTerm() {
                         var value = document.getElementById("search-bar").value
                         window.location = "http://sportscanary.com/search?category=" + value;
                     }
+    br
+    br
+    br
     br

@@ -10,15 +10,29 @@ body {
   padding: 7px 15px;
   width: auto;
 }
-#search-bar-home {
-}
+
 .main-image {
     height: 340px;
     width: 770px;
 }
 #search-bar {
-    background-color: rgba(47, 255, 247, 0.22);
+  background-color: white;
+  border-bottom: 3px solid white;
 }
+
+#search-bar:focus {
+  background-color: white;
+  border-bottom: 3px solid #00b0ff;
+}
+
+#search-bar-home {
+  border-bottom: 3px solid white;
+}
+
+#search-bar-home:focus {
+  border-bottom: 3px solid #00b0ff;
+}
+
 #search-button {
     height:40px;
     width:120px;
