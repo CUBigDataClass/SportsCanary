@@ -20,33 +20,36 @@ class DataTrimmer:
         with open(file_path) as data_file:
             return json.load(data_file)
 
+    # 167553 total
     def get_tweets(self, s, r):
-        ordered_tweet_dict = pickle.load(open("saved_dict.p", "rb"))
-#         ordered_tweet_dict = OrderedDict()
-#         for i in range(s, r):
-#             try:
-#                 print('At index ' + str(i))
-#                 json_file = self.load_json_blob(i)
-#                 for result in json_file['results']:
-#                     tweet = self.tweet_processor.standardize_tweet(result['body'])
-#
-#                     if tweet in ordered_tweet_dict:
-#                         ordered_tweet_dict[tweet] += 1
-#                     else:
-#                         ordered_tweet_dict[tweet] = 1
-#
-# # 167553
-#             except:
-#                 print('Key "body" not found.')
-#                 return None
-#         print("LENGTH: " + str(len(ordered_tweet_dict)))
-#         pickle.dump(ordered_tweet_dict, open('saved_dict.p', 'wb'))
-        return ordered_tweet_dict
+        try:
+            ordered_tweet_dict = pickle.load(open("saved_dict.p", "rb"))
+            return ordered_tweet_dict
+        except IOError:
+            ordered_tweet_dict = OrderedDict()
+            for i in range(s, r):
+                try:
+                    print('At index ' + str(i))
+                    json_file = self.load_json_blob(i)
+                    for result in json_file['results']:
+                        tweet = self.tweet_processor.standardize_tweet(result['body'])
+
+                        if tweet in ordered_tweet_dict:
+                            ordered_tweet_dict[tweet] += 1
+                        else:
+                            ordered_tweet_dict[tweet] = 1
+
+                except:
+                    print('Key "body" not found.')
+                    return None
+            print("LENGTH: " + str(len(ordered_tweet_dict)))
+            pickle.dump(ordered_tweet_dict, open('saved_dict.p', 'wb'))
+            return ordered_tweet_dict
 
     def write_emotions(self, tweet_dict):
         for i, entry in enumerate(tweet_dict):
             try:
-                if i > 14430:
+                if i > 57556:
                     print i
                     emotions = self.tone_analyzer.query_ibm_for_tone(entry)
                     with open('output.csv', 'a+b') as analyzed_tweets:
@@ -56,5 +59,5 @@ class DataTrimmer:
             except:
                 print('Error')
 
-# d = DataTrimmer()
-# d.write_emotions(d.get_tweets(2, 900))
+d = DataTrimmer()
+d.write_emotions(d.get_tweets(2, 900))
