@@ -59,5 +59,5 @@ class DataTrimmer:
             except:
                 print('Error')
 
-d = DataTrimmer()
-d.write_emotions(d.get_tweets(2, 900))
+# d = DataTrimmer()
+# d.write_emotions(d.get_tweets(2, 900))
