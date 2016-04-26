@@ -27,3 +27,14 @@ body {
     top:50%;
     left:50%;
 }
+.element {
+  position: relative;
+  top: 50%;
+  transform: translateY(-15%);
+}
+.parent {display: table;}
+
+.child {
+    display: table-cell;
+    vertical-align: middle;
+}
