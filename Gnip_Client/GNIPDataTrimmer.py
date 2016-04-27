@@ -58,6 +58,3 @@ class DataTrimmer:
                                                   emotions[3] + ', ' + emotions[4] + '\n')
             except:
                 print('Error')
-
-# d = DataTrimmer()
-# d.write_emotions(d.get_tweets(2, 900))

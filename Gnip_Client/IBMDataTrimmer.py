@@ -1,4 +1,4 @@
-with open('output.csv', 'rb') as csvfile:
+with open('output.csv', 'rb') as csvfile:  # pragma: no cover
     counter_1 = 0.0
     counter_2 = 0.0
     counter_3 = 0.0
