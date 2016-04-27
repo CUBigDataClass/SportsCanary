@@ -39,13 +39,26 @@ html
     meta(name='theme-color', content='#ffffff')
     
   body
-    nav
+    nav.navbar-fixed-top
       .nav-wrapper.light-blue.accent-3
         a(href="/")
           img.navbar-brand(src='/images/sportscanary/sc-logo-text.svg' alt="Sports Canary logo")
         a.button-collapse(href='#', data-activates='mobile-demo')
           i.material-icons menu
         ul.right.hide-on-med-and-down
+
+          //li
+          //a.btn-large.waves-effect.waves-light.light-blue.accent-3(onclick='goToSearchTerm()', type='submit', name='action')
+          //| Search
+          //i.material-icons.right search
+          //script.
+          //function goToSearchTerm() {
+          //var value = document.getElementById("search-bar-home").value
+          //window.location = "http://sportscanary.com/search?category=" + value;
+          //}
+          //li
+          //input#search-bar-home(type='text', name='searchbar' placeholder='Start Searching for Sports Matches Here!' class='white-text')
+          
           li
             a(href='/') Home
           li
@@ -57,7 +70,9 @@ html
           li
             a(href='/sports') ALL
           li
-            a(href='/about') More
+            a(href='/sports/kobe') Kobe
+          li
+            a(href='/about') About
           li
         ul#mobile-demo.side-nav
           li
@@ -71,7 +86,9 @@ html
           li
             a(href='/sports') ALL
           li
-            a(href='/about') More
+            a(href='/sports/kobe') Kobe
+          li
+            a(href='/about') About
           li
     
 

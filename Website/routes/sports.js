@@ -12,7 +12,7 @@ router.route('/').get(function(req, res, next) {
                 html: function() {
                     results = results.reverse();
                     res.render('sports/results-index', {
-                        title: 'SportsCanary - Predictions for Basketball, Hockey and Basketball',
+                        title: 'SportsCanary - Predictions for Basketball, Baseball and Hockey',
                         "results" : results
                     });
                 }
@@ -29,7 +29,7 @@ router.route('/nba').get(function(req, res, next) {
                 html: function(){
                     results_nba = results_nba.reverse();
                     res.render('sports/results-nba', {
-                        title: 'Results',
+                        title: 'SportsCanary - Predictions: NBA',
                         "results_nba" : results_nba
                     });
                 },
@@ -49,7 +49,7 @@ router.route('/nhl').get(function(req, res, next) {
                 html: function(){
                     results_nhl = results_nhl.reverse();
                     res.render('sports/results-nhl', {
-                        title: 'Results',
+                        title: 'SportsCanary - Predictions: NHL',
                         "results_nhl" : results_nhl
                     });
                 },
@@ -69,7 +69,7 @@ router.route('/mlb').get(function(req, res, next) {
                 html: function(){
                     results_mlb = results_mlb.reverse();
                     res.render('sports/results-mlb', {
-                        title: 'Results',
+                        title: 'SportsCanary - Predictions: MLB',
                         "results_mlb" : results_mlb
                     });
                 },
@@ -86,21 +86,13 @@ router.route('/kobe').get(function(req, res, next) {
             return console.error(err);
         } else {
             res.format({
+                html: function(){
+                    res.render('sports/kobe', {
+                        title: 'SportsCanary - Kobe: Mamba Day',
+                    });
+                },
                 json: function(){
-                    res.json(results_kobe);
-                }
-            });
-        }
-    });
-});
-router.route('/steph_curry').get(function(req, res, next) {
-    mongoose.model('Result').find({'sport_type': 'mlb'}, function (err, results_steph) {
-        if (err) {
-            return console.error(err);
-        } else {
-            res.format({
-                json: function(){
-                    res.json(results_steph);
+                    res.json(results_mlb);
                 }
             });
         }
