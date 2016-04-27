@@ -13,7 +13,22 @@ block content
                  div.col.s12
                    div.card-panel.z-depth-2
                      span.black-text
+                      #chartDiv
+                          script.
+                            var chartData={
+                            "type":"bubble",  // TYPES: area, bar, scatter, radar, range, wordcloud,  bubble... more info on: http://www.zingchart.com/docs/chart-types/
+                            "series":[  // Data for the Graph
+                            { "values": [35, 42, 67, 89]},
+                            { "values": [28, 40, 39, 36]}
+                            ]
+                            };
+
+                            zingchart.render({ // Render the Chart
+                            id:'chartDiv',
+                            data:chartData,
+                            height:400,
+                            width:600
+                            });
                         
     section#Kobe2
-    p
-      | Ha
+    
