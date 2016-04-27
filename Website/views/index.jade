@@ -12,7 +12,11 @@ block content
                   #odometer.odometer.light-blue-text.accent-3
                 h4.white-text
                   |MLB Games: 109
-              .col.m5.s11.center-align.multi-device-mockup
+                h4.white-text
+                  |NBA Games: 40
+                h4.white-text
+                  |NHL Games: 25
+              .col.m5.s5.center-align.multi-device-mockup
                 img(src='images/home/main.png', alt='SportsCanary - Homepage image')
                 //- Need to fix image before using responsive class --> img.img-responsive.main-image(src='images/home/main.png', alt='SportsCanary - Homepage image',)
                 br
@@ -20,17 +24,18 @@ block content
                 br
                 br
 
-                .col.m8
-                    input#search-bar-home(type='text', name='searchbar' placeholder=' Start Searching for Sports Matches Here!' class='white-text')
-                  div
-                    button.btn-large.waves-effect.waves-light.light-blue.accent-3(onclick='goToSearchTerm()', type='submit', name='action')
-                      | Search
-                      i.material-icons.right search
-                      script.
-                        function goToSearchTerm() {
-                          var value = document.getElementById("search-bar-home").value
-                          window.location = "http://sportscanary.com/search?category=" + value;
-                        }
+              .col.m3.s3.offset-m4.offset.s2
+                  input#search-bar-home(type='text', name='searchbar' placeholder=' Start Searching for Sports Matches Here!' class='white-text' 
+                                        onkeydown = "if (event.keyCode == 13) document.getElementById('search_button').click()")
+                div
+                  button.btn-large.waves-effect.waves-light.light-blue.accent-3(onclick='goToSearchTerm()', type='submit', name='action' id="search_button")
+                    | Search
+                    i.material-icons.right search
+                    script.
+                      function goToSearchTerm() {
+                        var value = document.getElementById("search-bar-home").value
+                        window.location = "http://sportscanary.com/search?category=" + value;
+                      }
     section#NBA
       include card-matchup-nba.jade
     section#NHL
