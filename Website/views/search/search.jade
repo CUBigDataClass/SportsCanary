@@ -6,10 +6,10 @@ block content
     div.container
         div.container
             .row.card-panel.grey.z-depth-2
-                .col.s12.m12
+              .col.m8.s8.offset-m1
                     input#search-bar-home(type='text', name='searchbar' placeholder=' Start Searching for Sports Matches Here!' class='white-text' 
                                           onkeydown = "if (event.keyCode == 13) document.getElementById('search_button').click()")
-                  div
+                  .col.m3.s3
                     button.btn-large.waves-effect.waves-light.light-blue.accent-3(onclick='goToSearchTerm()', type='submit', name='action' id="search_button")
                       | Search
                       i.material-icons.right search
