@@ -4,3 +4,28 @@
   position:relative;
   height:55vh;
 }
+#hero-kobe{
+  background-image:url(/images/kobe/kobe-header.jpg);
+  background-size:cover;
+  position:relative;
+  height:55vh;
+}
+#hero-nba{
+  background-image:url(/images/sportscanary/hero-nba.jpg);
+  background-size:cover;
+  position:relative;
+  height:55vh;
+}
+#hero-nhl{
+  background-image:url(/images/sportscanary/hero-nhl.jpg);
+  background-size:cover;
+  position:relative;
+  height:55vh;
+}
+#hero-mlb{
+  background-image:url(/images/sportscanary/hero-mlb.jpg);
+  background-size:cover;
+  position:relative;
+  height:55vh;
+}
+
