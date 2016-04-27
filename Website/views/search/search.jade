@@ -2,15 +2,24 @@ extends ../layout
 
 block content
     br
-    h1.center Search
-    div
-        div
-            input#search-bar(type='text', name='searchbar' placeholder='Search Terms')
-        div
-            button(onclick='goToSearchTerm()') Search
-                script.
-                    function goToSearchTerm() {
-                        var value = document.getElementById("search-bar").value
-                        window.location = "http://sportscanary.com/search?category=" + value;
-                    }
+    h1.center.light-blue-text.accent-3 Search
+    div.container
+        div.container
+            .row.card-panel.grey.z-depth-2
+                .col.s12.m12
+                    input#search-bar-home(type='text', name='searchbar' placeholder=' Start Searching for Sports Matches Here!' class='white-text' 
+                                          onkeydown = "if (event.keyCode == 13) document.getElementById('search_button').click()")
+                  div
+                    button.btn-large.waves-effect.waves-light.light-blue.accent-3(onclick='goToSearchTerm()', type='submit', name='action' id="search_button")
+                      | Search
+                      i.material-icons.right search
+                      script.
+                        function goToSearchTerm() {
+                          var value = document.getElementById("search-bar-home").value
+                          window.location = "http://sportscanary.com/search?category=" + value;
+                        }
+    br
+    br
+    br
+    br
     br

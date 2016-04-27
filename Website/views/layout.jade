@@ -39,6 +39,14 @@ html
     meta(name='msapplication-TileColor', content='#ffffff')
     meta(name='msapplication-TileImage', content='/ms-icon-144x144.png')
     meta(name='theme-color', content='#ffffff')
+    // Odometr includes
+    link(rel='stylesheet', href='http://github.hubspot.com/odometer/themes/odometer-theme-train-station.css')
+    script(src='http://github.hubspot.com/odometer/odometer.js')
+    // Extra styles for this example
+    style.
+      .odometer {
+      font-size: 50px;
+      }</body></html>
     
   body
     nav.navbar-fixed-top
@@ -76,6 +84,8 @@ html
           li
             a(href='/about') About
           li
+            a(href='/search')
+              i.material-icons search
         ul#mobile-demo.side-nav
           li
             a(href='/') Home
@@ -92,6 +102,8 @@ html
           li
             a(href='/about') About
           li
+            a(href='/search')
+              i.material-icons search
     
 
 

@@ -96,7 +96,8 @@
                              //= result.team_1_percentage_win
                       .col.s4.m4
                         .black-text
-                          h5= result.event_name
+                          br
+                          b= result.event_name
                           br
                           if result.score_1 == '0' && result.score_2 == '0'
                             b
@@ -106,16 +107,19 @@
                               | Game resulted in a tie.
                           else if result.score_1 > result.score_2 && result.team_1_percentage_win > result.team_2_percentage_win
                              b.green-text
-                                h5= result.team_1_name + " won" + " - Prediction: " + " Correct!"
+                                = result.team_1_name + " won" + " - Prediction: " + " Correct!"
                           else if result.score_1 > result.score_2 && result.team_1_percentage_win < result.team_2_percentage_win
                              b.red-text
-                                h5= result.team_1_name + " won" + " - Prediction: " + " Incorrect."
+                                = result.team_1_name + " won" + " - Prediction: " + " Incorrect."
                           else if result.score_1 < result.score_2 && result.team_1_percentage_win < result.team_2_percentage_win
                              b.green-text
-                                h5= result.team_2_name + " won" + " - Prediction: " + "Correct!"
+                                = result.team_2_name + " won" + " - Prediction: " + "Correct!"
                           else if result.score_1 < result.score_2 && result.team_1_percentage_win > result.team_2_percentage_win
                              b.red-text
-                                h5= result.team_2_name + " won" + " - Prediction: " + "Incorrect."
+                                = result.team_2_name + " won" + " - Prediction: " + "Incorrect."
+                          br
+                          br
+                          h5 VS
                       .col.s4.m4.right
                          //Switch Team 2 Logo Image
                          if result.team_2_name == 'Hawks'

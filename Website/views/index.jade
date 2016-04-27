@@ -3,61 +3,39 @@ block content
   #wrapper
     #hero
       .header
-        .container
             .row
-              .col.m5.s12
+              .col.m5.s5.offset-m1
                 h1.light-blue-text.accent-3
                   | Prediction Stats
-                p.white-text
-                  .row
-                    .col.m7.s12
-                      .card-panel.light-blue.accent-3
-                        span.white-text
-                          | Tweets Analyzed: 
-                          b.white-text.
-                          | 1,938,781
-                          br
-                          br
-                          | NBA Games: 40
-                          br
-                          b.white-text
-                          | Correctly Predicted: 65%
-                          br
-                          | MLB Games: 109
-                          br
-                          b.white-text
-                          | Correctly Predicted: 46.7%
-                          br
-                          | NHL Games: 25
-                          br
-                          b.white-text
-                          | Correctly Predicted: 50%
-                          br 
-                          br
-                          | Total Predictions: 174
-                          br
-                          b.white-text
-                            | Total Correct Predictions: 51.46%
-
-              .col.m6.s11.offset-m1.offset-s1.center-align.multi-device-mockup
-                img(src='images/home/main.png', alt='SportsCanary - Homepage image')                
+                h4.white-text
+                  | Tweets Analyzed:
+                  #odometer.odometer.light-blue-text.accent-3
+                h4.white-text
+                  |MLB Games: 109
+                h4.white-text
+                  |NBA Games: 40
+                h4.white-text
+                  |NHL Games: 25
+              .col.m5.s5.center-align.multi-device-mockup
+                img(src='images/home/main.png', alt='SportsCanary - Homepage image')
+                //- Need to fix image before using responsive class --> img.img-responsive.main-image(src='images/home/main.png', alt='SportsCanary - Homepage image',)
                 br
                 br
                 br
                 br
 
+              .col.m3.s3.offset-m4.offset.s2
+                  input#search-bar-home(type='text', name='searchbar' placeholder=' Start Searching for Sports Matches Here!' class='white-text' 
+                                        onkeydown = "if (event.keyCode == 13) document.getElementById('search_button').click()")
                 div
-                  div.col.m8
-                    input#search-bar-home(type='text', name='searchbar' placeholder='Start Searching for Sports Matches Here!' class='white-text')
-                  div
-                    button.btn-large.waves-effect.waves-light.light-blue.accent-3(onclick='goToSearchTerm()', type='submit', name='action')
-                      | Search
-                      i.material-icons.right search
-                      script.
-                        function goToSearchTerm() {
-                          var value = document.getElementById("search-bar-home").value
-                          window.location = "http://sportscanary.com/search?category=" + value;
-                        }
+                  button.btn-large.waves-effect.waves-light.light-blue.accent-3(onclick='goToSearchTerm()', type='submit', name='action' id="search_button")
+                    | Search
+                    i.material-icons.right search
+                    script.
+                      function goToSearchTerm() {
+                        var value = document.getElementById("search-bar-home").value
+                        window.location = "http://sportscanary.com/search?category=" + value;
+                      }
     section#NBA
       include card-matchup-nba.jade
     section#NHL
