@@ -28,6 +28,7 @@ body {
 
 #search-bar-home {
   border-bottom: 3px solid white;
+  color: #000000;
 }
 
 #search-bar-home:focus {

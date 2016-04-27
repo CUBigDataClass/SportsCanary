@@ -29,22 +29,23 @@ block content
                 br
                 br
                 br
-
-  
-      
     section#search-home
-      .row
-        .col.m5.s5.offset-m1
-          input#search-bar-home(type='text', name='searchbar' placeholder=' Start Searching for Sports Matches Here!' class='white-text' 
-                                onkeydown = "if (event.keyCode == 13) document.getElementById('search_button').click()")
-          button.btn-large.waves-effect.waves-light.light-blue.accent-3(onclick='goToSearchTerm()', type='submit', name='action' id="search_button")
-            | Search
-            i.material-icons.right search
-            script.
-              function goToSearchTerm() {
-                var value = document.getElementById("search-bar-home").value
-                window.location = "http://sportscanary.com/search?category=" + value;
-              }
+      div.container
+        br
+        .row.card-panel.grey.z-depth-2
+          .col.m5.s5.offset-m3
+            input#search-bar-home(type='text', name='searchbar' placeholder=' Start Searching for Sports Matches Here!' class='white-text' 
+                                  onkeydown = "if (event.keyCode == 13) document.getElementById('search_button').click()")
+          .col.m2.s2
+            button.btn-large.waves-effect.waves-light.light-blue.accent-3(onclick='goToSearchTerm()', type='submit', name='action' id="search_button")
+              | Search
+              i.material-icons.right search
+              script.
+                function goToSearchTerm() {
+                  var value = document.getElementById("search-bar-home").value
+                  window.location = "http://sportscanary.com/search?category=" + value;
+                }
+        br
     section#NBA
       include card-matchup-nba.jade
     section#NHL
